@@ -138,7 +138,6 @@ export default {
         try {
           const fileFilter = file => !file.endsWith('.map');
           const addPath = file => manifest.getPublicPath(file);
-          console.log(stats.compilation.chunkGroups);
           const chunkFiles = stats.compilation.chunkGroups.reduce((acc, c) => {
             acc[c.name] = [
               ...(acc[c.name] || []),
