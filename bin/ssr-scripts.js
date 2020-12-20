@@ -8,23 +8,15 @@ process.on('unhandledRejection', err => {
 
 const path = require('path'); 
 const spawn = require('react-dev-utils/crossSpawn');
+const { getConsoleArgs } = require('../utils/get-args');
 
-const args = process.argv.slice(2);
+const { command } = getConsoleArgs(process.argv);
 
-const scriptIndex = args.findIndex(
-  x => x === 'start' || x === 'build'
-);
+const allowedCommands = ['build','start'];
 
-const script = scriptIndex === -1 ? args[0] : args[scriptIndex];
-const nodeArgs = scriptIndex > 0 ? args.slice(0, scriptIndex) : [];
-
-if (['start', 'build'].includes(script)) {
-  const prefix = path.resolve(__dirname, '../');
-  // const runPath = require.resolve('../scripts/run.js');
-  // const babelNodeConfigPath = require.resolve('../configs/babel-node.config.js');
-
+if (allowedCommands.includes(command)) {
   const result = spawn.sync(
-    'npm run ' + script + ' --prefix ' + prefix + ' -- --app-cwd=' + process.cwd(),
+    `npm run ${command}`,
     { stdio: 'inherit', shell: true }
   );
 

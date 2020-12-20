@@ -2,16 +2,8 @@
 import fs from 'fs';
 import path from 'path';
 
-let appCwd = null;
-process.argv.forEach(arg => {
-  if (arg.indexOf('--app-cwd=') !== -1) {
-    appCwd = arg.replace('--app-cwd=', '');
-  }
-});
-
 // Пути в приложении
-const appDirectory = fs.realpathSync(appCwd);
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const resolveApp = relativePath => path.resolve(process.cwd(), relativePath);
 
 export const appPaths = {
   root: resolveApp('.'),
@@ -26,8 +18,8 @@ export const appPaths = {
 };
 
 // Путь в пакете сборки
-const packageDirectory = fs.realpathSync(process.cwd());
-const resolvePackage = relativePath => path.resolve(packageDirectory, relativePath);
+const PACKAGE_PATH = path.join(process.cwd(), 'node_modules', 'ssr-scripts')
+const resolvePackage = relativePath => path.resolve(PACKAGE_PATH, relativePath);
 
 export const packagePaths = {
   root: resolvePackage('.'),
