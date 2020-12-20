@@ -4,9 +4,6 @@
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
-  "engines": {
-    "node": ">=12.16.1"
-  },
   "dependencies": {
     "@babel/runtime": "^7.9.6",
     "@types/express": "^4.17.6",
