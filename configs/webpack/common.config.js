@@ -6,7 +6,7 @@ import { appPaths, packagePaths } from '../../utils/paths';
 
 export const resolvePath = (...args) => path.resolve(appPaths.root, ...args);
 
-const PUBLIC_PATH = '/static/assets/';
+const STATIC_PATH = '/static/assets/';
 
 export const isDebug = !process.argv.includes('--release');
 export const isVerbose = process.argv.includes('--verbose');
@@ -43,7 +43,7 @@ export default {
   mode: isDebug ? 'development' : 'production',
 
   output: {
-    publicPath: PUBLIC_PATH,
+    publicPath: STATIC_PATH,
     devtoolModuleFilenameTemplate: info =>
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
   },
