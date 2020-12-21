@@ -8,11 +8,11 @@ process.on('unhandledRejection', err => {
 
 const path = require('path'); 
 const spawn = require('react-dev-utils/crossSpawn');
-const { packagePaths } = require('ssr-scripts/utils/paths');
 const { getConsoleArgs } = require('../utils/get-args');
 
 const allowedCommands = ['build','start'];
 const command = process.argv[2];
+const prefix = path.resolve(__dirname, '../');
 
 if(!command || !allowedCommands.includes(command)){
   console.log(`Unknown command ${command}`);
@@ -20,7 +20,7 @@ if(!command || !allowedCommands.includes(command)){
 }
 
 const result = spawn.sync(
-  `npm run ${command} --prefix ${packagePaths.root}`,
+  `npm run ${command} --prefix ${prefix}`,
   { stdio: 'inherit', shell: true }
 );
 

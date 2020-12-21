@@ -1,11 +1,19 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs';
+import path from 'path';
+
+let appCwd = null;
+process.argv.forEach(arg => {
+  if (arg.indexOf('--app-cwd=') !== -1) {
+    appCwd = arg.replace('--app-cwd=', '');
+  }
+});
 
 // Пути в приложении
-const resolveApp = relativePath => path.resolve(process.cwd(), relativePath);
+const appDirectory = fs.realpathSync(appCwd);
+const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
-module.exports.appPaths = {
+export const appPaths = {
   root: resolveApp('.'),
   src: resolveApp('src'),
   build: resolveApp('build'),
@@ -18,10 +26,10 @@ module.exports.appPaths = {
 };
 
 // Путь в пакете сборки
-const PACKAGE_PATH = path.join(process.cwd(), 'node_modules', 'ssr-scripts')
-const resolvePackage = relativePath => path.resolve(PACKAGE_PATH, relativePath);
+const packageDirectory = fs.realpathSync(process.cwd());
+const resolvePackage = relativePath => path.resolve(packageDirectory, relativePath);
 
-module.exports.packagePaths = {
+export const packagePaths = {
   root: resolvePackage('.'),
   scripts: resolvePackage('scripts'),
   configs: resolvePackage('configs'),
