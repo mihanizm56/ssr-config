@@ -26,7 +26,6 @@ const copy = async () => {
         2,
       ),
     ),
-    copyFile(appPaths.packageLockJson, `${appPaths.root}/build/package-lock.json`),
     copyFile(appPaths.envDefaults, `${appPaths.root}/build/.env.defaults`),
     copyDir(appPaths.public, `${appPaths.root}/build/public`),
   ]);
