@@ -2,8 +2,11 @@
 import fs from 'fs';
 import path from 'path';
 
+let appCwd = path.join(process.cwd(),'../','../');
+
 // Пути в приложении
-const resolveApp = relativePath => path.resolve(process.cwd(), relativePath);
+const appDirectory = fs.realpathSync(appCwd);
+const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 export const appPaths = {
   root: resolveApp('.'),
