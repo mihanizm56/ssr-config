@@ -81,7 +81,7 @@ export default {
       }),
       {
         test: reStyle,
-        rules: [
+        use: [
           ...(isProduction
             ? []
             : [
@@ -90,7 +90,7 @@ export default {
                   options: { cssModule: true, reloadAll: true },
                 },
               ]),
-          { use: MiniCssExtractPlugin.loader },
+          MiniCssExtractPlugin.loader,
           {
             include: [appPaths.src],
             loader: 'css-loader',
