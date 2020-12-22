@@ -7,6 +7,15 @@
   "engines": {
     "node": ">=12.13.0"
   },
+  "scripts": {
+    "build": "babel-node scripts/run build --config-file ./configs/babel-node.config.js",
+    "build:analyse": "babel-node scripts/run build --config-file ./configs/babel-node.config.js --analyse",
+    "start": "babel-node scripts/run start --config-file ./configs/babel-node.config.js --silent --inspect",
+    "lint": "npx eslint ./ --ext .js --fix",
+    "commit": "git add . && git commit --no-edit",
+    "release": "npm run commit && git push && npm publish --access=public",
+    "beta": "npm run commit && git push && npm publish --tag beta --access=public"
+  },
   "dependencies": {
     "@babel/core": "7.9.6",
     "@babel/node": "7.8.7",
@@ -72,9 +81,42 @@
     "webpack-hot-middleware": "2.25.0",
     "webpack-node-externals": "1.6.0"
   },
-  "scripts": {
-    "build": "babel-node scripts/run build --config-file ./configs/babel-node.config.js",
-    "build:analyse": "babel-node scripts/run build --config-file ./configs/babel-node.config.js --analyse",
-    "start": "babel-node scripts/run start --config-file ./configs/babel-node.config.js --silent --inspect"
-  }
+  "devDependencies": {
+    "@commitlint/cli": "11.0.0",
+    "commitizen": "4.2.1",
+    "cz-customizable": "6.2.0",
+    "@wildberries/eslint-config-standart": "1.0.1",
+    "husky": "3.0.9",
+    "typescript": "3.8.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@wildberries/eslint-config-standart"
+    ],
+    "rules": {
+      "no-console": "off"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "git/commitizen.js"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS -g ./git/commitlint.js",
+      "pre-commit": "npm run lint && git add .",
+      "prepare-commit-msg": "node ./git/prepare-commit.js"
+    }
+  },
+  "files": [
+    "bin",
+    "configs",
+    "scripts",
+    "utils",
+    "package.json"
+  ]
 }

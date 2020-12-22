@@ -1,15 +1,14 @@
-import path from 'path';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import chokidar from 'chokidar';
-import { format } from './run';
-import { writeFile, copyFile, makeDir, copyDir, cleanDir } from '../utils/fs';
+// import chokidar from 'chokidar';
+import { writeFile, copyFile, makeDir, copyDir } from '../utils/fs';
 import { appPaths } from '../utils/paths';
+// import { format } from './run';
 
-// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires
+// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);
 
 const copy = async () => {
-  await makeDir(appPaths.root + '/build');
+  await makeDir(`${appPaths.root}/build`);
   await Promise.all([
     writeFile(
       `${appPaths.root}/build/package.json`,

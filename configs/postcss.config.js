@@ -2,6 +2,7 @@
 
 const { appPaths } = require('../utils/paths');
 
+// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);
 
 module.exports = () => {
@@ -72,7 +73,7 @@ module.exports = () => {
                 },
               ],
             }),
-        ]
+          ]
         : []),
     ],
   };

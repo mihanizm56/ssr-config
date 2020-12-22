@@ -6,16 +6,16 @@ import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
+import { appPaths } from '../../utils/paths';
+import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
   isProduction,
   isAnalyze,
   reStyle,
   commonStylesLoaders,
 } from './common.config';
-import { appPaths } from '../../utils/paths';
-import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 
-// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires
+// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);
 
 export default {
@@ -46,7 +46,7 @@ export default {
   module: {
     ...common.module,
     rules: [
-      ...overrideWebpackRules(common.module.rules, rule => {
+      ...overrideWebpackRules(common.module.rules, (rule) => {
         // Переопределение babel-preset-env конфигурации
         if (rule.loader === 'awesome-typescript-loader') {
           return {
@@ -89,7 +89,7 @@ export default {
                   loader: 'css-hot-loader',
                   options: { cssModule: true, reloadAll: true },
                 },
-            ]),
+              ]),
           { use: MiniCssExtractPlugin.loader },
           {
             include: [appPaths.src],
@@ -128,7 +128,7 @@ export default {
       output: `${appPaths.build}/asset-manifest.json`,
       publicPath: true,
       writeToDisk: true,
-      customize: entry => {
+      customize: (entry) => {
         // You can prevent adding items to the manifest by returning false.
         if (entry.key.toLowerCase().endsWith('.map')) return false;
         return { key: entry.key, value: entry.value };
@@ -137,8 +137,8 @@ export default {
         // Write chunk-manifest.json.json
         const chunkFileName = `${appPaths.build}/chunk-manifest.json`;
         try {
-          const fileFilter = file => !file.endsWith('.map');
-          const addPath = file => manifest.getPublicPath(file);
+          const fileFilter = (file) => !file.endsWith('.map');
+          const addPath = (file) => manifest.getPublicPath(file);
           const chunkFiles = stats.compilation.chunkGroups.reduce((acc, c) => {
             acc[c.name] = [
               ...(acc[c.name] || []),
@@ -170,21 +170,23 @@ export default {
     // Webpack Bundle Analyzer
     // https://github.com/th0r/webpack-bundle-analyzer
     ...(isProduction && isAnalyze ? [new BundleAnalyzerPlugin()] : []),
-    ...(isProduction ? [
+    ...(isProduction
+      ? [
           new CompressionPlugin({
             filename: '[path].br[query]',
             algorithm: 'brotliCompress',
             test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
             compressionOptions: {
-            level: 11,
+              level: 11,
             },
-          })
-    ] : []),
+          }),
+        ]
+      : []),
   ],
 
   optimization: {
     runtimeChunk: {
-      name: entrypoint => `runtime-${entrypoint.name}`,
+      name: (entrypoint) => `runtime-${entrypoint.name}`,
     },
     // Создание общих чанков с переиспользуемым функционалом
     splitChunks: {

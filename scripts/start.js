@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-import path from 'path';
 import express from 'express';
 import browserSync from 'browser-sync';
 import webpack from 'webpack';
@@ -8,9 +7,9 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
 import webpackConfig from '../configs/webpack';
+import { appPaths, packagePaths } from '../utils/paths';
 import run, { format } from './run';
 import clean from './clean';
-import { appPaths, packagePaths } from '../utils/paths';
 
 const isProduction = !process.argv.includes('--develop');
 
@@ -29,7 +28,7 @@ const createCompilationPromise = (name, compiler, config) => {
       console.info(`[${format(timeStart)}] Compiling '${name}'...`);
     });
 
-    compiler.hooks.done.tap(name, stats => {
+    compiler.hooks.done.tap(name, (stats) => {
       console.info(stats.toString(config.stats));
       const timeEnd = new Date();
       const time = timeEnd.getTime() - timeStart.getTime();
@@ -56,19 +55,14 @@ const start = async () => {
   if (server) return server;
   server = express();
   server.use(errorOverlayMiddleware());
-  server.use(
-    '/static',
-    express.static(appPaths.public),
-  );
+  server.use('/static', express.static(appPaths.public));
 
   // Configure client-side hot module replacement
-  const clientConfig = webpackConfig.find(config => config.name === 'client');
-  clientConfig.entry.client = [
-    `${packagePaths.utils}/webpack-hot-dev-client`,
-  ]
+  const clientConfig = webpackConfig.find((config) => config.name === 'client');
+  clientConfig.entry.client = [`${packagePaths.utils}/webpack-hot-dev-client`]
     .concat(clientConfig.entry.client)
     .sort((a, b) => b.includes('polyfill') - a.includes('polyfill'));
-    
+
   clientConfig.output.filename = clientConfig.output.filename.replace(
     'chunkhash',
     'hash',
@@ -78,26 +72,26 @@ const start = async () => {
     'hash',
   );
   clientConfig.module.rules = clientConfig.module.rules.filter(
-    x => x.loader !== 'null-loader',
+    (x) => x.loader !== 'null-loader',
   );
   clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 
-  const serverConfig = webpackConfig.find(config => config.name === 'server');
+  const serverConfig = webpackConfig.find((config) => config.name === 'server');
   serverConfig.output.hotUpdateMainFilename = 'updates/[hash].hot-update.json';
   serverConfig.output.hotUpdateChunkFilename =
     'updates/[id].[hash].hot-update.js';
   serverConfig.module.rules = serverConfig.module.rules.filter(
-    x => x.loader !== 'null-loader',
+    (x) => x.loader !== 'null-loader',
   );
   serverConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 
   await run(clean);
   const multiCompiler = webpack(webpackConfig);
   const clientCompiler = multiCompiler.compilers.find(
-    compiler => compiler.name === 'client',
+    (compiler) => compiler.name === 'client',
   );
   const serverCompiler = multiCompiler.compilers.find(
-    compiler => compiler.name === 'server',
+    (compiler) => compiler.name === 'server',
   );
   const clientPromise = createCompilationPromise(
     'client',
@@ -127,14 +121,14 @@ const start = async () => {
     if (!appPromiseIsResolved) return;
     appPromiseIsResolved = false;
     // eslint-disable-next-line no-return-assign
-    appPromise = new Promise(resolve => (appPromiseResolve = resolve));
+    appPromise = new Promise((resolve) => (appPromiseResolve = resolve));
   });
 
   let app;
   server.use((req, res) => {
     appPromise
       .then(() => app.handle(req, res))
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   });
 
   function checkForUpdate(fromUpdate) {
@@ -147,7 +141,7 @@ const start = async () => {
     }
     return app.hot
       .check(true)
-      .then(updatedModules => {
+      .then((updatedModules) => {
         if (!updatedModules) {
           if (fromUpdate) {
             console.info(`${hmrPrefix}Update applied.`);
@@ -158,13 +152,13 @@ const start = async () => {
           console.info(`${hmrPrefix}Nothing hot updated.`);
         } else {
           console.info(`${hmrPrefix}Updated modules:`);
-          updatedModules.forEach(moduleId =>
+          updatedModules.forEach((moduleId) =>
             console.info(`${hmrPrefix} - ${moduleId}`),
           ); // eslint-disable-line function-paren-newline
           checkForUpdate(true);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         if (['abort', 'fail'].includes(app.hot.status())) {
           console.warn(`${hmrPrefix}Cannot apply update.`);
 
@@ -172,7 +166,7 @@ const start = async () => {
           delete require.cache[require.resolve(`${appPaths.build}/server`)];
 
           // Удаление чанков из require.cache
-          Object.keys(require.cache).forEach(filename => {
+          Object.keys(require.cache).forEach((filename) => {
             if (
               /.*\/build\/chunks\/[^/]+/.test(filename) ||
               /.*\\build\\chunks\\[^\\]+/.test(filename)
@@ -181,7 +175,7 @@ const start = async () => {
             }
           });
 
-          // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require
+          // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
           app = require(`${appPaths.build}/server`).default;
           console.warn(`${hmrPrefix}App has been reloaded.`);
         } else {
@@ -208,7 +202,7 @@ const start = async () => {
   const timeStart = new Date();
   console.info(`[${format(timeStart)}] Launching server...`);
 
-  // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require
+  // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
   app = require(`${appPaths.build}/server`).default;
   appPromiseIsResolved = true;
   appPromiseResolve();
@@ -221,7 +215,7 @@ const start = async () => {
         server: true,
         middleware: [server],
         open: !process.argv.includes('--silent'),
-        ...(isProduction ? {notify: false, ui: false} : {}),
+        ...(isProduction ? { notify: false, ui: false } : {}),
       },
       (error, bs) => (error ? reject(error) : resolve(bs)),
     ),

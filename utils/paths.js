@@ -2,11 +2,11 @@
 import fs from 'fs';
 import path from 'path';
 
-let appCwd = path.join(process.cwd(),'../','../');
+const appCwd = path.join(process.cwd(), '../', '../');
 
 // Пути в приложении
 const appDirectory = fs.realpathSync(appCwd);
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
 
 export const appPaths = {
   root: resolveApp('.'),
@@ -22,7 +22,8 @@ export const appPaths = {
 
 // Путь в пакете сборки
 const packageDirectory = fs.realpathSync(process.cwd());
-const resolvePackage = relativePath => path.resolve(packageDirectory, relativePath);
+const resolvePackage = (relativePath) =>
+  path.resolve(packageDirectory, relativePath);
 
 export const packagePaths = {
   root: resolvePackage('.'),

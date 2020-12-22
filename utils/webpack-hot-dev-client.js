@@ -11,7 +11,7 @@ import {
   stopReportingRuntimeErrors,
 } from 'react-error-overlay';
 
-setEditorHandler(errorLocation => {
+setEditorHandler((errorLocation) => {
   const fileName = encodeURIComponent(errorLocation.fileName);
   const lineNumber = encodeURIComponent(errorLocation.lineNumber || 1);
   fetch(

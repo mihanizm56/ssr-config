@@ -2,6 +2,8 @@
 
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
+import { appPaths } from '../../utils/paths';
+import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
   isProduction,
   resolvePath,
@@ -9,10 +11,8 @@ import common, {
   reImage,
   commonStylesLoaders,
 } from './common.config';
-import { appPaths } from '../../utils/paths';
-import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 
-// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires
+// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);
 
 export default {
@@ -42,7 +42,7 @@ export default {
   module: {
     ...common.module,
     rules: [
-      ...overrideWebpackRules(common.module.rules, rule => {
+      ...overrideWebpackRules(common.module.rules, (rule) => {
         // Переопределение babel-preset-env конфигурации
         if (rule.loader === 'awesome-typescript-loader') {
           return {
@@ -58,6 +58,7 @@ export default {
                       modules: false,
                       corejs: 3,
                       targets: {
+                        // eslint-disable-next-line security/detect-unsafe-regex
                         node: pkg.engines.node.match(/(\d+\.?)+/)[0],
                       },
                       forceAllTransforms: isProduction,

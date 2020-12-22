@@ -39,11 +39,11 @@ export const commonStylesLoaders = [
 export default {
   context: appPaths.root,
 
-  mode: isProduction ?  'production' : 'development',
+  mode: isProduction ? 'production' : 'development',
 
   output: {
     publicPath: STATIC_PATH,
-    devtoolModuleFilenameTemplate: info =>
+    devtoolModuleFilenameTemplate: (info) =>
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
   },
 
@@ -163,7 +163,7 @@ export default {
               ),
               loader: 'null-loader',
             },
-        ]
+          ]
         : []),
     ],
   },
@@ -184,7 +184,7 @@ export default {
     timings: true,
     version: isVerbose,
     // Скрываем ворнинги для mini-css-extract-plugin warnings о конфликтах в порядке стилей
-    warningsFilter: warning =>
+    warningsFilter: (warning) =>
       /Conflicting order. Following module has been added/gm.test(warning),
     // Скрываем логи дочерних плагинов
     children: false,
