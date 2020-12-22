@@ -6,7 +6,7 @@ import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import common, {
-  isDebug,
+  isProduction,
   isAnalyze,
   reStyle,
   commonStylesLoaders,
@@ -30,10 +30,10 @@ export default {
   output: {
     ...common.output,
     path: `${appPaths.root}/build/public/assets`,
-    filename: isDebug ? '[name].js' : '[name].[chunkhash:8].js',
-    chunkFilename: isDebug
-      ? '[name].chunk.js'
-      : '[name].[chunkhash:8].chunk.js',
+    filename: !isProduction ? '[name].[chunkhash:8].js' : '[name].js',
+    chunkFilename: !isProduction
+      ? '[name].[chunkhash:8].chunk.js'
+      : '[name].chunk.js',
   },
 
   // Webpack мутирует resolve объект, клонируем чтобы избежать этого
@@ -63,7 +63,7 @@ export default {
                       targets: {
                         browsers: pkg.browserslist,
                       },
-                      forceAllTransforms: !isDebug,
+                      forceAllTransforms: isProduction,
                       useBuiltIns: 'entry',
                     },
                   ],
@@ -81,23 +81,23 @@ export default {
       {
         test: reStyle,
         rules: [
-          ...(isDebug
-            ? [
+          ...(isProduction
+            ? []
+            : [
                 {
                   loader: 'css-hot-loader',
                   options: { cssModule: true, reloadAll: true },
                 },
-              ]
-            : []),
+            ]),
           { use: MiniCssExtractPlugin.loader },
           {
             include: [appPaths.src],
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: isDebug
-                  ? '[path]-[local]-[hash:base64:5]'
-                  : '[hash:base64:5]',
+                localIdentName: isProduction
+                  ? '[hash:base64:5]'
+                  : '[path]-[local]-[hash:base64:5]',
               },
               importLoaders: 2,
               sourceMap: true,
@@ -110,7 +110,7 @@ export default {
   },
 
   // devtool
-  ...(isDebug ? { devtool: 'inline-cheap-module-source-map' } : {}),
+  ...(isProduction ? {} : { devtool: 'inline-cheap-module-source-map' }),
 
   plugins: [
     ...common.plugins,
@@ -154,21 +154,21 @@ export default {
           fs.writeFileSync(chunkFileName, JSON.stringify(chunkFiles, null, 2));
         } catch (err) {
           console.error(`ERROR: Cannot write ${chunkFileName}: `, err);
-          if (!isDebug) process.exit(1);
+          if (isProduction) process.exit(1);
         }
       },
     }),
 
     new MiniCssExtractPlugin({
-      filename: isDebug ? '[name].css' : '[name].[contenthash:8].css',
-      chunkFilename: isDebug
-        ? '[name].chunk.css'
-        : '[name].[contenthash:8].chunk.css',
+      filename: isProduction ? '[name].[contenthash:8].css' : '[name].css',
+      chunkFilename: isProduction
+        ? '[name].[contenthash:8].chunk.css'
+        : '[name].chunk.css',
     }),
 
     // Webpack Bundle Analyzer
     // https://github.com/th0r/webpack-bundle-analyzer
-    ...(!isDebug && isAnalyze ? [new BundleAnalyzerPlugin()] : []),
+    ...(isProduction && isAnalyze ? [new BundleAnalyzerPlugin()] : []),
   ],
 
   optimization: {

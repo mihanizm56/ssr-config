@@ -5,7 +5,7 @@ const { appPaths } = require('../utils/paths');
 const pkg = require(appPaths.packageJson);
 
 module.exports = () => {
-  const isDebug = !process.argv.includes('--release');
+  const isProduction = process.argv.includes('--release');
 
   return {
     // The list of plugins for PostCSS
@@ -59,9 +59,8 @@ module.exports = () => {
         flexbox: 'no-2009',
         overrideBrowserslist: pkg.browserslist,
       }),
-      ...(isDebug
-        ? []
-        : [
+      ...(isProduction
+        ? [
             // CSS Nano
             require('cssnano')({
               preset: [
@@ -73,7 +72,8 @@ module.exports = () => {
                 },
               ],
             }),
-          ]),
+        ]
+        : []),
     ],
   };
 };

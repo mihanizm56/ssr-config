@@ -12,7 +12,7 @@ import run, { format } from './run';
 import clean from './clean';
 import { appPaths, packagePaths } from '../utils/paths';
 
-const isDebug = !process.argv.includes('--release');
+const isProduction = process.argv.includes('--release');
 
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {
@@ -221,7 +221,7 @@ const start = async () => {
         server: true,
         middleware: [server],
         open: !process.argv.includes('--silent'),
-        ...(isDebug ? {} : { notify: false, ui: false }),
+        ...(isProduction ? {notify: false, ui: false} : {}),
       },
       (error, bs) => (error ? reject(error) : resolve(bs)),
     ),

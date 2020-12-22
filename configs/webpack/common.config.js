@@ -8,16 +8,15 @@ export const resolvePath = (...args) => path.resolve(appPaths.root, ...args);
 
 const STATIC_PATH = '/static/assets/';
 
-export const isDebug = !process.argv.includes('--release');
+export const isProduction = process.argv.includes('--release');
 export const isVerbose = process.argv.includes('--verbose');
-export const isAnalyze =
-  process.argv.includes('--analyze') || process.argv.includes('--analyse');
+export const isAnalyze = process.argv.includes('--analyse');
 
 export const reJavaScript = /\.(js)$/;
 export const reTypeScript = /\.(ts|tsx)$/;
 export const reStyle = /\.(css|scss|sass)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
-const staticAssetName = isDebug
+const staticAssetName = !isProduction
   ? '[path][name].[ext]?[hash:8]'
   : '[hash:8].[ext]';
 
@@ -40,7 +39,7 @@ export const commonStylesLoaders = [
 export default {
   context: appPaths.root,
 
-  mode: isDebug ? 'development' : 'production',
+  mode: isProduction ?  'production' : 'development',
 
   output: {
     publicPath: STATIC_PATH,
@@ -80,13 +79,13 @@ export default {
               '@babel/plugin-syntax-dynamic-import',
               '@babel/plugin-transform-exponentiation-operator',
               // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-              ...(isDebug
-                ? []
-                : ['@babel/plugin-transform-react-constant-elements']),
+              ...(isProduction
+                ? ['@babel/plugin-transform-react-constant-elements']
+                : []),
               // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-inline-elements
-              ...(isDebug
-                ? []
-                : ['@babel/plugin-transform-react-inline-elements']),
+              ...(isProduction
+                ? ['@babel/plugin-transform-react-inline-elements']
+                : []),
             ],
           },
           babelCore: '@babel/core',
@@ -156,22 +155,22 @@ export default {
       },
 
       // Исключение dev модулей при production сборке
-      ...(isDebug
-        ? []
-        : [
+      ...(isProduction
+        ? [
             {
               test: resolvePath(
                 'node_modules/react-deep-force-update/lib/index.js',
               ),
               loader: 'null-loader',
             },
-          ]),
+        ]
+        : []),
     ],
   },
 
-  bail: !isDebug,
+  bail: isProduction,
 
-  cache: isDebug,
+  cache: !isProduction,
 
   stats: {
     cached: isVerbose,
@@ -181,7 +180,7 @@ export default {
     colors: true,
     hash: isVerbose,
     modules: isVerbose,
-    reasons: isDebug,
+    reasons: !isProduction,
     timings: true,
     version: isVerbose,
     // Скрываем ворнинги для mini-css-extract-plugin warnings о конфликтах в порядке стилей
@@ -193,11 +192,8 @@ export default {
 
   plugins: [
     new webpack.DefinePlugin({
-      __DEV__: isDebug,
+      __DEV__: !isProduction,
       __TEST__: false,
     }),
-
-    // Игнорирование лишних локалей moment.js
-    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /ru|en-gb/),
   ],
 };

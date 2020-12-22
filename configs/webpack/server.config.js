@@ -3,7 +3,7 @@
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import common, {
-  isDebug,
+  isProduction,
   resolvePath,
   reStyle,
   reImage,
@@ -60,7 +60,7 @@ export default {
                       targets: {
                         node: pkg.engines.node.match(/(\d+\.?)+/)[0],
                       },
-                      forceAllTransforms: !isDebug,
+                      forceAllTransforms: isProduction,
                       useBuiltIns: false,
                     },
                   ],
@@ -99,9 +99,9 @@ export default {
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: isDebug
-                  ? '[path]-[local]-[hash:base64:5]'
-                  : '[hash:base64:5]',
+                localIdentName: isProduction
+                  ? '[hash:base64:5]'
+                  : '[path]-[local]-[hash:base64:5]',
               },
               onlyLocals: true,
               importLoaders: 2,
@@ -122,7 +122,7 @@ export default {
   ],
 
   // devtool
-  ...(isDebug ? { devtool: 'inline-cheap-module-source-map' } : {}),
+  ...(isProduction ? {} : { devtool: 'inline-cheap-module-source-map' }),
 
   plugins: [
     ...common.plugins,
@@ -135,15 +135,15 @@ export default {
 
     // Добавляем "баннер" для каждого собранного чанка
     // https://webpack.js.org/plugins/banner-plugin/
-    ...(isDebug
-      ? []
-      : [
+    ...(isProduction
+      ? [
           new webpack.BannerPlugin({
             banner: 'require("source-map-support").install();',
             raw: true,
             entryOnly: false,
           }),
-        ]),
+        ]
+      : []),
   ],
 
   node: {
