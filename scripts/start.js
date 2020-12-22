@@ -7,6 +7,7 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
+import CompressionPlugin from 'compression-webpack-plugin';
 import webpackConfig from '../configs/webpack';
 import run, { format } from './run';
 import clean from './clean';
