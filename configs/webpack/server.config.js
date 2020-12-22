@@ -104,7 +104,7 @@ export default {
                   ? '[hash:base64:5]'
                   : '[path]-[local]-[hash:base64:5]',
               },
-              // onlyLocals: true, // TODO FIX
+              onlyLocals: true,
               importLoaders: 2,
             },
           },
