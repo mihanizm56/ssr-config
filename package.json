@@ -8,8 +8,6 @@
     "node": ">=12.13.0"
   },
   "dependencies": {
-    "@babel/runtime": "7.9.6",
-    "express": "4.17.1",
     "@babel/core": "7.9.6",
     "@babel/node": "7.8.7",
     "@babel/plugin-proposal-class-properties": "7.8.3",
@@ -22,15 +20,18 @@
     "@babel/plugin-transform-runtime": "7.9.6",
     "@babel/preset-env": "7.9.6",
     "@babel/register": "7.9.0",
+    "@babel/runtime": "7.9.6",
     "autoprefixer": "9.8.0",
     "awesome-typescript-loader": "5.2.1",
     "babel-loader": "8.1.0",
     "browser-sync": "2.26.7",
     "chokidar": "3.4.0",
+    "compression-webpack-plugin": "7.1.0",
     "css-hot-loader": "1.4.4",
     "css-loader": "3.5.3",
     "cssnano": "4.1.10",
     "empty": "0.10.1",
+    "express": "4.17.1",
     "file-loader": "6.0.0",
     "glob": "7.1.6",
     "mini-css-extract-plugin": "0.9.0",
@@ -61,6 +62,7 @@
     "react-error-overlay": "6.0.7",
     "rimraf": "3.0.2",
     "sass-loader": "8.0.2",
+    "source-map-support": "0.5.19",
     "svg-url-loader": "6.0.0",
     "url-loader": "4.1.0",
     "webpack": "4.43.0",
@@ -68,8 +70,7 @@
     "webpack-bundle-analyzer": "3.8.0",
     "webpack-dev-middleware": "3.7.2",
     "webpack-hot-middleware": "2.25.0",
-    "webpack-node-externals": "1.6.0",
-    "source-map-support": "0.5.19"
+    "webpack-node-externals": "1.6.0"
   },
   "scripts": {
     "build": "babel-node scripts/run build --config-file ./configs/babel-node.config.js --release",
