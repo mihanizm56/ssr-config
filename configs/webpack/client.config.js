@@ -172,11 +172,6 @@ export default {
     ...(isProduction && isAnalyze ? [new BundleAnalyzerPlugin()] : []),
     ...(isProduction ? [
           new CompressionPlugin({
-              filename: '[path].gz[query]',
-              algorithm: 'gzip',
-              test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
-          }),
-          new CompressionPlugin({
             filename: '[path].br[query]',
             algorithm: 'brotliCompress',
             test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
