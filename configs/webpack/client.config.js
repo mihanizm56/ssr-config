@@ -5,6 +5,7 @@ import webpack from 'webpack';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import CompressionPlugin from 'compression-webpack-plugin';
 import common, {
   isProduction,
   isAnalyze,
@@ -169,7 +170,6 @@ export default {
     // Webpack Bundle Analyzer
     // https://github.com/th0r/webpack-bundle-analyzer
     ...(isProduction && isAnalyze ? [new BundleAnalyzerPlugin()] : []),
-
     ...(isProduction ? [
           new CompressionPlugin({
               filename: '[path].gz[query]',
