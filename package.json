@@ -26,7 +26,7 @@
     "babel-loader": "8.1.0",
     "browser-sync": "2.26.7",
     "chokidar": "3.4.0",
-    "compression-webpack-plugin": "7.1.0",
+    "compression-webpack-plugin": "4.0.0",
     "css-hot-loader": "1.4.4",
     "css-loader": "3.5.3",
     "cssnano": "4.1.10",
