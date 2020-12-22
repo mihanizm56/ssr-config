@@ -8,7 +8,7 @@ export const resolvePath = (...args) => path.resolve(appPaths.root, ...args);
 
 const STATIC_PATH = '/static/assets/';
 
-export const isProduction = process.argv.includes('--release');
+export const isProduction = !process.argv.includes('--develop');
 export const isVerbose = process.argv.includes('--verbose');
 export const isAnalyze = process.argv.includes('--analyse');
 

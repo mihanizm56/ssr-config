@@ -73,8 +73,8 @@
     "webpack-node-externals": "1.6.0"
   },
   "scripts": {
-    "build": "babel-node scripts/run build --config-file ./configs/babel-node.config.js --release",
-    "build:analyse": "babel-node scripts/run build --config-file ./configs/babel-node.config.js --release --analyse",
+    "build": "babel-node scripts/run build --config-file ./configs/babel-node.config.js",
+    "build:analyse": "babel-node scripts/run build --config-file ./configs/babel-node.config.js --analyse",
     "start": "babel-node scripts/run start --config-file ./configs/babel-node.config.js --silent --inspect"
   }
 }

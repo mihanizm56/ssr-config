@@ -5,7 +5,7 @@ const { appPaths } = require('../utils/paths');
 const pkg = require(appPaths.packageJson);
 
 module.exports = () => {
-  const isProduction = process.argv.includes('--release');
+  const isProduction = !process.argv.includes('--develop');
 
   return {
     // The list of plugins for PostCSS

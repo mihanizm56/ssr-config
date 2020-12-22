@@ -31,9 +31,9 @@ export default {
   output: {
     ...common.output,
     path: `${appPaths.root}/build/public/assets`,
-    filename: !isProduction ? '[name].[chunkhash:8].js' : '[name].js',
-    chunkFilename: !isProduction
-      ? '[name].[chunkhash:8].chunk.js'
+    filename: isProduction ? '[name].[chunkhash:16].js' : '[name].js',
+    chunkFilename: isProduction
+      ? '[name].[chunkhash:16].chunk.js'
       : '[name].chunk.js',
   },
 
@@ -163,7 +163,7 @@ export default {
     new MiniCssExtractPlugin({
       filename: isProduction ? '[name].[contenthash:8].css' : '[name].css',
       chunkFilename: isProduction
-        ? '[name].[contenthash:8].chunk.css'
+        ? '[name].[contenthash:16].chunk.css'
         : '[name].chunk.css',
     }),
 

@@ -12,7 +12,7 @@ import run, { format } from './run';
 import clean from './clean';
 import { appPaths, packagePaths } from '../utils/paths';
 
-const isProduction = process.argv.includes('--release');
+const isProduction = !process.argv.includes('--develop');
 
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {
