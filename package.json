@@ -10,7 +10,7 @@
   "scripts": {
     "build": "babel-node scripts/run build --config-file ./configs/babel-node.config.js",
     "build:analyse": "babel-node scripts/run build --config-file ./configs/babel-node.config.js --analyse",
-    "start": "babel-node scripts/run start --config-file ./configs/babel-node.config.js --silent --inspect",
+    "start": "babel-node scripts/run start --config-file ./configs/babel-node.config.js --silent --inspect --develop",
     "lint": "npx eslint ./ --ext .js --fix",
     "commit": "git add . && git commit --no-edit",
     "release": "npm run commit && git push && npm publish --access=public",

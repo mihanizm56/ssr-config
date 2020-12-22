@@ -11,8 +11,6 @@ import { appPaths, packagePaths } from '../utils/paths';
 import run, { format } from './run';
 import clean from './clean';
 
-const isProduction = !process.argv.includes('--develop');
-
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {
   // poll: true,
@@ -215,7 +213,8 @@ const start = async () => {
         server: true,
         middleware: [server],
         open: !process.argv.includes('--silent'),
-        ...(isProduction ? { notify: false, ui: false } : {}),
+        notify: false,
+        ui: false,
       },
       (error, bs) => (error ? reject(error) : resolve(bs)),
     ),
