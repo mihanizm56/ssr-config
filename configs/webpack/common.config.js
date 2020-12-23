@@ -2,6 +2,7 @@
 
 import path from 'path';
 import webpack from 'webpack';
+import ActionsLoaderConfig from '@mihanizm56/webpack-magic-redux-modules/lib/loader-config';
 import { appPaths, packagePaths } from '../../utils/paths';
 
 export const resolvePath = (...args) => path.resolve(appPaths.root, ...args);
@@ -165,6 +166,8 @@ export default {
             },
           ]
         : []),
+
+      ActionsLoaderConfig(),
     ],
   },
 
