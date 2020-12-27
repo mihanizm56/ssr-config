@@ -115,6 +115,7 @@ export default {
   },
 
   externals: [
+    'node-fetch',
     './chunk-manifest.json',
     './asset-manifest.json',
     nodeExternals({
