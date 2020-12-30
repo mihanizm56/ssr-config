@@ -15,7 +15,7 @@ export const isAnalyze = process.argv.includes('--analyse');
 
 export const reJavaScript = /\.(js)$/;
 export const reTypeScript = /\.(ts|tsx)$/;
-export const reStyle = /\.(css|scss|sass)$/;
+export const reStyle = /(\.module)?\.(css|scss|sass)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
 const staticAssetName = !isProduction
   ? '[path][name].[ext]?[hash:8]'
