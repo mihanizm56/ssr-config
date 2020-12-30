@@ -14,7 +14,7 @@ export const appPaths = {
   build: resolveApp('build'),
   public: resolveApp('public'),
   nodeModules: resolveApp('node_modules'),
-  envDefaults: resolveApp('.env.defaults'),
+  envDefaults: resolveApp('.env'),
   packageJson: resolveApp('package.json'),
   packageLockJson: resolveApp('package-lock.json'),
   tsConfig: resolveApp('tsconfig.json'),
