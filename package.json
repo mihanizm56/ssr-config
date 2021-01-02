@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "bin": "./bin/ssr-scripts.js",
   "engines": {
     "node": ">=12.13.0"
@@ -117,6 +117,7 @@
     "scripts",
     "utils",
     "package.json",
-    "node_modules"
+    "node_modules",
+    "package-lock.json"
   ]
 }
