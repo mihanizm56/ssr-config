@@ -25,7 +25,7 @@ export default {
   target: 'web',
 
   entry: {
-    client: './src/client.tsx',
+    client: './src/client/index.tsx',
   },
 
   output: {
