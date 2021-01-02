@@ -1,7 +1,9 @@
 {
   "name": "@mihanizm56/ssr-scripts",
   "version": "0.0.3",
-  "bin": "./bin/ssr-scripts.js",
+  "bin": {
+    "ssr-scripts": "./bin/ssr-scripts.js"
+  },
   "engines": {
     "node": ">=12.13.0"
   },
@@ -86,7 +88,7 @@
     "cz-customizable": "6.2.0",
     "@wildberries/eslint-config-standart": "1.0.1",
     "husky": "3.0.9",
-    "typescript": "3.8.3"
+    "typescript": "3.9.3"
   },
   "eslintConfig": {
     "extends": [
@@ -117,7 +119,6 @@
     "scripts",
     "utils",
     "package.json",
-    "node_modules",
-    "package-lock.json"
+    "node_modules"
   ]
 }
