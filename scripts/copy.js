@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 // import chokidar from 'chokidar';
-import { writeFile, copyFile, makeDir, copyDir } from '../utils/fs';
+import { writeFile, makeDir, copyDir } from '../utils/fs';
 import { appPaths } from '../utils/paths';
 // import { format } from './run';
 
@@ -25,7 +25,7 @@ const copy = async () => {
         2,
       ),
     ),
-    copyFile(appPaths.envDefaults, `${appPaths.root}/build/.env`),
+    // copyFile(appPaths.envDefaults, `${appPaths.root}/build/.env`),
     copyDir(appPaths.public, `${appPaths.root}/build/public`),
   ]);
 
