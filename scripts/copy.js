@@ -25,7 +25,6 @@ const copy = async () => {
         2,
       ),
     ),
-    // copyFile(appPaths.envDefaults, `${appPaths.root}/build/.env`),
     copyDir(appPaths.public, `${appPaths.root}/build/public`),
   ]);
 
