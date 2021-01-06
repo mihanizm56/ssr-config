@@ -215,6 +215,7 @@ const start = async () => {
         open: !process.argv.includes('--silent'),
         notify: false,
         ui: false,
+        port: process.env.PORT || 3000,
       },
       (error, bs) => (error ? reject(error) : resolve(bs)),
     ),
