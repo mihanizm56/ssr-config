@@ -180,11 +180,11 @@ export default {
               level: 11,
             },
           }),
-          new CompressionPlugin({
-            filename: '[path].gz[query]',
-            algorithm: 'gzip',
-            test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
-          }),
+          // new CompressionPlugin({
+          //   filename: '[path].gz[query]',
+          //   algorithm: 'gzip',
+          //   test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
+          // }),
         ]
       : []),
   ],
