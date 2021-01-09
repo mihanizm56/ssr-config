@@ -72,7 +72,7 @@ export default {
         loader: 'awesome-typescript-loader',
         options: {
           reportFiles: [`${appPaths.src}/**/*.{ts,tsx}`],
-          useCache: !isProduction,
+          useCache: true,
           useBabel: true,
           babelOptions: {
             // https://babeljs.io/docs/usage/options/

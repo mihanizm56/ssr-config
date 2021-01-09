@@ -1,6 +1,12 @@
 +1) styles shared
 +2) replace -- to NODE_ENV
-+3) cache-loader+styles
+---3) cache-loader+styles
 4) styles splitting (css modules,sass-modules,sass,css)
 5) optimizations
 +6) compression
+
+
+
+
+7) awts => babel
+8) add cache-loader and thread-loader
