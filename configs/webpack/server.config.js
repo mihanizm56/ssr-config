@@ -94,7 +94,6 @@ export default {
         test: reStyle,
         rules: [
           {
-            include: appPaths.src,
             exclude: resolvePath('node_modules'),
             loader: 'css-loader',
             options: {

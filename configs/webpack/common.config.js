@@ -80,14 +80,9 @@ export default {
               '@babel/plugin-syntax-dynamic-import',
               '@babel/plugin-transform-exponentiation-operator',
               // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-              ...(isProduction
-                ? ['@babel/plugin-transform-react-constant-elements']
-                : []),
-              // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-inline-elements
-              ...(isProduction
-                ? ['@babel/plugin-transform-react-inline-elements']
-                : []),
-            ],
+              isProduction && '@babel/plugin-transform-react-constant-elements',
+              isProduction && '@babel/plugin-transform-react-inline-elements',
+            ].filter(Boolean),
           },
           babelCore: '@babel/core',
         },

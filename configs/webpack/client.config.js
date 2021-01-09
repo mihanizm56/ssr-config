@@ -107,6 +107,10 @@ export default {
               },
             },
           },
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: true },
+          },
         ],
       },
     ],
