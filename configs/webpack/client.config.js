@@ -7,10 +7,13 @@ import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
+import SpeedMeasurePlugin from 'speed-measure-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import { resolvePath } from '../../utils/resolve-path';
 import common, { getIsProduction, isAnalyze, reStyle } from './common.config';
+
+const smp = new SpeedMeasurePlugin();
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);
@@ -41,7 +44,7 @@ const getCacheAndThreadLoaderConfig = () =>
         },
       };
 
-export default {
+export default smp.wrap({
   ...common,
   name: 'client',
   target: 'web',
@@ -241,4 +244,4 @@ export default {
     net: 'empty',
     tls: 'empty',
   },
-};
+});
