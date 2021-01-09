@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.1.0-beta.21",
+  "version": "0.1.0-beta.22",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -85,13 +85,13 @@
     "webpack-bundle-analyzer": "3.8.0",
     "webpack-dev-middleware": "3.7.2",
     "webpack-hot-middleware": "2.25.0",
-    "webpack-node-externals": "1.6.0"
+    "webpack-node-externals": "1.6.0",
+    "@wildberries/eslint-config-standart": "1.0.1"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",
     "commitizen": "4.2.1",
     "cz-customizable": "6.2.0",
-    "@wildberries/eslint-config-standart": "1.0.1",
     "husky": "3.0.9",
     "typescript": "3.9.3"
   },
