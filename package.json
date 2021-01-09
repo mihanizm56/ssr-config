@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.1.0-beta.4",
+  "version": "0.1.0-beta.5",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -8,16 +8,15 @@
     "node": ">=12.13.0"
   },
   "scripts": {
-    "build": "babel-node scripts/run build --config-file ./configs/babel-node.config.js",
-    "build:analyse": "babel-node scripts/run build --config-file ./configs/babel-node.config.js --analyse",
-    "start": "babel-node scripts/run start --config-file ./configs/babel-node.config.js --silent --inspect --develop",
+    "build": "cross-env NODE_ENV=production babel-node scripts/run build --config-file ./configs/babel-node.config.js",
+    "build:analyse": "cross-env ANALYZE=true babel-node scripts/run build --config-file ./configs/babel-node.config.js",
+    "start": "cross-env NODE_ENV=development babel-node scripts/run start --config-file ./configs/babel-node.config.js",
     "lint": "npx eslint ./ --ext .js --fix",
     "commit": "git add . && git commit --no-edit",
     "release": "npm run commit && git push && npm publish --access=public",
     "beta": "npm run commit && git push && npm publish --tag beta --access=public"
   },
   "dependencies": {
-    "@mihanizm56/webpack-magic-redux-modules": "0.0.6",
     "@babel/core": "7.9.6",
     "@babel/node": "7.8.7",
     "@babel/plugin-proposal-class-properties": "7.8.3",
@@ -31,13 +30,14 @@
     "@babel/preset-env": "7.9.6",
     "@babel/register": "7.9.0",
     "@babel/runtime": "7.9.6",
+    "@mihanizm56/webpack-magic-redux-modules": "0.0.6",
     "autoprefixer": "9.8.0",
     "awesome-typescript-loader": "5.2.1",
     "babel-loader": "8.1.0",
     "browser-sync": "2.26.7",
     "chokidar": "3.4.0",
     "compression-webpack-plugin": "4.0.0",
-    "mini-css-extract-plugin": "0.9.0",
+    "cross-env": "7.0.3",
     "css-hot-loader": "1.4.4",
     "css-loader": "3.4.2",
     "cssnano": "4.1.10",
@@ -45,6 +45,7 @@
     "express": "4.17.1",
     "file-loader": "6.0.0",
     "glob": "7.1.6",
+    "mini-css-extract-plugin": "0.9.0",
     "mkdirp": "1.0.4",
     "node-sass": "4.13.1",
     "null-loader": "4.0.0",

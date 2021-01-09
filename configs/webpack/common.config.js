@@ -9,31 +9,14 @@ export const resolvePath = (...args) => path.resolve(appPaths.root, ...args);
 
 const STATIC_PATH = '/static/assets/';
 
-export const isProduction = !process.argv.includes('--develop');
-export const isVerbose = process.argv.includes('--verbose');
-export const isAnalyze = process.argv.includes('--analyse');
+export const isProduction = process.env.NODE_ENV === 'production';
+export const isAnalyze = process.env.ANALYZE === 'true';
 
 export const reJavaScript = /\.(js)$/;
 export const reTypeScript = /\.(ts|tsx)$/;
 export const reStyle = /(\.module)?\.(css|scss|sass)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
 const staticAssetName = '[name].[hash:8].[ext]';
-
-// export const commonStylesLoaders = [
-//   {
-//     loader: 'postcss-loader',
-//     options: {
-//       sourceMap: true,
-//       config: {
-//         path: `${packagePaths.configs}/postcss.config.js`,
-//       },
-//     },
-//   },
-//   {
-//     loader: 'sass-loader',
-//     options: { sourceMap: true },
-//   },
-// ];
 
 export default {
   context: appPaths.root,
@@ -167,16 +150,9 @@ export default {
   cache: !isProduction,
 
   stats: {
-    cached: isVerbose,
-    cachedAssets: isVerbose,
-    chunks: isVerbose,
-    chunkModules: isVerbose,
     colors: true,
-    hash: isVerbose,
-    modules: isVerbose,
-    reasons: !isProduction,
+    // reasons: !isProduction,
     timings: true,
-    version: isVerbose,
     // Скрываем ворнинги для mini-css-extract-plugin warnings о конфликтах в порядке стилей
     warningsFilter: (warning) =>
       /Conflicting order. Following module has been added/gm.test(warning),

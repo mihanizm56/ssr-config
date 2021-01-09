@@ -18,6 +18,9 @@ const watchOptions = {
   aggregateTimeout: 1000,
 };
 
+const openBrowser = process.env.BROWSER !== 'none';
+const PORT = process.env.PORT || 3000;
+
 const createCompilationPromise = (name, compiler, config) => {
   return new Promise((resolve, reject) => {
     let timeStart = new Date();
@@ -212,10 +215,10 @@ const start = async () => {
         // https://www.browsersync.io/docs/options
         server: true,
         middleware: [server],
-        open: !process.argv.includes('--silent'),
+        open: openBrowser,
         notify: false,
         ui: false,
-        port: process.env.PORT || 3000,
+        port: PORT,
       },
       (error, bs) => (error ? reject(error) : resolve(bs)),
     ),
