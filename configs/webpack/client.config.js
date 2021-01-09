@@ -7,13 +7,10 @@ import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
-import SpeedMeasurePlugin from 'speed-measure-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import { resolvePath } from '../../utils/resolve-path';
 import common, { getIsProduction, isAnalyze, reStyle } from './common.config';
-
-const smp = new SpeedMeasurePlugin();
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);
@@ -44,7 +41,7 @@ const getCacheAndThreadLoaderConfig = () =>
         },
       };
 
-export default smp.wrap({
+export default {
   ...common,
   name: 'client',
   target: 'web',
@@ -112,7 +109,7 @@ export default smp.wrap({
           //         options: { cssModule: true, reloadAll: true },
           //       },
           //     ]),
-          getCacheAndThreadLoaderConfig(),
+          !isProduction && { loader: 'cache-loader' },
           { use: MiniCssExtractPlugin.loader },
           {
             exclude: resolvePath('node_modules'),
@@ -244,4 +241,4 @@ export default smp.wrap({
     net: 'empty',
     tls: 'empty',
   },
-});
+};

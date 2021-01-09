@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.1.0-beta.12",
+  "version": "0.1.0-beta.13",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -76,7 +76,6 @@
     "rimraf": "3.0.2",
     "sass-loader": "8.0.2",
     "source-map-support": "0.5.19",
-    "speed-measure-webpack-plugin": "1.3.3",
     "svg-url-loader": "6.0.0",
     "thread-loader": "3.0.1",
     "url-loader": "4.1.0",
