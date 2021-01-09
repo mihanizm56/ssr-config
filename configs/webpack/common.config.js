@@ -3,7 +3,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import ActionsLoaderConfig from '@mihanizm56/webpack-magic-redux-modules/lib/loader-config';
-import { appPaths, packagePaths } from '../../utils/paths';
+import { appPaths } from '../../utils/paths';
 
 export const resolvePath = (...args) => path.resolve(appPaths.root, ...args);
 
@@ -17,30 +17,30 @@ export const reJavaScript = /\.(js)$/;
 export const reTypeScript = /\.(ts|tsx)$/;
 export const reStyle = /(\.module)?\.(css|scss|sass)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
-const staticAssetName = !isProduction
-  ? '[path][name].[ext]?[hash:8]'
-  : '[hash:8].[ext]';
+const staticAssetName = '[name].[hash:8].[ext]';
 
-export const commonStylesLoaders = [
-  {
-    loader: 'postcss-loader',
-    options: {
-      sourceMap: true,
-      config: {
-        path: `${packagePaths.configs}/postcss.config.js`,
-      },
-    },
-  },
-  {
-    loader: 'sass-loader',
-    options: { sourceMap: true },
-  },
-];
+// export const commonStylesLoaders = [
+//   {
+//     loader: 'postcss-loader',
+//     options: {
+//       sourceMap: true,
+//       config: {
+//         path: `${packagePaths.configs}/postcss.config.js`,
+//       },
+//     },
+//   },
+//   {
+//     loader: 'sass-loader',
+//     options: { sourceMap: true },
+//   },
+// ];
 
 export default {
   context: appPaths.root,
 
   mode: isProduction ? 'production' : 'development',
+
+  devtool: isProduction ? false : 'inline-cheap-module-source-map',
 
   output: {
     publicPath: STATIC_PATH,
@@ -148,6 +148,8 @@ export default {
           /\.txt$/,
           /\.md$/,
           /\.ejs$/,
+          /\.woff2/,
+          /\.woff/,
         ],
         loader: 'file-loader',
         options: {
@@ -156,19 +158,13 @@ export default {
       },
 
       // Исключение dev модулей при production сборке
-      ...(isProduction
-        ? [
-            {
-              test: resolvePath(
-                'node_modules/react-deep-force-update/lib/index.js',
-              ),
-              loader: 'null-loader',
-            },
-          ]
-        : []),
+      isProduction && {
+        test: resolvePath('node_modules/react-deep-force-update/lib/index.js'),
+        loader: 'null-loader',
+      },
 
       ActionsLoaderConfig(),
-    ],
+    ].filter(Boolean),
   },
 
   bail: isProduction,

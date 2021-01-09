@@ -6,13 +6,13 @@ import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
-import { appPaths } from '../../utils/paths';
+import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
   isProduction,
   isAnalyze,
   reStyle,
-  commonStylesLoaders,
+  resolvePath,
 } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
@@ -20,14 +20,11 @@ const pkg = require(appPaths.packageJson);
 
 export default {
   ...common,
-
   name: 'client',
   target: 'web',
-
   entry: {
     client: './src/client/index.tsx',
   },
-
   output: {
     ...common.output,
     path: `${appPaths.root}/build/public/assets`,
@@ -36,7 +33,6 @@ export default {
       ? '[name].[chunkhash:16].chunk.js'
       : '[name].chunk.js',
   },
-
   // Webpack мутирует resolve объект, клонируем чтобы избежать этого
   // https://github.com/webpack/webpack/issues/4817
   resolve: {
@@ -82,17 +78,18 @@ export default {
       {
         test: reStyle,
         rules: [
-          ...(isProduction
-            ? []
-            : [
-                {
-                  loader: 'css-hot-loader',
-                  options: { cssModule: true, reloadAll: true },
-                },
-              ]),
+          // ...(isProduction
+          //   ? []
+          //   : [
+          //       {
+          //         loader: 'css-hot-loader',
+          //         options: { cssModule: true, reloadAll: true },
+          //       },
+          //     ]),
           { use: MiniCssExtractPlugin.loader },
           {
-            include: [appPaths.src],
+            // include: [appPaths.src],
+            exclude: resolvePath('node_modules'),
             loader: 'css-loader',
             options: {
               modules: {
@@ -101,17 +98,22 @@ export default {
                   : '[path]-[local]-[hash:base64:5]',
               },
               importLoaders: 2,
-              sourceMap: true,
+              sourceMap: !isProduction,
             },
           },
-          ...commonStylesLoaders,
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: !isProduction,
+              config: {
+                path: `${packagePaths.configs}/postcss.config.js`,
+              },
+            },
+          },
         ],
       },
     ],
   },
-
-  // devtool
-  ...(isProduction ? {} : { devtool: 'inline-cheap-module-source-map' }),
 
   plugins: [
     ...common.plugins,
@@ -169,25 +171,17 @@ export default {
 
     // Webpack Bundle Analyzer
     // https://github.com/th0r/webpack-bundle-analyzer
-    ...(isProduction && isAnalyze ? [new BundleAnalyzerPlugin()] : []),
-    ...(isProduction
-      ? [
-          new CompressionPlugin({
-            filename: '[path].br[query]',
-            algorithm: 'brotliCompress',
-            test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
-            compressionOptions: {
-              level: 11,
-            },
-          }),
-          // new CompressionPlugin({
-          //   filename: '[path].gz[query]',
-          //   algorithm: 'gzip',
-          //   test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
-          // }),
-        ]
-      : []),
-  ],
+    isProduction && isAnalyze && new BundleAnalyzerPlugin(),
+    isProduction &&
+      new CompressionPlugin({
+        filename: '[path].br[query]',
+        algorithm: 'brotliCompress',
+        test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
+        compressionOptions: {
+          level: 11,
+        },
+      }),
+  ].filter(Boolean),
 
   optimization: {
     runtimeChunk: {

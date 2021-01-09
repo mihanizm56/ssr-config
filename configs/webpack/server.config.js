@@ -2,18 +2,17 @@
 
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
-import { appPaths } from '../../utils/paths';
+import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
   isProduction,
   resolvePath,
   reStyle,
   reImage,
-  commonStylesLoaders,
 } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
-const pkg = require(appPaths.packageJson);
+const packageJson = require(appPaths.packageJson);
 
 export default {
   ...common,
@@ -59,7 +58,7 @@ export default {
                       corejs: 3,
                       targets: {
                         // eslint-disable-next-line security/detect-unsafe-regex
-                        node: pkg.engines.node.match(/(\d+\.?)+/)[0],
+                        node: packageJson.engines.node.match(/(\d+\.?)+/)[0],
                       },
                       forceAllTransforms: isProduction,
                       useBuiltIns: false,
@@ -108,7 +107,19 @@ export default {
               importLoaders: 2,
             },
           },
-          ...commonStylesLoaders,
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: !isProduction,
+              config: {
+                path: `${packagePaths.configs}/postcss.config.js`,
+              },
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: !isProduction },
+          },
         ],
       },
     ],
@@ -123,9 +134,6 @@ export default {
     }),
   ],
 
-  // devtool
-  ...(isProduction ? {} : { devtool: 'inline-cheap-module-source-map' }),
-
   plugins: [
     ...common.plugins,
 
@@ -137,16 +145,13 @@ export default {
 
     // Добавляем "баннер" для каждого собранного чанка
     // https://webpack.js.org/plugins/banner-plugin/
-    ...(isProduction
-      ? [
-          new webpack.BannerPlugin({
-            banner: 'require("source-map-support").install();',
-            raw: true,
-            entryOnly: false,
-          }),
-        ]
-      : []),
-  ],
+    isProduction &&
+      new webpack.BannerPlugin({
+        banner: 'require("source-map-support").install();',
+        raw: true,
+        entryOnly: false,
+      }),
+  ].filter(Boolean),
 
   node: {
     console: false,
