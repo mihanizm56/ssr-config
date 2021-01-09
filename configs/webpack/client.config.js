@@ -9,12 +9,8 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
-import common, {
-  isProduction,
-  isAnalyze,
-  reStyle,
-  resolvePath,
-} from './common.config';
+import { resolvePath } from '../../utils/resolve-path';
+import common, { isProduction, isAnalyze, reStyle } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);

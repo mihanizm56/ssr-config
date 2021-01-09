@@ -4,10 +4,7 @@ import path from 'path';
 import webpack from 'webpack';
 import ActionsLoaderConfig from '@mihanizm56/webpack-magic-redux-modules/lib/loader-config';
 import { appPaths } from '../../utils/paths';
-
-export const resolvePath = (...args) => path.resolve(appPaths.root, ...args);
-
-const STATIC_PATH = '/static/assets/';
+import { resolvePath } from '../../utils/resolve-path';
 
 export const isProduction = process.env.NODE_ENV === 'production';
 export const isAnalyze = process.env.ANALYZE === 'true';
@@ -17,6 +14,7 @@ export const reTypeScript = /\.(ts|tsx)$/;
 export const reStyle = /(\.module)?\.(css|scss|sass)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
 const staticAssetName = '[name].[hash:8].[ext]';
+const STATIC_PATH = '/static/assets/';
 
 export default {
   context: appPaths.root,
