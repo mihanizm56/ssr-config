@@ -115,7 +115,7 @@ export default {
             loader: 'sass-loader',
             options: { sourceMap: !isProduction },
           },
-        ],
+        ].filter(Boolean),
       },
     ],
   },
