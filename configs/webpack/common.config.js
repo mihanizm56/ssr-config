@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import path from 'path';
+import os from 'os';
 import webpack from 'webpack';
-import ActionsLoaderConfig from '@mihanizm56/webpack-magic-redux-modules/lib/loader-config';
 import { appPaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
 
@@ -16,6 +16,28 @@ export const reStyle = /(\.module)?\.(css|scss|sass)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
 const staticAssetName = '[name].[hash:8].[ext]';
 const STATIC_PATH = '/static/assets/';
+
+export const getCacheAndThreadLoaderConfig = () =>
+  !isProduction
+    ? ({ loader: 'cache-loader' },
+      {
+        loader: 'thread-loader',
+        options: {
+          workers: os.cpus().length - 1,
+          poolRespawn: false,
+          workerParallelJobs: 50,
+          poolParallelJobs: 200,
+        },
+      })
+    : {
+        loader: 'thread-loader',
+        options: {
+          workers: os.cpus().length - 1,
+          poolRespawn: false,
+          workerParallelJobs: 50,
+          poolParallelJobs: 200,
+        },
+      };
 
 export default {
   context: appPaths.root,
@@ -79,30 +101,46 @@ export default {
               // Инлайним маловесные SVGs как UTF-8 закодированные строки
               {
                 test: /\.svg$/,
-                loader: 'svg-url-loader',
-                options: {
-                  name: staticAssetName,
-                  limit: 4096, // 4kb
-                },
+
+                use: [
+                  getCacheAndThreadLoaderConfig(),
+                  {
+                    loader: 'svg-url-loader',
+                    options: {
+                      name: staticAssetName,
+                      limit: 4096, // 4kb
+                    },
+                  },
+                ],
               },
 
               // Инлайним маловесные изображения как Base64 закодированные строки
               {
-                loader: 'url-loader',
-                options: {
-                  name: staticAssetName,
-                  limit: 4096, // 4kb
-                },
+                use: [
+                  getCacheAndThreadLoaderConfig(),
+                  {
+                    loader: 'url-loader',
+                    options: {
+                      name: staticAssetName,
+                      limit: 4096, // 4kb
+                    },
+                  },
+                ],
               },
             ],
           },
 
           // Или возвращем URL на ресурс
           {
-            loader: 'file-loader',
-            options: {
-              name: staticAssetName,
-            },
+            use: [
+              getCacheAndThreadLoaderConfig(),
+              {
+                loader: 'file-loader',
+                options: {
+                  name: staticAssetName,
+                },
+              },
+            ],
           },
         ],
       },
@@ -110,7 +148,7 @@ export default {
       // Конвертирование TXT в модуль
       {
         test: /\.txt$/,
-        loader: 'raw-loader',
+        use: [getCacheAndThreadLoaderConfig(), { loader: 'raw-loader' }],
       },
 
       // Для всего основного возвращаем URL
@@ -140,7 +178,16 @@ export default {
         loader: 'null-loader',
       },
 
-      ActionsLoaderConfig(),
+      {
+        test: /\.[jt]s$/,
+        exclude: /node_modules/,
+        use: [
+          getCacheAndThreadLoaderConfig(),
+          {
+            loader: '@mihanizm56/webpack-magic-redux-modules',
+          },
+        ],
+      },
     ].filter(Boolean),
   },
 

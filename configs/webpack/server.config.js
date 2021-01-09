@@ -90,7 +90,6 @@ export default {
       {
         test: reStyle,
         rules: [
-          !isProduction && { loader: 'cache-loader' },
           {
             exclude: resolvePath('node_modules'),
             loader: 'css-loader',

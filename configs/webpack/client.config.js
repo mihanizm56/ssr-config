@@ -19,28 +19,6 @@ const isProduction = getIsProduction();
 const brotliEnabled = process.env.BROTLI_ASSETS !== 'false';
 const gzipEnabled = process.env.GZIP_ASSETS !== 'false';
 
-const getCacheAndThreadLoaderConfig = () =>
-  !isProduction
-    ? ({ loader: 'cache-loader' },
-      {
-        loader: 'thread-loader',
-        options: {
-          workers: os.cpus().length - 1,
-          poolRespawn: false,
-          workerParallelJobs: 50,
-          poolParallelJobs: 200,
-        },
-      })
-    : {
-        loader: 'thread-loader',
-        options: {
-          workers: os.cpus().length - 1,
-          poolRespawn: false,
-          workerParallelJobs: 50,
-          poolParallelJobs: 200,
-        },
-      };
-
 export default {
   ...common,
   name: 'client',
@@ -105,7 +83,6 @@ export default {
             loader: 'css-hot-loader',
             options: { cssModule: true, reloadAll: true },
           },
-          !isProduction && { loader: 'cache-loader' },
           { use: MiniCssExtractPlugin.loader },
           {
             exclude: resolvePath('node_modules'),
