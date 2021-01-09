@@ -101,14 +101,10 @@ export default {
       {
         test: reStyle,
         rules: [
-          // ...(isProduction
-          //   ? []
-          //   : [
-          //       {
-          //         loader: 'css-hot-loader',
-          //         options: { cssModule: true, reloadAll: true },
-          //       },
-          //     ]),
+          !isProduction && {
+            loader: 'css-hot-loader',
+            options: { cssModule: true, reloadAll: true },
+          },
           !isProduction && { loader: 'cache-loader' },
           { use: MiniCssExtractPlugin.loader },
           {
