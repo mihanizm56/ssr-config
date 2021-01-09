@@ -12,6 +12,7 @@ import common, {
   reSassRegex,
   reSassModuleRegex,
   reImage,
+  reAllStyles,
 } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
@@ -204,13 +205,7 @@ export default {
     './chunk-manifest.json',
     './asset-manifest.json',
     nodeExternals({
-      whitelist: [
-        reCssRegex,
-        reCssModuleRegex,
-        reSassRegex,
-        reSassModuleRegex,
-        reImage,
-      ],
+      whitelist: [reAllStyles, reImage],
     }),
   ],
 
