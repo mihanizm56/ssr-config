@@ -8,7 +8,7 @@ import common, {
   getIsProduction,
   reCssRegex,
   reCssModuleRegex,
-  reSassRegex,
+  reSassAllRegex,
   reImage,
   reAllStyles,
 } from './common.config';
@@ -140,7 +140,7 @@ export default {
         ].filter(Boolean),
       },
       {
-        test: reSassRegex,
+        test: reSassAllRegex,
         rules: [
           {
             loader: 'css-loader',

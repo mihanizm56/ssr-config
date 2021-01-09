@@ -16,7 +16,7 @@ import common, {
   isAnalyze,
   reCssRegex,
   reCssModuleRegex,
-  reSassRegex,
+  reSassAllRegex,
 } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
@@ -140,7 +140,7 @@ export default {
         ].filter(Boolean),
       },
       {
-        test: reSassRegex,
+        test: reSassAllRegex,
         rules: [
           !isProduction && {
             loader: 'css-hot-loader',
