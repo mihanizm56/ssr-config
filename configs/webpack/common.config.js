@@ -6,7 +6,8 @@ import ActionsLoaderConfig from '@mihanizm56/webpack-magic-redux-modules/lib/loa
 import { appPaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
 
-export const isProduction = process.env.NODE_ENV === 'production';
+export const getIsProduction = process.env.NODE_ENV === 'production';
+const isProduction = getIsProduction();
 export const isAnalyze = process.env.ANALYZE === 'true';
 
 export const reJavaScript = /\.(js)$/;

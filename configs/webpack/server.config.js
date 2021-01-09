@@ -5,10 +5,11 @@ import nodeExternals from 'webpack-node-externals';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import { resolvePath } from '../../utils/resolve-path';
-import common, { isProduction, reStyle, reImage } from './common.config';
+import common, { getIsProduction, reStyle, reImage } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const packageJson = require(appPaths.packageJson);
+const isProduction = getIsProduction();
 
 export default {
   ...common,

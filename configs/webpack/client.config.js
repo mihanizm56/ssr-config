@@ -10,10 +10,11 @@ import CompressionPlugin from 'compression-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import { resolvePath } from '../../utils/resolve-path';
-import common, { isProduction, isAnalyze, reStyle } from './common.config';
+import common, { getIsProduction, isAnalyze, reStyle } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);
+const isProduction = getIsProduction();
 
 const brotliEnabled = process.env.BROTLI_ASSETS !== 'false';
 const gzipEnabled = process.env.GZIP_ASSETS !== 'false';
