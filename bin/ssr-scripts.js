@@ -5,7 +5,10 @@ process.on('unhandledRejection', (err) => {
 });
 
 const path = require('path');
+const dotenv = require('dotenv');
 const spawn = require('react-dev-utils/crossSpawn');
+
+dotenv.config();
 
 const allowedCommands = ['build', 'start'];
 const command = process.argv[2];
