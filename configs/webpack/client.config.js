@@ -17,7 +17,6 @@ import common, {
   reCssRegex,
   reCssModuleRegex,
   reSassRegex,
-  reSassModuleRegex,
 } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
@@ -86,6 +85,7 @@ export default {
       }),
       {
         test: reCssRegex,
+        exclude: reCssModuleRegex,
         rules: [
           !isProduction && {
             loader: 'css-hot-loader',
@@ -93,7 +93,6 @@ export default {
           },
           { use: MiniCssExtractPlugin.loader },
           {
-            // exclude: resolvePath('node_modules'),
             loader: 'css-loader',
             options: {
               importLoaders: 1,
@@ -120,7 +119,6 @@ export default {
           },
           { use: MiniCssExtractPlugin.loader },
           {
-            // exclude: resolvePath('node_modules'),
             loader: 'css-loader',
             options: {
               modules: {
@@ -150,38 +148,6 @@ export default {
           },
           { use: MiniCssExtractPlugin.loader },
           {
-            // exclude: resolvePath('node_modules'),
-            loader: 'css-loader',
-            options: {
-              importLoaders: 2,
-              sourceMap: !isProduction,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: !isProduction,
-              config: {
-                path: `${packagePaths.configs}/postcss.config.js`,
-              },
-            },
-          },
-          {
-            loader: 'sass-loader',
-            options: { sourceMap: true },
-          },
-        ].filter(Boolean),
-      },
-      {
-        test: reSassModuleRegex,
-        rules: [
-          !isProduction && {
-            loader: 'css-hot-loader',
-            options: { cssModule: true, reloadAll: true },
-          },
-          { use: MiniCssExtractPlugin.loader },
-          {
-            // exclude: resolvePath('node_modules'),
             loader: 'css-loader',
             options: {
               modules: {

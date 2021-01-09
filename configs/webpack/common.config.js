@@ -17,8 +17,7 @@ export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
 // style files regexes
 export const reCssRegex = /\.css$/;
 export const reCssModuleRegex = /\.module\.css$/;
-export const reSassRegex = /\.(scss|sass)$/;
-export const reSassModuleRegex = /\.module\.(scss|sass)$/;
+export const reSassRegex = /\.module\.(scss|sass)$/;
 export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
 const staticAssetName = '[name].[hash:8].[ext]';

@@ -4,13 +4,11 @@ import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
-import { resolvePath } from '../../utils/resolve-path';
 import common, {
   getIsProduction,
   reCssRegex,
   reCssModuleRegex,
   reSassRegex,
-  reSassModuleRegex,
   reImage,
   reAllStyles,
 } from './common.config';
@@ -97,9 +95,9 @@ export default {
       }),
       {
         test: reCssRegex,
+        exclude: reCssModuleRegex,
         rules: [
           {
-            exclude: resolvePath('node_modules'),
             loader: 'css-loader',
             options: {
               onlyLocals: true,
@@ -121,7 +119,6 @@ export default {
         test: reCssModuleRegex,
         rules: [
           {
-            exclude: resolvePath('node_modules'),
             loader: 'css-loader',
             options: {
               modules: {
@@ -146,33 +143,6 @@ export default {
         test: reSassRegex,
         rules: [
           {
-            exclude: resolvePath('node_modules'),
-            loader: 'css-loader',
-            options: {
-              onlyLocals: true,
-              importLoaders: 2,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: !isProduction,
-              config: {
-                path: `${packagePaths.configs}/postcss.config.js`,
-              },
-            },
-          },
-          {
-            loader: 'sass-loader',
-            options: { sourceMap: !isProduction },
-          },
-        ].filter(Boolean),
-      },
-      {
-        test: reSassModuleRegex,
-        rules: [
-          {
-            exclude: resolvePath('node_modules'),
             loader: 'css-loader',
             options: {
               modules: {
