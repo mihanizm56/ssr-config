@@ -3,6 +3,7 @@
 import express from 'express';
 import browserSync from 'browser-sync';
 import webpack from 'webpack';
+import dotenv from 'dotenv';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
@@ -10,6 +11,8 @@ import webpackConfig from '../configs/webpack';
 import { appPaths, packagePaths } from '../utils/paths';
 import run, { format } from './run';
 import clean from './clean';
+
+dotenv.config();
 
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {

@@ -1,5 +1,5 @@
 +1) styles shared
-2) replace -- to NODE_ENV
++2) replace -- to NODE_ENV
 3) thread+cache+styles
 4) styles splitting (css modules,sass-modules,sass,css)
 5) optimizations

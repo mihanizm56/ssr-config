@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.1.0-beta.6",
+  "version": "0.1.0-beta.7",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -41,6 +41,7 @@
     "css-hot-loader": "1.4.4",
     "css-loader": "3.4.2",
     "cssnano": "4.1.10",
+    "dotenv": "8.2.0",
     "empty": "0.10.1",
     "express": "4.17.1",
     "file-loader": "6.0.0",
