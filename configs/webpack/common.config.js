@@ -10,8 +10,8 @@ export const getIsProduction = () => process.env.NODE_ENV === 'production';
 const isProduction = getIsProduction();
 export const isAnalyze = process.env.ANALYZE === 'true';
 
-export const reJavaScript = /\.(js)$/;
-export const reTypeScript = /\.(ts|tsx)$/;
+export const reJavaScript = /\.(js(x)?)$/;
+export const reTypeScript = /\.(ts(x)?)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
 
 // style files regexes
