@@ -99,9 +99,7 @@ export default {
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: isProduction
-                  ? '[hash:base64:5]'
-                  : '[path]-[local]-[hash:base64:5]',
+                localIdentName: '[local]-[hash:base64:10]',
               },
               onlyLocals: true,
               importLoaders: 2,
