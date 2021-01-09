@@ -150,9 +150,16 @@ export default {
   cache: !isProduction,
 
   stats: {
+    cached: false,
+    cachedAssets: false,
+    chunks: false,
+    chunkModules: false,
     colors: true,
-    // reasons: !isProduction,
+    hash: false,
+    modules: false,
+    reasons: !isProduction,
     timings: true,
+    version: false,
     // Скрываем ворнинги для mini-css-extract-plugin warnings о конфликтах в порядке стилей
     warningsFilter: (warning) =>
       /Conflicting order. Following module has been added/gm.test(warning),
