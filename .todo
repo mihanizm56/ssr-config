@@ -2,7 +2,7 @@
 +2) replace -- to NODE_ENV
 ---3) cache-loader+styles
 4) styles splitting (css modules,sass-modules,sass,css)
-5) optimizations
++5) optimizations (added Terser)
 +6) compression
 
 

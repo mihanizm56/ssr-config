@@ -12,8 +12,15 @@ export const isAnalyze = process.env.ANALYZE === 'true';
 
 export const reJavaScript = /\.(js)$/;
 export const reTypeScript = /\.(ts|tsx)$/;
-export const reStyle = /(\.module)?\.(css|scss|sass)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
+
+// style files regexes
+export const reCssRegex = /\.css$/;
+export const reCssModuleRegex = /\.module\.css$/;
+export const reSassRegex = /\.(scss|sass)$/;
+export const reSassModuleRegex = /\.module\.(scss|sass)$/;
+export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
+
 const staticAssetName = '[name].[hash:8].[ext]';
 const STATIC_PATH = '/static/assets/';
 
@@ -96,7 +103,7 @@ export default {
         oneOf: [
           // Инлайним маловесные изображения в CSS
           {
-            issuer: reStyle,
+            issuer: reAllStyles,
             oneOf: [
               // Инлайним маловесные SVGs как UTF-8 закодированные строки
               {
@@ -154,18 +161,7 @@ export default {
       // Для всего основного возвращаем URL
       // НЕ ЗАБЫТЬ обновить `exclude` при добавлении нового модуля
       {
-        exclude: [
-          reJavaScript,
-          reTypeScript,
-          reStyle,
-          reImage,
-          /\.json$/,
-          /\.txt$/,
-          /\.md$/,
-          /\.ejs$/,
-          /\.woff2/,
-          /\.woff/,
-        ],
+        exclude: [/\.json$/, /\.md$/, /\.ejs$/, /\.woff2/, /\.woff/],
         loader: 'file-loader',
         options: {
           name: staticAssetName,

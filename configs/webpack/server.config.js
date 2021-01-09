@@ -5,7 +5,14 @@ import nodeExternals from 'webpack-node-externals';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import { resolvePath } from '../../utils/resolve-path';
-import common, { getIsProduction, reStyle, reImage } from './common.config';
+import common, {
+  getIsProduction,
+  reCssRegex,
+  reCssModuleRegex,
+  reSassRegex,
+  reSassModuleRegex,
+  reImage,
+} from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const packageJson = require(appPaths.packageJson);
@@ -88,7 +95,80 @@ export default {
         return rule;
       }),
       {
-        test: reStyle,
+        test: reCssRegex,
+        rules: [
+          {
+            exclude: resolvePath('node_modules'),
+            loader: 'css-loader',
+            options: {
+              onlyLocals: true,
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: !isProduction,
+              config: {
+                path: `${packagePaths.configs}/postcss.config.js`,
+              },
+            },
+          },
+        ].filter(Boolean),
+      },
+      {
+        test: reCssModuleRegex,
+        rules: [
+          {
+            exclude: resolvePath('node_modules'),
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[local]-[hash:base64:10]',
+              },
+              onlyLocals: true,
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: !isProduction,
+              config: {
+                path: `${packagePaths.configs}/postcss.config.js`,
+              },
+            },
+          },
+        ].filter(Boolean),
+      },
+      {
+        test: reSassRegex,
+        rules: [
+          {
+            exclude: resolvePath('node_modules'),
+            loader: 'css-loader',
+            options: {
+              onlyLocals: true,
+              importLoaders: 2,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: !isProduction,
+              config: {
+                path: `${packagePaths.configs}/postcss.config.js`,
+              },
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: !isProduction },
+          },
+        ].filter(Boolean),
+      },
+      {
+        test: reSassModuleRegex,
         rules: [
           {
             exclude: resolvePath('node_modules'),
@@ -124,7 +204,13 @@ export default {
     './chunk-manifest.json',
     './asset-manifest.json',
     nodeExternals({
-      whitelist: [reStyle, reImage],
+      whitelist: [
+        reCssRegex,
+        reCssModuleRegex,
+        reSassRegex,
+        reSassModuleRegex,
+        reImage,
+      ],
     }),
   ],
 

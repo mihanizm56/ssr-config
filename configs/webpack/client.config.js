@@ -7,11 +7,18 @@ import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
-import { resolvePath } from '../../utils/resolve-path';
-import common, { getIsProduction, isAnalyze, reStyle } from './common.config';
+import common, {
+  getIsProduction,
+  isAnalyze,
+  reCssRegex,
+  reCssModuleRegex,
+  reSassRegex,
+  reSassModuleRegex,
+} from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);
@@ -78,7 +85,7 @@ export default {
         return rule;
       }),
       {
-        test: reStyle,
+        test: reCssRegex,
         rules: [
           !isProduction && {
             loader: 'css-hot-loader',
@@ -86,7 +93,95 @@ export default {
           },
           { use: MiniCssExtractPlugin.loader },
           {
-            exclude: resolvePath('node_modules'),
+            // exclude: resolvePath('node_modules'),
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              sourceMap: !isProduction,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: !isProduction,
+              config: {
+                path: `${packagePaths.configs}/postcss.config.js`,
+              },
+            },
+          },
+        ].filter(Boolean),
+      },
+      {
+        test: reCssModuleRegex,
+        rules: [
+          !isProduction && {
+            loader: 'css-hot-loader',
+            options: { cssModule: true, reloadAll: true },
+          },
+          { use: MiniCssExtractPlugin.loader },
+          {
+            // exclude: resolvePath('node_modules'),
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[local]-[hash:base64:10]',
+              },
+              importLoaders: 1,
+              sourceMap: !isProduction,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: !isProduction,
+              config: {
+                path: `${packagePaths.configs}/postcss.config.js`,
+              },
+            },
+          },
+        ].filter(Boolean),
+      },
+      {
+        test: reSassRegex,
+        rules: [
+          !isProduction && {
+            loader: 'css-hot-loader',
+            options: { cssModule: true, reloadAll: true },
+          },
+          { use: MiniCssExtractPlugin.loader },
+          {
+            // exclude: resolvePath('node_modules'),
+            loader: 'css-loader',
+            options: {
+              importLoaders: 2,
+              sourceMap: !isProduction,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: !isProduction,
+              config: {
+                path: `${packagePaths.configs}/postcss.config.js`,
+              },
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: true },
+          },
+        ].filter(Boolean),
+      },
+      {
+        test: reSassModuleRegex,
+        rules: [
+          !isProduction && {
+            loader: 'css-hot-loader',
+            options: { cssModule: true, reloadAll: true },
+          },
+          { use: MiniCssExtractPlugin.loader },
+          {
+            // exclude: resolvePath('node_modules'),
             loader: 'css-loader',
             options: {
               modules: {
@@ -191,44 +286,44 @@ export default {
   optimization: {
     minimize: isProduction,
     minimizer: [
-      // new TerserPlugin({
-      //   parallel: true,
-      //   terserOptions: {
-      //     parse: {
-      //       // We want terser to parse ecma 8 code. However, we don't want it
-      //       // to apply any minification steps that turns valid ecma 5 code
-      //       // into invalid ecma 5 code. This is why the 'compress' and 'output'
-      //       // sections only apply transformations that are ecma 5 safe
-      //       // https://github.com/facebook/create-react-app/pull/4234
-      //       ecma: 8,
-      //     },
-      //     compress: {
-      //       ecma: 5,
-      //       warnings: false,
-      //       // Disabled because of an issue with Uglify breaking seemingly valid code:
-      //       // https://github.com/facebook/create-react-app/issues/2376
-      //       // Pending further investigation:
-      //       // https://github.com/mishoo/UglifyJS2/issues/2011
-      //       comparisons: false,
-      //       // Disabled because of an issue with Terser breaking valid code:
-      //       // https://github.com/facebook/create-react-app/issues/5250
-      //       // Pending further investigation:
-      //       // https://github.com/terser-js/terser/issues/120
-      //       inline: 2,
-      //     },
-      //     mangle: {
-      //       safari10: true,
-      //     },
-      //     output: {
-      //       ecma: 5,
-      //       comments: false,
-      //       // Turned on because emoji and regex is not minified properly using default
-      //       // https://github.com/facebook/create-react-app/issues/2488
-      //       ascii_only: true,
-      //     },
-      //   },
-      //   sourceMap: !isProduction,
-      // }),
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          parse: {
+            // We want terser to parse ecma 8 code. However, we don't want it
+            // to apply any minification steps that turns valid ecma 5 code
+            // into invalid ecma 5 code. This is why the 'compress' and 'output'
+            // sections only apply transformations that are ecma 5 safe
+            // https://github.com/facebook/create-react-app/pull/4234
+            ecma: 8,
+          },
+          compress: {
+            ecma: 5,
+            warnings: false,
+            // Disabled because of an issue with Uglify breaking seemingly valid code:
+            // https://github.com/facebook/create-react-app/issues/2376
+            // Pending further investigation:
+            // https://github.com/mishoo/UglifyJS2/issues/2011
+            comparisons: false,
+            // Disabled because of an issue with Terser breaking valid code:
+            // https://github.com/facebook/create-react-app/issues/5250
+            // Pending further investigation:
+            // https://github.com/terser-js/terser/issues/120
+            inline: 2,
+          },
+          mangle: {
+            safari10: true,
+          },
+          output: {
+            ecma: 5,
+            comments: false,
+            // Turned on because emoji and regex is not minified properly using default
+            // https://github.com/facebook/create-react-app/issues/2488
+            ascii_only: true,
+          },
+        },
+        sourceMap: !isProduction,
+      }),
       new OptimizeCSSAssetsPlugin({
         cssProcessorPluginOptions: {
           preset: [
