@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import fs from 'fs';
+import os from 'os';
 import webpack from 'webpack';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -17,6 +18,31 @@ import common, {
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
 const pkg = require(appPaths.packageJson);
+
+const brotliEnabled = process.env.BROTLI_ASSETS !== 'false';
+const gzipEnabled = process.env.GZIP_ASSETS !== 'false';
+
+const getCacheAndThreadLoaderConfig = () =>
+  !isProduction
+    ? ({ loader: 'cache-loader' },
+      {
+        loader: 'thread-loader',
+        options: {
+          workers: os.cpus().length - 1,
+          poolRespawn: false,
+          workerParallelJobs: 50,
+          poolParallelJobs: 200,
+        },
+      })
+    : {
+        loader: 'thread-loader',
+        options: {
+          workers: os.cpus().length - 1,
+          poolRespawn: false,
+          workerParallelJobs: 50,
+          poolParallelJobs: 200,
+        },
+      };
 
 export default {
   ...common,
@@ -86,6 +112,7 @@ export default {
           //         options: { cssModule: true, reloadAll: true },
           //       },
           //     ]),
+          getCacheAndThreadLoaderConfig(),
           { use: MiniCssExtractPlugin.loader },
           {
             exclude: resolvePath('node_modules'),
@@ -174,6 +201,7 @@ export default {
     // https://github.com/th0r/webpack-bundle-analyzer
     isProduction && isAnalyze && new BundleAnalyzerPlugin(),
     isProduction &&
+      brotliEnabled &&
       new CompressionPlugin({
         filename: '[path].br[query]',
         algorithm: 'brotliCompress',
@@ -181,6 +209,13 @@ export default {
         compressionOptions: {
           level: 11,
         },
+      }),
+    isProduction &&
+      gzipEnabled &&
+      new CompressionPlugin({
+        filename: '[path].gz[query]',
+        algorithm: 'gzip',
+        test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
       }),
   ].filter(Boolean),
 
