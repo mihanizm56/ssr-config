@@ -161,7 +161,18 @@ export default {
       // Для всего основного возвращаем URL
       // НЕ ЗАБЫТЬ обновить `exclude` при добавлении нового модуля
       {
-        exclude: [/\.json$/, /\.md$/, /\.ejs$/, /\.woff2/, /\.woff/],
+        exclude: [
+          reJavaScript,
+          reTypeScript,
+          reAllStyles,
+          reImage,
+          /\.json$/,
+          /\.txt$/,
+          /\.md$/,
+          /\.ejs$/,
+          /\.woff2/,
+          /\.woff/,
+        ],
         loader: 'file-loader',
         options: {
           name: staticAssetName,
