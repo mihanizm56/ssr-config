@@ -146,6 +146,7 @@ export default {
       {
         test: reSassAllRegex,
         rules: [
+          { loader: 'cache-loader' },
           {
             loader: 'css-loader',
             options: {
