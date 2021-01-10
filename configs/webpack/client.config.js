@@ -76,6 +76,7 @@ export default {
             //   useBuiltIns: 'entry',
             // },
             // ],
+            '@babel/preset-react',
             '@babel/preset-typescript',
           ],
           // cacheDirectory: true,
