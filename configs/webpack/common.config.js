@@ -22,27 +22,18 @@ export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 const staticAssetName = '[name].[hash:8].[ext]';
 const STATIC_PATH = '/static/assets/';
 
-export const getCacheAndThreadLoaderConfig = () =>
-  !isProduction
-    ? ({ loader: 'cache-loader' },
-      {
-        loader: 'thread-loader',
-        options: {
-          workers: os.cpus().length - 1,
-          poolRespawn: false,
-          workerParallelJobs: 50,
-          poolParallelJobs: 200,
-        },
-      })
-    : {
-        loader: 'thread-loader',
-        options: {
-          workers: os.cpus().length - 1,
-          poolRespawn: false,
-          workerParallelJobs: 50,
-          poolParallelJobs: 200,
-        },
-      };
+export const getCacheAndThreadLoaderConfig = () => [
+  { loader: 'cache-loader' },
+  {
+    loader: 'thread-loader',
+    options: {
+      workers: os.cpus().length - 1,
+      poolRespawn: false,
+      workerParallelJobs: 50,
+      poolParallelJobs: 200,
+    },
+  },
+];
 
 export default {
   context: appPaths.root,
@@ -114,7 +105,7 @@ export default {
           // Или возвращем URL на ресурс
           {
             use: [
-              getCacheAndThreadLoaderConfig(),
+              ...getCacheAndThreadLoaderConfig(),
               {
                 loader: 'file-loader',
                 options: {
@@ -147,7 +138,7 @@ export default {
           /\.woff/,
         ],
         use: [
-          getCacheAndThreadLoaderConfig(),
+          ...getCacheAndThreadLoaderConfig(),
           {
             loader: 'file-loader',
             options: {
@@ -167,7 +158,7 @@ export default {
         test: /\.[jt]s$/,
         exclude: /node_modules/,
         use: [
-          getCacheAndThreadLoaderConfig(),
+          ...getCacheAndThreadLoaderConfig(),
           {
             loader: '@mihanizm56/webpack-magic-redux-modules',
           },
