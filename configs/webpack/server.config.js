@@ -2,18 +2,16 @@
 
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
-import { appPaths, packagePaths } from '../../utils/paths';
+import { appPaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
   getIsProduction,
-  reCssRegex,
-  reCssModuleRegex,
-  reSassAllRegex,
   reImage,
   reAllStyles,
   reScripts,
   getCacheAndThreadLoaderConfig,
   getBabelLoaderConfig,
+  getStyleLoadersConfig,
 } from './common.config';
 
 const isProduction = getIsProduction();
@@ -50,6 +48,8 @@ export default {
         use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(true)],
       },
 
+      ...getStyleLoadersConfig(true),
+
       ...overrideWebpackRules(common.module.rules, (rule) => {
         // Переписываем пути для статических ассетов
         if (
@@ -68,81 +68,6 @@ export default {
 
         return rule;
       }),
-      {
-        test: reCssRegex,
-        exclude: reCssModuleRegex,
-        rules: [
-          {
-            loader: 'css-loader',
-            options: {
-              onlyLocals: true,
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: !isProduction,
-              config: {
-                path: `${packagePaths.configs}/postcss.config.js`,
-              },
-            },
-          },
-        ].filter(Boolean),
-      },
-      {
-        test: reCssModuleRegex,
-        rules: [
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[local]-[hash:base64:10]',
-              },
-              onlyLocals: true,
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: !isProduction,
-              config: {
-                path: `${packagePaths.configs}/postcss.config.js`,
-              },
-            },
-          },
-        ].filter(Boolean),
-      },
-      {
-        test: reSassAllRegex,
-        rules: [
-          { loader: 'cache-loader' },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[local]-[hash:base64:10]',
-              },
-              onlyLocals: true,
-              importLoaders: 2,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: !isProduction,
-              config: {
-                path: `${packagePaths.configs}/postcss.config.js`,
-              },
-            },
-          },
-          {
-            loader: 'sass-loader',
-            options: { sourceMap: !isProduction },
-          },
-        ].filter(Boolean),
-      },
     ],
   },
 

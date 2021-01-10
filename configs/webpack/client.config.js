@@ -9,16 +9,14 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import { appPaths, packagePaths } from '../../utils/paths';
+import { appPaths } from '../../utils/paths';
 import common, {
   getIsProduction,
   isAnalyze,
-  reCssRegex,
-  reCssModuleRegex,
-  reSassAllRegex,
   reScripts,
   getCacheAndThreadLoaderConfig,
   getBabelLoaderConfig,
+  getStyleLoadersConfig,
 } from './common.config';
 
 const isProduction = getIsProduction();
@@ -54,98 +52,7 @@ export default {
         test: reScripts,
         use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(false)],
       },
-      {
-        test: reCssRegex,
-        exclude: reCssModuleRegex,
-        rules: [
-          !isProduction && {
-            loader: 'css-hot-loader',
-            options: { cssModule: true, reloadAll: true },
-          },
-          { use: MiniCssExtractPlugin.loader },
-          { loader: 'cache-loader' },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-              sourceMap: !isProduction,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: !isProduction,
-              config: {
-                path: `${packagePaths.configs}/postcss.config.js`,
-              },
-            },
-          },
-        ].filter(Boolean),
-      },
-      {
-        test: reCssModuleRegex,
-        rules: [
-          !isProduction && {
-            loader: 'css-hot-loader',
-            options: { cssModule: true, reloadAll: true },
-          },
-          { use: MiniCssExtractPlugin.loader },
-          { loader: 'cache-loader' },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[local]-[hash:base64:10]',
-              },
-              importLoaders: 1,
-              sourceMap: !isProduction,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: !isProduction,
-              config: {
-                path: `${packagePaths.configs}/postcss.config.js`,
-              },
-            },
-          },
-        ].filter(Boolean),
-      },
-      {
-        test: reSassAllRegex,
-        rules: [
-          !isProduction && {
-            loader: 'css-hot-loader',
-            options: { cssModule: true, reloadAll: true },
-          },
-          { use: MiniCssExtractPlugin.loader },
-          { loader: 'cache-loader' },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[local]-[hash:base64:10]',
-              },
-              importLoaders: 2,
-              sourceMap: !isProduction,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: !isProduction,
-              config: {
-                path: `${packagePaths.configs}/postcss.config.js`,
-              },
-            },
-          },
-          {
-            loader: 'sass-loader',
-            options: { sourceMap: true },
-          },
-        ].filter(Boolean),
-      },
+      ...getStyleLoadersConfig(false),
     ],
   },
 

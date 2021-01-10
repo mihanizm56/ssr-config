@@ -4,7 +4,8 @@ import path from 'path';
 import os from 'os';
 import webpack from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { appPaths } from '../../utils/paths';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import { appPaths, packagePaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
 
 export const getIsProduction = () => process.env.NODE_ENV === 'production';
@@ -78,6 +79,104 @@ export const getBabelLoaderConfig = (isNode) => ({
     ],
   },
 });
+
+export const getStyleLoadersConfig = (isNode) => [
+  {
+    test: reCssRegex,
+    exclude: reCssModuleRegex,
+    rules: [
+      !isNode &&
+        !isProduction && {
+          loader: 'css-hot-loader',
+          options: { cssModule: true, reloadAll: true },
+        },
+      !isNode && { use: MiniCssExtractPlugin.loader },
+      { loader: 'cache-loader' },
+      {
+        loader: 'css-loader',
+        options: {
+          importLoaders: 1,
+          sourceMap: !isProduction,
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: !isProduction,
+          config: {
+            path: `${packagePaths.configs}/postcss.config.js`,
+          },
+        },
+      },
+    ].filter(Boolean),
+  },
+  {
+    test: reCssModuleRegex,
+    rules: [
+      !isNode &&
+        !isProduction && {
+          loader: 'css-hot-loader',
+          options: { cssModule: true, reloadAll: true },
+        },
+      !isNode && { use: MiniCssExtractPlugin.loader },
+      { loader: 'cache-loader' },
+      {
+        loader: 'css-loader',
+        options: {
+          modules: {
+            localIdentName: '[local]-[hash:base64:10]',
+          },
+          importLoaders: 1,
+          sourceMap: !isProduction,
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: !isProduction,
+          config: {
+            path: `${packagePaths.configs}/postcss.config.js`,
+          },
+        },
+      },
+    ].filter(Boolean),
+  },
+  {
+    test: reSassAllRegex,
+    rules: [
+      !isNode &&
+        !isProduction && {
+          loader: 'css-hot-loader',
+          options: { cssModule: true, reloadAll: true },
+        },
+      !isNode && { use: MiniCssExtractPlugin.loader },
+      { loader: 'cache-loader' },
+      {
+        loader: 'css-loader',
+        options: {
+          modules: {
+            localIdentName: '[local]-[hash:base64:10]',
+          },
+          importLoaders: 2,
+          sourceMap: !isProduction,
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: !isProduction,
+          config: {
+            path: `${packagePaths.configs}/postcss.config.js`,
+          },
+        },
+      },
+      {
+        loader: 'sass-loader',
+        options: { sourceMap: true },
+      },
+    ].filter(Boolean),
+  },
+];
 
 export default {
   context: appPaths.root,
