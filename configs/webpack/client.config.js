@@ -55,9 +55,6 @@ export default {
         test: reTypeScript,
         loader: require.resolve('babel-loader'),
         options: {
-          customize: require.resolve(
-            'babel-preset-react-app/webpack-overrides',
-          ),
           plugins: [
             [
               '@babel/plugin-proposal-class-properties',

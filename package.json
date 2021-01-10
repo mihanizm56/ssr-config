@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.1.1-beta.1",
+  "version": "0.1.1-beta.2",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -33,7 +33,6 @@
     "@mihanizm56/webpack-magic-redux-modules": "0.0.6",
     "@wildberries/eslint-config-standart": "1.0.1",
     "autoprefixer": "9.8.0",
-    "awesome-typescript-loader": "5.2.1",
     "babel-loader": "8.1.0",
     "browser-sync": "2.26.7",
     "cache-loader": "4.1.0",
