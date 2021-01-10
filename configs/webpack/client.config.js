@@ -53,35 +53,34 @@ export default {
     rules: [
       {
         test: reTypeScript,
-        loader: require.resolve('babel-loader'),
+        loader: 'babel-loader',
         options: {
           plugins: [
-            [
-              '@babel/plugin-proposal-class-properties',
-              '@babel/plugin-syntax-dynamic-import',
-              '@babel/plugin-transform-exponentiation-operator',
-              // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-              isProduction && '@babel/plugin-transform-react-constant-elements',
-              isProduction && '@babel/plugin-transform-react-inline-elements',
-            ],
-          ],
+            '@babel/plugin-proposal-class-properties',
+            '@babel/plugin-syntax-dynamic-import',
+            '@babel/plugin-transform-exponentiation-operator',
+            // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
+            isProduction && '@babel/plugin-transform-react-constant-elements',
+            isProduction && '@babel/plugin-transform-react-inline-elements',
+          ].filter(Boolean),
           presets: [
-            [
-              '@babel/preset-env',
-              {
-                modules: false,
-                corejs: 3,
-                targets: {
-                  browsers: pkg.browserslist,
-                },
-                forceAllTransforms: isProduction,
-                useBuiltIns: 'entry',
-              },
-            ],
+            // [
+            '@babel/preset-env',
+            // {
+            //   modules: false,
+            //   corejs: 3,
+            //   targets: {
+            //     browsers: pkg.browserslist,
+            //   },
+            //   forceAllTransforms: isProduction,
+            //   useBuiltIns: 'entry',
+            // },
+            // ],
+            '@babel/preset-typescript',
           ],
-          cacheDirectory: true,
-          cacheCompression: false,
-          compact: isProduction,
+          // cacheDirectory: true,
+          // cacheCompression: false,
+          // compact: isProduction,
         },
       },
       // {
