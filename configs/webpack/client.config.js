@@ -111,7 +111,7 @@ export default {
             options: { cssModule: true, reloadAll: true },
           },
           { use: MiniCssExtractPlugin.loader },
-          { loader: 'cache-loader' },
+          !isProduction && { loader: 'cache-loader' },
           {
             loader: 'css-loader',
             options: {
@@ -138,7 +138,7 @@ export default {
             options: { cssModule: true, reloadAll: true },
           },
           { use: MiniCssExtractPlugin.loader },
-          { loader: 'cache-loader' },
+          !isProduction && { loader: 'cache-loader' },
           {
             loader: 'css-loader',
             options: {
@@ -168,7 +168,7 @@ export default {
             options: { cssModule: true, reloadAll: true },
           },
           { use: MiniCssExtractPlugin.loader },
-          { loader: 'cache-loader' },
+          !isProduction && { loader: 'cache-loader' },
           {
             loader: 'css-loader',
             options: {
