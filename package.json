@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.1.1-beta.4",
+  "version": "0.1.1-beta.5",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -26,6 +26,9 @@
     "@babel/plugin-transform-exponentiation-operator": "7.8.3",
     "@babel/plugin-transform-react-constant-elements": "7.9.0",
     "@babel/plugin-transform-react-inline-elements": "7.9.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.1",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
+    "@babel/preset-react": "7.12.10",
     "@babel/plugin-transform-runtime": "7.9.6",
     "@babel/preset-env": "7.9.6",
     "@babel/preset-typescript": "7.12.7",

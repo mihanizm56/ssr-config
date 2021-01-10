@@ -2,6 +2,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import fs from 'fs';
+import os from 'os';
 import webpack from 'webpack';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -9,15 +10,15 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
-import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
   getIsProduction,
   isAnalyze,
   reCssRegex,
   reCssModuleRegex,
   reSassAllRegex,
-  reTypeScript,
+  reScripts,
 } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
@@ -52,96 +53,55 @@ export default {
     ...common.module,
     rules: [
       {
-        test: reTypeScript,
-        loader: 'babel-loader',
-        options: {
-          plugins: [
-            '@babel/plugin-proposal-class-properties',
-            '@babel/plugin-syntax-dynamic-import',
-            '@babel/plugin-transform-exponentiation-operator',
-            // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-            isProduction && '@babel/plugin-transform-react-constant-elements',
-            isProduction && '@babel/plugin-transform-react-inline-elements',
-          ].filter(Boolean),
-          presets: [
-            // [
-            '@babel/preset-env',
-            // {
-            //   modules: false,
-            //   corejs: 3,
-            //   targets: {
-            //     browsers: pkg.browserslist,
-            //   },
-            //   forceAllTransforms: isProduction,
-            //   useBuiltIns: 'entry',
-            // },
-            // ],
-            '@babel/preset-react',
-            '@babel/preset-typescript',
-          ],
-          // cacheDirectory: true,
-          // cacheCompression: false,
-          // compact: isProduction,
-        },
+        test: reScripts,
+        use: [
+          { loader: 'cache-loader' },
+          {
+            loader: 'thread-loader',
+            options: {
+              workers: os.cpus().length - 1,
+              poolRespawn: false,
+            },
+          },
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              cacheCompression: false,
+              compact: isProduction,
+              plugins: [
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-syntax-dynamic-import',
+                '@babel/plugin-transform-exponentiation-operator',
+                '@babel/plugin-proposal-optional-chaining',
+                '@babel/plugin-proposal-nullish-coalescing-operator',
+                // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
+                isProduction &&
+                  '@babel/plugin-transform-react-constant-elements',
+                isProduction && '@babel/plugin-transform-react-inline-elements',
+              ].filter(Boolean),
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    modules: false,
+                    corejs: 3,
+                    targets: {
+                      browsers: pkg.browserslist,
+                    },
+                    forceAllTransforms: isProduction,
+                    useBuiltIns: 'entry',
+                    // Exclude transforms that make all code slower
+                    exclude: ['transform-typeof-symbol'],
+                  },
+                ],
+                '@babel/preset-react',
+                '@babel/preset-typescript',
+              ],
+            },
+          },
+        ],
       },
-      // {
-      //   test: reTypeScript,
-      //   include: [appPaths.src],
-      //   loader: 'awesome-typescript-loader',
-      //   options: {
-      //     reportFiles: [`${appPaths.src}/**/*.{ts,tsx}`],
-      //     useCache: true,
-      //     useBabel: true,
-      //     babelOptions: {
-      //       // https://babeljs.io/docs/usage/options/
-      //       babelrc: false,
-      //       configFile: false,
-
-      //       plugins: [
-      //         '@babel/plugin-proposal-class-properties',
-      //         '@babel/plugin-syntax-dynamic-import',
-      //         '@babel/plugin-transform-exponentiation-operator',
-      //         // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-      //         isProduction && '@babel/plugin-transform-react-constant-elements',
-      //         isProduction && '@babel/plugin-transform-react-inline-elements',
-      //       ].filter(Boolean),
-      //     },
-      //     babelCore: '@babel/core',
-      //   },
-      // },
-      // ...overrideWebpackRules(common.module.rules, (rule) => {
-      //   // Переопределение babel-preset-env конфигурации
-      //   if (rule.loader === 'awesome-typescript-loader') {
-      //     return {
-      //       ...rule,
-      //       options: {
-      //         ...rule.options,
-      //         babelOptions: {
-      //           ...rule.options.babelOptions,
-      //           presets: [
-      //             [
-      //               '@babel/preset-env',
-      //               {
-      //                 modules: false,
-      //                 corejs: 3,
-      //                 targets: {
-      //                   browsers: pkg.browserslist,
-      //                 },
-      //                 forceAllTransforms: isProduction,
-      //                 useBuiltIns: 'entry',
-      //               },
-      //             ],
-      //             ...(rule.options.babelOptions.presets
-      //               ? rule.options.babelOptions.presets
-      //               : []),
-      //           ],
-      //         },
-      //       },
-      //     };
-      //   }
-
-      //   return rule;
-      // }),
       {
         test: reCssRegex,
         exclude: reCssModuleRegex,
@@ -305,6 +265,10 @@ export default {
         filename: '[path].gz[query]',
         algorithm: 'gzip',
         test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
+      }),
+    !isProduction &&
+      new ForkTsCheckerWebpackPlugin({
+        async: true,
       }),
   ].filter(Boolean),
 

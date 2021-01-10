@@ -10,8 +10,7 @@ export const getIsProduction = () => process.env.NODE_ENV === 'production';
 const isProduction = getIsProduction();
 export const isAnalyze = process.env.ANALYZE === 'true';
 
-export const reJavaScript = /\.(js)$/;
-export const reTypeScript = /\.(ts|tsx)$/;
+export const reScripts = /\.(js|jsx|ts|tsx)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
 
 // style files regexes
@@ -49,6 +48,7 @@ export default {
   context: appPaths.root,
 
   mode: isProduction ? 'production' : 'development',
+  // mode: 'development',
 
   devtool: isProduction ? false : 'inline-cheap-module-source-map',
 
@@ -72,31 +72,6 @@ export default {
     strictExportPresence: true,
 
     rules: [
-      // {
-      //   test: reTypeScript,
-      //   include: [appPaths.src],
-      //   loader: 'awesome-typescript-loader',
-      //   options: {
-      //     reportFiles: [`${appPaths.src}/**/*.{ts,tsx}`],
-      //     useCache: true,
-      //     useBabel: true,
-      //     babelOptions: {
-      //       // https://babeljs.io/docs/usage/options/
-      //       babelrc: false,
-      //       configFile: false,
-
-      //       plugins: [
-      //         '@babel/plugin-proposal-class-properties',
-      //         '@babel/plugin-syntax-dynamic-import',
-      //         '@babel/plugin-transform-exponentiation-operator',
-      //         // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-      //         isProduction && '@babel/plugin-transform-react-constant-elements',
-      //         isProduction && '@babel/plugin-transform-react-inline-elements',
-      //       ].filter(Boolean),
-      //     },
-      //     babelCore: '@babel/core',
-      //   },
-      // },
       {
         test: reImage,
         oneOf: [
@@ -109,7 +84,7 @@ export default {
                 test: /\.svg$/,
 
                 use: [
-                  getCacheAndThreadLoaderConfig(),
+                  { loader: 'cache-loader' },
                   {
                     loader: 'svg-url-loader',
                     options: {
@@ -123,7 +98,7 @@ export default {
               // Инлайним маловесные изображения как Base64 закодированные строки
               {
                 use: [
-                  getCacheAndThreadLoaderConfig(),
+                  { loader: 'cache-loader' },
                   {
                     loader: 'url-loader',
                     options: {
@@ -154,15 +129,14 @@ export default {
       // Конвертирование TXT в модуль
       {
         test: /\.txt$/,
-        use: [getCacheAndThreadLoaderConfig(), { loader: 'raw-loader' }],
+        use: [{ loader: 'cache-loader' }, { loader: 'raw-loader' }],
       },
 
       // Для всего основного возвращаем URL
       // НЕ ЗАБЫТЬ обновить `exclude` при добавлении нового модуля
       {
         exclude: [
-          reJavaScript,
-          reTypeScript,
+          reScripts,
           reAllStyles,
           reImage,
           /\.json$/,
@@ -172,10 +146,15 @@ export default {
           /\.woff2/,
           /\.woff/,
         ],
-        loader: 'file-loader',
-        options: {
-          name: staticAssetName,
-        },
+        use: [
+          getCacheAndThreadLoaderConfig(),
+          {
+            loader: 'file-loader',
+            options: {
+              name: staticAssetName,
+            },
+          },
+        ],
       },
 
       // Исключение dev модулей при production сборке

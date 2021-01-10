@@ -1,7 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
+import os from 'os';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
@@ -11,10 +13,9 @@ import common, {
   reSassAllRegex,
   reImage,
   reAllStyles,
+  reScripts,
 } from './common.config';
 
-// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
-const packageJson = require(appPaths.packageJson);
 const isProduction = getIsProduction();
 
 export default {
@@ -44,38 +45,41 @@ export default {
   module: {
     ...common.module,
     rules: [
-      ...overrideWebpackRules(common.module.rules, (rule) => {
-        // Переопределение babel-preset-env конфигурации
-        if (rule.loader === 'awesome-typescript-loader') {
-          return {
-            ...rule,
+      {
+        test: reScripts,
+        use: [
+          { loader: 'cache-loader' },
+          {
+            loader: 'thread-loader',
             options: {
-              ...rule.options,
-              babelOptions: {
-                ...rule.options.babelOptions,
-                presets: [
-                  [
-                    '@babel/preset-env',
-                    {
-                      modules: false,
-                      corejs: 3,
-                      targets: {
-                        // eslint-disable-next-line security/detect-unsafe-regex
-                        node: packageJson.engines.node.match(/(\d+\.?)+/)[0],
-                      },
-                      forceAllTransforms: isProduction,
-                      useBuiltIns: false,
-                    },
-                  ],
-                  ...(rule.options.babelOptions.presets
-                    ? rule.options.babelOptions.presets
-                    : []),
-                ],
-              },
+              workers: os.cpus().length - 1,
+              poolRespawn: false,
             },
-          };
-        }
+          },
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              cacheCompression: false,
+              compact: isProduction,
+              plugins: [
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-syntax-dynamic-import',
+                '@babel/plugin-transform-exponentiation-operator',
+                // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
+                isProduction && '@babel/plugin-transform-react-inline-elements',
+              ].filter(Boolean),
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react',
+                '@babel/preset-typescript',
+              ],
+            },
+          },
+        ],
+      },
 
+      ...overrideWebpackRules(common.module.rules, (rule) => {
         // Переписываем пути для статических ассетов
         if (
           rule.loader === 'file-loader' ||
@@ -195,6 +199,11 @@ export default {
         banner: 'require("source-map-support").install();',
         raw: true,
         entryOnly: false,
+      }),
+
+    !isProduction &&
+      new ForkTsCheckerWebpackPlugin({
+        async: true,
       }),
   ].filter(Boolean),
 
