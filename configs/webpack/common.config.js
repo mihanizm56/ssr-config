@@ -3,12 +3,15 @@
 import path from 'path';
 import os from 'os';
 import webpack from 'webpack';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { appPaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
 
 export const getIsProduction = () => process.env.NODE_ENV === 'production';
 const isProduction = getIsProduction();
 export const isAnalyze = process.env.ANALYZE === 'true';
+// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
+const pkg = require(appPaths.packageJson);
 
 export const reScripts = /\.(js|jsx|ts|tsx)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
@@ -34,6 +37,47 @@ export const getCacheAndThreadLoaderConfig = () => [
     },
   },
 ];
+
+export const getBabelLoaderConfig = (isNode) => ({
+  loader: 'babel-loader',
+  options: {
+    cacheDirectory: true,
+    cacheCompression: false,
+    compact: isProduction,
+    plugins: [
+      '@babel/plugin-proposal-class-properties',
+      '@babel/plugin-syntax-dynamic-import',
+      '@babel/plugin-transform-exponentiation-operator',
+      '@babel/plugin-proposal-optional-chaining',
+      '@babel/plugin-proposal-nullish-coalescing-operator',
+      // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
+      isProduction && '@babel/plugin-transform-react-inline-elements',
+      isNode &&
+        isProduction &&
+        '@babel/plugin-transform-react-constant-elements',
+    ].filter(Boolean),
+    presets: [
+      isNode
+        ? '@babel/preset-env'
+        : [
+            '@babel/preset-env',
+            {
+              modules: false,
+              corejs: 3,
+              targets: {
+                browsers: pkg.browserslist,
+              },
+              forceAllTransforms: isProduction,
+              useBuiltIns: 'entry',
+              // Exclude transforms that make all code slower
+              exclude: ['transform-typeof-symbol'],
+            },
+          ],
+      '@babel/preset-react',
+      '@babel/preset-typescript',
+    ],
+  },
+});
 
 export default {
   context: appPaths.root,
@@ -194,5 +238,10 @@ export default {
       __DEV__: !isProduction,
       __TEST__: false,
     }),
+
+    !isProduction &&
+      new ForkTsCheckerWebpackPlugin({
+        async: false,
+      }),
   ],
 };

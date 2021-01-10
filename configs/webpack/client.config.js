@@ -2,7 +2,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import fs from 'fs';
-import os from 'os';
 import webpack from 'webpack';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -10,7 +9,6 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import common, {
   getIsProduction,
@@ -19,10 +17,10 @@ import common, {
   reCssModuleRegex,
   reSassAllRegex,
   reScripts,
+  getCacheAndThreadLoaderConfig,
+  getBabelLoaderConfig,
 } from './common.config';
 
-// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
-const pkg = require(appPaths.packageJson);
 const isProduction = getIsProduction();
 
 const brotliEnabled = isProduction && process.env.BROTLI_ASSETS !== 'false';
@@ -54,53 +52,7 @@ export default {
     rules: [
       {
         test: reScripts,
-        use: [
-          { loader: 'cache-loader' },
-          {
-            loader: 'thread-loader',
-            options: {
-              workers: os.cpus().length - 1,
-              poolRespawn: false,
-            },
-          },
-          {
-            loader: 'babel-loader',
-            options: {
-              cacheDirectory: true,
-              cacheCompression: false,
-              compact: isProduction,
-              plugins: [
-                '@babel/plugin-proposal-class-properties',
-                '@babel/plugin-syntax-dynamic-import',
-                '@babel/plugin-transform-exponentiation-operator',
-                '@babel/plugin-proposal-optional-chaining',
-                '@babel/plugin-proposal-nullish-coalescing-operator',
-                // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-                isProduction &&
-                  '@babel/plugin-transform-react-constant-elements',
-                isProduction && '@babel/plugin-transform-react-inline-elements',
-              ].filter(Boolean),
-              presets: [
-                [
-                  '@babel/preset-env',
-                  {
-                    modules: false,
-                    corejs: 3,
-                    targets: {
-                      browsers: pkg.browserslist,
-                    },
-                    forceAllTransforms: isProduction,
-                    useBuiltIns: 'entry',
-                    // Exclude transforms that make all code slower
-                    exclude: ['transform-typeof-symbol'],
-                  },
-                ],
-                '@babel/preset-react',
-                '@babel/preset-typescript',
-              ],
-            },
-          },
-        ],
+        use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(false)],
       },
       {
         test: reCssRegex,
@@ -268,10 +220,6 @@ export default {
         filename: '[path].gz[query]',
         algorithm: 'gzip',
         test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
-      }),
-    !isProduction &&
-      new ForkTsCheckerWebpackPlugin({
-        async: false,
       }),
   ].filter(Boolean),
 

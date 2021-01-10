@@ -1,9 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-import os from 'os';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
@@ -14,6 +12,8 @@ import common, {
   reImage,
   reAllStyles,
   reScripts,
+  getCacheAndThreadLoaderConfig,
+  getBabelLoaderConfig,
 } from './common.config';
 
 const isProduction = getIsProduction();
@@ -47,36 +47,7 @@ export default {
     rules: [
       {
         test: reScripts,
-        use: [
-          { loader: 'cache-loader' },
-          {
-            loader: 'thread-loader',
-            options: {
-              workers: os.cpus().length - 1,
-              poolRespawn: false,
-            },
-          },
-          {
-            loader: 'babel-loader',
-            options: {
-              cacheDirectory: true,
-              cacheCompression: false,
-              compact: isProduction,
-              plugins: [
-                '@babel/plugin-proposal-class-properties',
-                '@babel/plugin-syntax-dynamic-import',
-                '@babel/plugin-transform-exponentiation-operator',
-                // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-                isProduction && '@babel/plugin-transform-react-inline-elements',
-              ].filter(Boolean),
-              presets: [
-                '@babel/preset-env',
-                '@babel/preset-react',
-                '@babel/preset-typescript',
-              ],
-            },
-          },
-        ],
+        use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(true)],
       },
 
       ...overrideWebpackRules(common.module.rules, (rule) => {
@@ -200,11 +171,6 @@ export default {
         banner: 'require("source-map-support").install();',
         raw: true,
         entryOnly: false,
-      }),
-
-    !isProduction &&
-      new ForkTsCheckerWebpackPlugin({
-        async: false,
       }),
   ].filter(Boolean),
 
