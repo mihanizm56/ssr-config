@@ -101,7 +101,6 @@ export default {
         test: reCssRegex,
         exclude: reCssModuleRegex,
         rules: [
-          !isProduction && { loader: 'cache-loader' },
           {
             loader: 'css-loader',
             options: {
@@ -123,7 +122,6 @@ export default {
       {
         test: reCssModuleRegex,
         rules: [
-          !isProduction && { loader: 'cache-loader' },
           {
             loader: 'css-loader',
             options: {
@@ -148,7 +146,7 @@ export default {
       {
         test: reSassAllRegex,
         rules: [
-          !isProduction && { loader: 'cache-loader' },
+          { loader: 'cache-loader' },
           {
             loader: 'css-loader',
             options: {
