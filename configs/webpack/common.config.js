@@ -72,31 +72,31 @@ export default {
     strictExportPresence: true,
 
     rules: [
-      {
-        test: reTypeScript,
-        include: [appPaths.src],
-        loader: 'awesome-typescript-loader',
-        options: {
-          reportFiles: [`${appPaths.src}/**/*.{ts,tsx}`],
-          useCache: true,
-          useBabel: true,
-          babelOptions: {
-            // https://babeljs.io/docs/usage/options/
-            babelrc: false,
-            configFile: false,
+      // {
+      //   test: reTypeScript,
+      //   include: [appPaths.src],
+      //   loader: 'awesome-typescript-loader',
+      //   options: {
+      //     reportFiles: [`${appPaths.src}/**/*.{ts,tsx}`],
+      //     useCache: true,
+      //     useBabel: true,
+      //     babelOptions: {
+      //       // https://babeljs.io/docs/usage/options/
+      //       babelrc: false,
+      //       configFile: false,
 
-            plugins: [
-              '@babel/plugin-proposal-class-properties',
-              '@babel/plugin-syntax-dynamic-import',
-              '@babel/plugin-transform-exponentiation-operator',
-              // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-              isProduction && '@babel/plugin-transform-react-constant-elements',
-              isProduction && '@babel/plugin-transform-react-inline-elements',
-            ].filter(Boolean),
-          },
-          babelCore: '@babel/core',
-        },
-      },
+      //       plugins: [
+      //         '@babel/plugin-proposal-class-properties',
+      //         '@babel/plugin-syntax-dynamic-import',
+      //         '@babel/plugin-transform-exponentiation-operator',
+      //         // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
+      //         isProduction && '@babel/plugin-transform-react-constant-elements',
+      //         isProduction && '@babel/plugin-transform-react-inline-elements',
+      //       ].filter(Boolean),
+      //     },
+      //     babelCore: '@babel/core',
+      //   },
+      // },
       {
         test: reImage,
         oneOf: [

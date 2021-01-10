@@ -17,6 +17,7 @@ import common, {
   reCssRegex,
   reCssModuleRegex,
   reSassAllRegex,
+  reTypeScript,
 } from './common.config';
 
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
@@ -50,39 +51,100 @@ export default {
   module: {
     ...common.module,
     rules: [
-      ...overrideWebpackRules(common.module.rules, (rule) => {
-        // Переопределение babel-preset-env конфигурации
-        if (rule.loader === 'awesome-typescript-loader') {
-          return {
-            ...rule,
-            options: {
-              ...rule.options,
-              babelOptions: {
-                ...rule.options.babelOptions,
-                presets: [
-                  [
-                    '@babel/preset-env',
-                    {
-                      modules: false,
-                      corejs: 3,
-                      targets: {
-                        browsers: pkg.browserslist,
-                      },
-                      forceAllTransforms: isProduction,
-                      useBuiltIns: 'entry',
-                    },
-                  ],
-                  ...(rule.options.babelOptions.presets
-                    ? rule.options.babelOptions.presets
-                    : []),
-                ],
+      {
+        test: reTypeScript,
+        loader: require.resolve('babel-loader'),
+        options: {
+          customize: require.resolve(
+            'babel-preset-react-app/webpack-overrides',
+          ),
+          plugins: [
+            [
+              '@babel/plugin-proposal-class-properties',
+              '@babel/plugin-syntax-dynamic-import',
+              '@babel/plugin-transform-exponentiation-operator',
+              // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
+              isProduction && '@babel/plugin-transform-react-constant-elements',
+              isProduction && '@babel/plugin-transform-react-inline-elements',
+            ],
+          ],
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                modules: false,
+                corejs: 3,
+                targets: {
+                  browsers: pkg.browserslist,
+                },
+                forceAllTransforms: isProduction,
+                useBuiltIns: 'entry',
               },
-            },
-          };
-        }
+            ],
+          ],
+          cacheDirectory: true,
+          cacheCompression: false,
+          compact: isProduction,
+        },
+      },
+      // {
+      //   test: reTypeScript,
+      //   include: [appPaths.src],
+      //   loader: 'awesome-typescript-loader',
+      //   options: {
+      //     reportFiles: [`${appPaths.src}/**/*.{ts,tsx}`],
+      //     useCache: true,
+      //     useBabel: true,
+      //     babelOptions: {
+      //       // https://babeljs.io/docs/usage/options/
+      //       babelrc: false,
+      //       configFile: false,
 
-        return rule;
-      }),
+      //       plugins: [
+      //         '@babel/plugin-proposal-class-properties',
+      //         '@babel/plugin-syntax-dynamic-import',
+      //         '@babel/plugin-transform-exponentiation-operator',
+      //         // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
+      //         isProduction && '@babel/plugin-transform-react-constant-elements',
+      //         isProduction && '@babel/plugin-transform-react-inline-elements',
+      //       ].filter(Boolean),
+      //     },
+      //     babelCore: '@babel/core',
+      //   },
+      // },
+      // ...overrideWebpackRules(common.module.rules, (rule) => {
+      //   // Переопределение babel-preset-env конфигурации
+      //   if (rule.loader === 'awesome-typescript-loader') {
+      //     return {
+      //       ...rule,
+      //       options: {
+      //         ...rule.options,
+      //         babelOptions: {
+      //           ...rule.options.babelOptions,
+      //           presets: [
+      //             [
+      //               '@babel/preset-env',
+      //               {
+      //                 modules: false,
+      //                 corejs: 3,
+      //                 targets: {
+      //                   browsers: pkg.browserslist,
+      //                 },
+      //                 forceAllTransforms: isProduction,
+      //                 useBuiltIns: 'entry',
+      //               },
+      //             ],
+      //             ...(rule.options.babelOptions.presets
+      //               ? rule.options.babelOptions.presets
+      //               : []),
+      //           ],
+      //         },
+      //       },
+      //     };
+      //   }
+
+      //   return rule;
+      // }),
       {
         test: reCssRegex,
         exclude: reCssModuleRegex,

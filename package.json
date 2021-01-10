@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.1.0",
+  "version": "0.1.1-beta.1",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -31,6 +31,7 @@
     "@babel/register": "7.9.0",
     "@babel/runtime": "7.9.6",
     "@mihanizm56/webpack-magic-redux-modules": "0.0.6",
+    "@wildberries/eslint-config-standart": "1.0.1",
     "autoprefixer": "9.8.0",
     "awesome-typescript-loader": "5.2.1",
     "babel-loader": "8.1.0",
@@ -85,8 +86,7 @@
     "webpack-bundle-analyzer": "3.8.0",
     "webpack-dev-middleware": "3.7.2",
     "webpack-hot-middleware": "2.25.0",
-    "webpack-node-externals": "1.6.0",
-    "@wildberries/eslint-config-standart": "1.0.1"
+    "webpack-node-externals": "1.6.0"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",
