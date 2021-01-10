@@ -47,7 +47,6 @@ export default {
         test: reScripts,
         use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(true)],
       },
-
       ...getStyleLoadersConfig(true),
 
       ...overrideWebpackRules(common.module.rules, (rule) => {

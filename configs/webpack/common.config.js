@@ -49,11 +49,11 @@ export const getBabelLoaderConfig = (isNode) => ({
       '@babel/plugin-proposal-class-properties',
       '@babel/plugin-syntax-dynamic-import',
       '@babel/plugin-transform-exponentiation-operator',
-      '@babel/plugin-proposal-optional-chaining',
-      '@babel/plugin-proposal-nullish-coalescing-operator',
+      !isNode && '@babel/plugin-proposal-optional-chaining',
+      !isNode && '@babel/plugin-proposal-nullish-coalescing-operator',
       // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
       isProduction && '@babel/plugin-transform-react-inline-elements',
-      isNode &&
+      !isNode &&
         isProduction &&
         '@babel/plugin-transform-react-constant-elements',
     ].filter(Boolean),
@@ -97,6 +97,7 @@ export const getStyleLoadersConfig = (isNode) => [
         options: {
           importLoaders: 1,
           sourceMap: !isProduction,
+          onlyLocals: isNode,
         },
       },
       {
@@ -128,6 +129,7 @@ export const getStyleLoadersConfig = (isNode) => [
           },
           importLoaders: 1,
           sourceMap: !isProduction,
+          onlyLocals: isNode,
         },
       },
       {
@@ -159,6 +161,7 @@ export const getStyleLoadersConfig = (isNode) => [
           },
           importLoaders: 2,
           sourceMap: !isProduction,
+          onlyLocals: isNode,
         },
       },
       {
