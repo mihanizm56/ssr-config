@@ -26,18 +26,31 @@ export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 const staticAssetName = '[name].[hash:8].[ext]';
 const STATIC_PATH = '/static/assets/';
 
-export const getCacheAndThreadLoaderConfig = () => [
-  { loader: 'cache-loader' },
-  {
-    loader: 'thread-loader',
-    options: {
-      workers: os.cpus().length - 1,
-      poolRespawn: false,
-      workerParallelJobs: 50,
-      poolParallelJobs: 200,
-    },
-  },
-];
+export const getCacheAndThreadLoaderConfig = () =>
+  isProduction
+    ? [
+        {
+          loader: 'thread-loader',
+          options: {
+            workers: os.cpus().length - 1,
+            poolRespawn: false,
+            workerParallelJobs: 50,
+            poolParallelJobs: 200,
+          },
+        },
+      ]
+    : [
+        { loader: 'cache-loader' },
+        {
+          loader: 'thread-loader',
+          options: {
+            workers: os.cpus().length - 1,
+            poolRespawn: false,
+            workerParallelJobs: 50,
+            poolParallelJobs: 200,
+          },
+        },
+      ];
 
 export const getBabelLoaderConfig = (isNode) => ({
   loader: 'babel-loader',
@@ -91,7 +104,7 @@ export const getStyleLoadersConfig = (isNode) => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      { loader: 'cache-loader' },
+      !isProduction && { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -120,7 +133,7 @@ export const getStyleLoadersConfig = (isNode) => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      { loader: 'cache-loader' },
+      !isProduction && { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -152,7 +165,7 @@ export const getStyleLoadersConfig = (isNode) => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      { loader: 'cache-loader' },
+      !isProduction && { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -221,7 +234,7 @@ export default {
                 test: /\.svg$/,
 
                 use: [
-                  { loader: 'cache-loader' },
+                  !isProduction && { loader: 'cache-loader' },
                   {
                     loader: 'svg-url-loader',
                     options: {
@@ -229,13 +242,13 @@ export default {
                       limit: 4096, // 4kb
                     },
                   },
-                ],
+                ].filter(Boolean),
               },
 
               // Инлайним маловесные изображения как Base64 закодированные строки
               {
                 use: [
-                  { loader: 'cache-loader' },
+                  !isProduction && { loader: 'cache-loader' },
                   {
                     loader: 'url-loader',
                     options: {
@@ -243,7 +256,7 @@ export default {
                       limit: 4096, // 4kb
                     },
                   },
-                ],
+                ].filter(Boolean),
               },
             ],
           },
@@ -266,7 +279,10 @@ export default {
       // Конвертирование TXT в модуль
       {
         test: /\.txt$/,
-        use: [{ loader: 'cache-loader' }, { loader: 'raw-loader' }],
+        use: [
+          !isProduction && { loader: 'cache-loader' },
+          { loader: 'raw-loader' },
+        ].filter(Boolean),
       },
 
       // Для всего основного возвращаем URL
