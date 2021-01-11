@@ -49,8 +49,8 @@ export const getBabelLoaderConfig = (isNode) => ({
       '@babel/plugin-proposal-class-properties',
       '@babel/plugin-syntax-dynamic-import',
       '@babel/plugin-transform-exponentiation-operator',
-      !isNode && '@babel/plugin-proposal-optional-chaining',
-      !isNode && '@babel/plugin-proposal-nullish-coalescing-operator',
+      '@babel/plugin-proposal-optional-chaining',
+      '@babel/plugin-proposal-nullish-coalescing-operator',
       // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
       isProduction && '@babel/plugin-transform-react-inline-elements',
       !isNode &&
