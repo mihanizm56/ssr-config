@@ -11,6 +11,13 @@ const bundle = () => {
       }
 
       if (stats.hasErrors()) {
+        console.log(
+          stats.toString({
+            chunks: false, // Makes the build much quieter
+            colors: true, // Shows colors in the console
+          }),
+        );
+
         return reject(new Error('Webpack compilation errors'));
       }
 
