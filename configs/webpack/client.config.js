@@ -115,9 +115,7 @@ export default {
         : '[name].chunk.css',
     }),
 
-    new ProgressBarPlugin({
-      format: `${'  client bundle  '.blue.bold}[:bar] ${':percent'.green.bold}`,
-    }),
+    new ProgressBarPlugin(),
 
     // Webpack Bundle Analyzer
     // https://github.com/th0r/webpack-bundle-analyzer
