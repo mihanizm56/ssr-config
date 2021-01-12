@@ -77,7 +77,6 @@
     "postcss-selector-matches": "4.0.0",
     "postcss-selector-not": "4.0.0",
     "prettier": "2.0.5",
-    "progress-bar-webpack-plugin": "2.1.0",
     "raw-loader": "4.0.1",
     "react-dev-utils": "10.2.1",
     "react-error-overlay": "6.0.7",

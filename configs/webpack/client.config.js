@@ -6,7 +6,6 @@ import fs from 'fs';
 import webpack from 'webpack';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import ProgressBarPlugin from 'progress-bar-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
@@ -114,8 +113,6 @@ export default {
         ? '[name].[contenthash:16].chunk.css'
         : '[name].chunk.css',
     }),
-
-    new ProgressBarPlugin(),
 
     // Webpack Bundle Analyzer
     // https://github.com/th0r/webpack-bundle-analyzer
