@@ -10,6 +10,7 @@ import CompressionPlugin from 'compression-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import { appPaths } from '../../utils/paths';
+import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
   getIsProduction,
   isAnalyze,
@@ -53,6 +54,8 @@ export default {
         use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(false)],
       },
       ...getStyleLoadersConfig(false),
+
+      ...overrideWebpackRules(common.module.rules, (rule) => rule),
     ],
   },
 
