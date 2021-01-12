@@ -5,7 +5,6 @@ import os from 'os';
 import webpack from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import ProgressBarPlugin from 'progress-bar-webpack-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
 
@@ -361,8 +360,5 @@ export default {
     new ForkTsCheckerWebpackPlugin({
       async: !isProduction,
     }),
-
-    // isProduction && new ProgressBarPlugin(),
-    new ProgressBarPlugin(),
-  ].filter(Boolean),
+  ],
 };

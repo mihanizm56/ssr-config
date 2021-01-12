@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable import/no-extraneous-dependencies */
 
+import 'colors';
 import fs from 'fs';
 import webpack from 'webpack';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import ProgressBarPlugin from 'progress-bar-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import CompressionPlugin from 'compression-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
@@ -111,6 +113,10 @@ export default {
       chunkFilename: isProduction
         ? '[name].[contenthash:16].chunk.css'
         : '[name].chunk.css',
+    }),
+
+    new ProgressBarPlugin({
+      format: `${'  client bundle  '.blue.bold}[:bar] ${':percent'.green.bold}`,
     }),
 
     // Webpack Bundle Analyzer

@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.1.10-beta.2",
+  "version": "0.1.10-beta.3",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -41,6 +41,7 @@
     "browser-sync": "2.26.7",
     "cache-loader": "4.1.0",
     "chokidar": "3.4.0",
+    "colors": "1.4.0",
     "compression-webpack-plugin": "4.0.0",
     "cross-env": "7.0.3",
     "css-hot-loader": "1.4.4",

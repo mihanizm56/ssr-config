@@ -1,7 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
+import 'colors';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
+import ProgressBarPlugin from 'progress-bar-webpack-plugin';
 import { appPaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
@@ -86,6 +88,10 @@ export default {
       'process.env.BROWSER': false,
       __SERVER__: true,
       __CLIENT__: false,
+    }),
+
+    new ProgressBarPlugin({
+      format: `${'  server bundle  '.blue.bold}[:bar] ${':percent'.green.bold}`,
     }),
 
     // Добавляем "баннер" для каждого собранного чанка
