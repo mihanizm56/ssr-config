@@ -1,11 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
+import 'colors';
 import express from 'express';
 import browserSync from 'browser-sync';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
+import WebpackBar from 'webpackbar';
 import webpackConfig from '../configs/webpack';
 import { appPaths, packagePaths } from '../utils/paths';
 import run, { format } from './run';
@@ -76,6 +78,12 @@ const start = async () => {
     (x) => x.loader !== 'null-loader',
   );
   clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  clientConfig.plugins.push(
+    new WebpackBar({
+      name: 'client',
+      color: 'green',
+    }),
+  );
 
   const serverConfig = webpackConfig.find((config) => config.name === 'server');
   serverConfig.output.hotUpdateMainFilename = 'updates/[hash].hot-update.json';
@@ -85,6 +93,12 @@ const start = async () => {
     (x) => x.loader !== 'null-loader',
   );
   serverConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  serverConfig.plugins.push(
+    new WebpackBar({
+      name: 'server',
+      color: 'yellow',
+    }),
+  );
 
   await run(clean);
   const multiCompiler = webpack(webpackConfig);

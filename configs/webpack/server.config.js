@@ -3,6 +3,7 @@
 import 'colors';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
+import WebpackBar from 'webpackbar';
 import { appPaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
@@ -87,6 +88,11 @@ export default {
       'process.env.BROWSER': false,
       __SERVER__: true,
       __CLIENT__: false,
+    }),
+
+    new WebpackBar({
+      name: 'server',
+      color: 'yellow',
     }),
 
     // Добавляем "баннер" для каждого собранного чанка

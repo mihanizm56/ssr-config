@@ -4,6 +4,7 @@
 import 'colors';
 import fs from 'fs';
 import webpack from 'webpack';
+import WebpackBar from 'webpackbar';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
@@ -130,6 +131,11 @@ export default {
       chunkFilename: isProduction
         ? '[name].[contenthash:16].chunk.css'
         : '[name].chunk.css',
+    }),
+
+    new WebpackBar({
+      name: 'client',
+      color: 'green',
     }),
 
     // Webpack Bundle Analyzer
