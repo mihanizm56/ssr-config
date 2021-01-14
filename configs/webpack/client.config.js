@@ -84,21 +84,39 @@ export default {
         // Write chunk-manifest.json.json
         const chunkFileName = `${appPaths.build}/chunk-manifest.json`;
         try {
-          const fileFilter = (file) => !file.endsWith('.map');
+          const mapFileFilter = (file) => !file.endsWith('.map');
+          const cssFileFilter = (file) => file.endsWith('.css');
+          const jsFileFilter = (file) => file.endsWith('.js');
           const addPath = (file) => manifest.getPublicPath(file);
-          const chunkFiles = stats.compilation.chunkGroups.reduce((acc, c) => {
-            acc[c.name] = [
-              ...(acc[c.name] || []),
-              ...c.chunks.reduce(
-                (files, cc) => [
-                  ...files,
-                  ...cc.files.filter(fileFilter).map(addPath),
-                ],
-                [],
-              ),
-            ];
-            return acc;
-          }, Object.create(null));
+          const chunkFiles = stats.compilation.chunkGroups.reduce(
+            (acc, chunkGroup) => {
+              return {
+                ...acc,
+                [chunkGroup.name]: {
+                  ...acc[chunkGroup.name],
+
+                  js: chunkGroup.chunks.reduce((files, cc) => {
+                    const newFiles = cc.files
+                      .filter(mapFileFilter)
+                      .filter(jsFileFilter)
+                      .map(addPath);
+
+                    return [...files, ...newFiles];
+                  }, []),
+
+                  css: chunkGroup.chunks.reduce((files, cc) => {
+                    const newFiles = cc.files
+                      .filter(mapFileFilter)
+                      .filter(cssFileFilter)
+                      .map(addPath);
+
+                    return [...files, ...newFiles];
+                  }, []),
+                },
+              };
+            },
+            {},
+          );
           fs.writeFileSync(chunkFileName, JSON.stringify(chunkFiles, null, 2));
         } catch (err) {
           console.error(`ERROR: Cannot write ${chunkFileName}: `, err);
