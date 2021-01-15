@@ -48,6 +48,8 @@ export default {
     ...common.resolve,
   },
 
+  devtool: isProduction ? false : 'cheap-module-source-map',
+
   module: {
     ...common.module,
     rules: [

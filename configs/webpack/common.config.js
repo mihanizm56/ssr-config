@@ -200,8 +200,6 @@ export default {
   mode: isProduction ? 'production' : 'development',
   // mode: 'development',
 
-  devtool: isProduction ? false : 'inline-cheap-module-source-map',
-
   output: {
     publicPath: STATIC_PATH,
     devtoolModuleFilenameTemplate: (info) =>
