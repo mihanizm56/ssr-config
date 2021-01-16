@@ -6,7 +6,8 @@ const appCwd = path.join(process.cwd(), '../', '../', '../');
 
 // Пути в приложении
 const appDirectory = fs.realpathSync(appCwd);
-const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+export const resolveApp = (relativePath) =>
+  path.resolve(appDirectory, relativePath);
 
 export const appPaths = {
   root: resolveApp('.'),

@@ -3,6 +3,7 @@
 import 'colors';
 import express from 'express';
 import browserSync from 'browser-sync';
+import merge from 'webpack-merge';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
@@ -11,6 +12,7 @@ import webpackConfig from '../configs/webpack';
 import { appPaths, packagePaths } from '../utils/paths';
 import run, { format } from './run';
 import clean from './clean';
+import { getInjectedConfig } from './get-injected-config';
 
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {
@@ -49,33 +51,40 @@ const start = async () => {
   server.use(errorOverlayMiddleware());
   server.use('/static', express.static(appPaths.public));
 
+  const injectedConfig = await getInjectedConfig();
+
   // Configure client-side hot module replacement
   const clientConfig = webpackConfig.find((config) => config.name === 'client');
-  clientConfig.entry.client = [`${packagePaths.utils}/webpack-hot-dev-client`]
-    .concat(clientConfig.entry.client)
+  const finalClientConfig = merge.smart(clientConfig, injectedConfig.client);
+  finalClientConfig.entry.client = [
+    `${packagePaths.utils}/webpack-hot-dev-client`,
+  ]
+    .concat(finalClientConfig.entry.client)
     .sort((a, b) => b.includes('polyfill') - a.includes('polyfill'));
 
-  clientConfig.output.filename = clientConfig.output.filename.replace(
+  finalClientConfig.output.filename = finalClientConfig.output.filename.replace(
     'chunkhash',
     'hash',
   );
-  clientConfig.output.chunkFilename = clientConfig.output.chunkFilename.replace(
+  finalClientConfig.output.chunkFilename = finalClientConfig.output.chunkFilename.replace(
     'chunkhash',
     'hash',
   );
-  clientConfig.module.rules = clientConfig.module.rules.filter(
+  finalClientConfig.module.rules = finalClientConfig.module.rules.filter(
     (x) => x.loader !== 'null-loader',
   );
-  clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  finalClientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 
   const serverConfig = webpackConfig.find((config) => config.name === 'server');
-  serverConfig.output.hotUpdateMainFilename = 'updates/[hash].hot-update.json';
-  serverConfig.output.hotUpdateChunkFilename =
+  const finalServerConfig = merge.smart(serverConfig, injectedConfig.server);
+  finalServerConfig.output.hotUpdateMainFilename =
+    'updates/[hash].hot-update.json';
+  finalServerConfig.output.hotUpdateChunkFilename =
     'updates/[id].[hash].hot-update.js';
-  serverConfig.module.rules = serverConfig.module.rules.filter(
+  finalServerConfig.module.rules = finalServerConfig.module.rules.filter(
     (x) => x.loader !== 'null-loader',
   );
-  serverConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  finalServerConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 
   await run(clean);
   const multiCompiler = webpack(webpackConfig);
@@ -88,17 +97,17 @@ const start = async () => {
   const clientPromise = createCompilationPromise(
     'client',
     clientCompiler,
-    clientConfig,
+    finalClientConfig,
   );
   const serverPromise = createCompilationPromise(
     'server',
     serverCompiler,
-    serverConfig,
+    finalServerConfig,
   );
 
   server.use(
     webpackDevMiddleware(clientCompiler, {
-      publicPath: clientConfig.output.publicPath,
+      publicPath: finalClientConfig.output.publicPath,
       logLevel: 'silent',
       watchOptions,
     }),
