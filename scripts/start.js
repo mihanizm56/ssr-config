@@ -55,36 +55,33 @@ const start = async () => {
 
   // Configure client-side hot module replacement
   const clientConfig = webpackConfig.find((config) => config.name === 'client');
-  const finalClientConfig = merge.smart(clientConfig, injectedConfig.client);
-  finalClientConfig.entry.client = [
-    `${packagePaths.utils}/webpack-hot-dev-client`,
-  ]
-    .concat(finalClientConfig.entry.client)
+  clientConfig.entry.client = [`${packagePaths.utils}/webpack-hot-dev-client`]
+    .concat(clientConfig.entry.client)
     .sort((a, b) => b.includes('polyfill') - a.includes('polyfill'));
 
-  finalClientConfig.output.filename = finalClientConfig.output.filename.replace(
+  clientConfig.output.filename = clientConfig.output.filename.replace(
     'chunkhash',
     'hash',
   );
-  finalClientConfig.output.chunkFilename = finalClientConfig.output.chunkFilename.replace(
+  clientConfig.output.chunkFilename = clientConfig.output.chunkFilename.replace(
     'chunkhash',
     'hash',
   );
-  finalClientConfig.module.rules = finalClientConfig.module.rules.filter(
+  clientConfig.module.rules = clientConfig.module.rules.filter(
     (x) => x.loader !== 'null-loader',
   );
-  finalClientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  const finalClientConfig = merge.smart(clientConfig, injectedConfig.client);
 
   const serverConfig = webpackConfig.find((config) => config.name === 'server');
-  const finalServerConfig = merge.smart(serverConfig, injectedConfig.server);
-  finalServerConfig.output.hotUpdateMainFilename =
-    'updates/[hash].hot-update.json';
-  finalServerConfig.output.hotUpdateChunkFilename =
+  serverConfig.output.hotUpdateMainFilename = 'updates/[hash].hot-update.json';
+  serverConfig.output.hotUpdateChunkFilename =
     'updates/[id].[hash].hot-update.js';
-  finalServerConfig.module.rules = finalServerConfig.module.rules.filter(
+  serverConfig.module.rules = serverConfig.module.rules.filter(
     (x) => x.loader !== 'null-loader',
   );
-  finalServerConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  serverConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  const finalServerConfig = merge.smart(serverConfig, injectedConfig.server);
 
   await run(clean);
   const multiCompiler = webpack(webpackConfig);
