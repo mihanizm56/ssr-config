@@ -18,11 +18,11 @@ export const getInjectedConfig = async () => {
     return configFile;
   }
 
-  const additionalConfigExists = Boolean(
-    await readFile(appPaths.configOverrides),
+  const additionalConfigExists = await readFile(appPaths.configOverrides).catch(
+    () => null,
   );
 
-  if (additionalConfigExists) {
+  if (Boolean(additionalConfigExists)) {
     console.log('detect additionalConfigExists', additionalConfigExists);
 
     const configFile = require(appPaths.configOverrides);

@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.1.11-beta.1",
+  "version": "0.1.11-beta.2",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -92,7 +92,7 @@
     "webpack-bundle-analyzer": "3.8.0",
     "webpack-dev-middleware": "3.7.2",
     "webpack-hot-middleware": "2.25.0",
-    "webpack-merge": "5.7.3",
+    "webpack-merge": "4.2.2",
     "webpack-node-externals": "1.6.0",
     "webpackbar": "5.0.0-3"
   },
