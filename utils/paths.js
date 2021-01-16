@@ -17,6 +17,7 @@ export const appPaths = {
   packageJson: resolveApp('package.json'),
   packageLockJson: resolveApp('package-lock.json'),
   tsConfig: resolveApp('tsconfig.json'),
+  configOverrides: resolveApp('config-overrides.js'),
 };
 
 // Путь в пакете сборки

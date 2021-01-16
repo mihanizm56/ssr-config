@@ -1,11 +1,21 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import webpack from 'webpack';
+import merge from 'webpack-merge';
 import webpackConfig from '../configs/webpack';
+import { getInjectedConfig } from './get-injected-config';
 
 const bundle = () => {
-  return new Promise((resolve, reject) => {
-    webpack(webpackConfig).run((err, stats) => {
+  return new Promise(async (resolve, reject) => {
+    const injectedConfig = await getInjectedConfig();
+
+    const resultClientConfig = merge.smart(webpackConfig[0], injectedConfig[0]);
+    const resultServerConfig = merge.smart(webpackConfig[1], injectedConfig[1]);
+
+    console.log('resultClientConfig', resultClientConfig);
+    console.log('resultServerConfig', resultServerConfig);
+
+    webpack([resultClientConfig, resultServerConfig]).run((err, stats) => {
       if (err) {
         return reject(err);
       }
