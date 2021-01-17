@@ -72,7 +72,6 @@ const start = async () => {
     (x) => x.loader !== 'null-loader',
   );
   clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-  // const finalClientConfig = merge.smart(clientConfig, injectedConfig.client);
 
   const serverConfig = webpackResultConfig.find(
     (config) => config.name === 'server',
@@ -84,10 +83,9 @@ const start = async () => {
     (x) => x.loader !== 'null-loader',
   );
   serverConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-  // const finalServerConfig = merge.smart(serverConfig, injectedConfig.server);
 
   await run(clean);
-  const multiCompiler = webpack(webpackResultConfig);
+  const multiCompiler = webpack([clientConfig, serverConfig]);
   const clientCompiler = multiCompiler.compilers.find(
     (compiler) => compiler.name === 'client',
   );
