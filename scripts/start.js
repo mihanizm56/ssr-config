@@ -191,9 +191,9 @@ const start = async () => {
   }
 
   serverCompiler.watch(watchOptions, (error, stats) => {
-    const isError = app && !error && !stats.hasErrors();
+    const isSuccess = app && !error && !stats.hasErrors();
 
-    if (isError) {
+    if (!isSuccess) {
       return;
     }
 
