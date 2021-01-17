@@ -1,32 +1,20 @@
-const mapFileFilter = (file) => !file.endsWith('.map');
-const cssFileFilter = (file) => file.endsWith('.css');
-const jsFileFilter = (file) => file.endsWith('.js');
-const addPath = (manifest) => (file) => manifest.getPublicPath(file);
+import { getFormattedChunkGroup } from './get-formatted-chunk-group';
 
 export const makeChunkManifest = ({ chunkGroups, manifest }) =>
   chunkGroups.reduce((acc, chunkGroup) => {
+    const chunkGroupName = chunkGroup.name;
+
+    const { js, css } = getFormattedChunkGroup({
+      chunks: chunkGroup.chunks,
+      manifest,
+    });
+
     return {
       ...acc,
-      [chunkGroup.name]: {
-        ...acc[chunkGroup.name],
-
-        js: chunkGroup.chunks.reduce((files, cc) => {
-          const newFiles = cc.files
-            .filter(mapFileFilter)
-            .filter(jsFileFilter)
-            .map(addPath(manifest));
-
-          return [...files, ...newFiles];
-        }, []),
-
-        css: chunkGroup.chunks.reduce((files, cc) => {
-          const newFiles = cc.files
-            .filter(mapFileFilter)
-            .filter(cssFileFilter)
-            .map(addPath);
-
-          return [...files, ...newFiles];
-        }, []),
+      [chunkGroupName]: {
+        ...acc[chunkGroupName],
+        js,
+        css,
       },
     };
   }, {});
