@@ -133,7 +133,7 @@ const start = async () => {
     const hmrPrefix = '[\x1b[35mHMR\x1b[0m] ';
 
     if (!app.hot) {
-      throw new Error(`${hmrPrefix}Hot Module Replacement is disabled.`);
+      console.log(`${hmrPrefix} ${'Hot Module Replacement is disabled'.red}`);
     }
 
     if (app.hot.status() !== 'idle') {
@@ -145,7 +145,7 @@ const start = async () => {
       .then((updatedModules) => {
         if (!updatedModules) {
           if (fromUpdate) {
-            console.log(`${hmrPrefix}Update applied.`.green);
+            console.log(`${hmrPrefix} ${'Update applied'.green}`);
           }
 
           return;
@@ -165,7 +165,8 @@ const start = async () => {
       })
       .catch((error) => {
         if (['abort', 'fail'].includes(app.hot.status())) {
-          console.warn(`${hmrPrefix}Cannot apply update.`.yellow.underline);
+          console.log(`${hmrPrefix} ${'Cannot apply update'.yellow.underline}`);
+          console.log(`reason: ${app.hot.status()}`.red);
 
           // Удаление server.js из require.cache
           delete require.cache[require.resolve(`${appPaths.build}/server`)];
@@ -182,9 +183,9 @@ const start = async () => {
 
           // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
           app = require(`${appPaths.build}/server`).default;
-          console.warn(`${hmrPrefix}App has been reloaded.`.green);
+          console.log(`${hmrPrefix} ${'App has been reloaded'.green}`);
         } else {
-          console.log(`${hmrPrefix}Update failed`.red);
+          console.log(`${hmrPrefix} ${'Update failed'.red}`);
           console.log(`${error.stack || error.message}`.red);
         }
       });
