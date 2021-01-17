@@ -3,7 +3,6 @@
 import 'colors';
 import express from 'express';
 import browserSync from 'browser-sync';
-import merge from 'webpack-merge';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
@@ -51,10 +50,12 @@ const start = async () => {
   server.use(errorOverlayMiddleware());
   server.use('/static', express.static(appPaths.public));
 
-  const injectedConfig = await getInjectedConfig();
+  const webpackResultConfig = await getInjectedConfig(webpackConfig);
 
   // Configure client-side hot module replacement
-  const clientConfig = webpackConfig.find((config) => config.name === 'client');
+  const clientConfig = webpackResultConfig.find(
+    (config) => config.name === 'client',
+  );
   clientConfig.entry.client = [`${packagePaths.utils}/webpack-hot-dev-client`]
     .concat(clientConfig.entry.client)
     .sort((a, b) => b.includes('polyfill') - a.includes('polyfill'));
@@ -71,9 +72,11 @@ const start = async () => {
     (x) => x.loader !== 'null-loader',
   );
   clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-  const finalClientConfig = merge.smart(clientConfig, injectedConfig.client);
+  // const finalClientConfig = merge.smart(clientConfig, injectedConfig.client);
 
-  const serverConfig = webpackConfig.find((config) => config.name === 'server');
+  const serverConfig = webpackResultConfig.find(
+    (config) => config.name === 'server',
+  );
   serverConfig.output.hotUpdateMainFilename = 'updates/[hash].hot-update.json';
   serverConfig.output.hotUpdateChunkFilename =
     'updates/[id].[hash].hot-update.js';
@@ -81,10 +84,10 @@ const start = async () => {
     (x) => x.loader !== 'null-loader',
   );
   serverConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-  const finalServerConfig = merge.smart(serverConfig, injectedConfig.server);
+  // const finalServerConfig = merge.smart(serverConfig, injectedConfig.server);
 
   await run(clean);
-  const multiCompiler = webpack(webpackConfig);
+  const multiCompiler = webpack(webpackResultConfig);
   const clientCompiler = multiCompiler.compilers.find(
     (compiler) => compiler.name === 'client',
   );
@@ -94,17 +97,17 @@ const start = async () => {
   const clientPromise = createCompilationPromise(
     'client',
     clientCompiler,
-    finalClientConfig,
+    clientConfig,
   );
   const serverPromise = createCompilationPromise(
     'server',
     serverCompiler,
-    finalServerConfig,
+    serverConfig,
   );
 
   server.use(
     webpackDevMiddleware(clientCompiler, {
-      publicPath: finalClientConfig.output.publicPath,
+      publicPath: clientConfig.output.publicPath,
       logLevel: 'silent',
       watchOptions,
     }),

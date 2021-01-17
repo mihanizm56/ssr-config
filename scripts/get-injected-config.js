@@ -3,25 +3,25 @@
 /* eslint-disable global-require */
 import { appPaths, resolveApp } from '../utils/paths';
 
-export const getInjectedConfig = async () => {
+export const getInjectedConfig = async (config) => {
   const pkg = require(appPaths.packageJson);
   const extraPathForAdditionalConfig =
     pkg['config-overrides-path'] || './config-overrides.js';
 
   try {
-    const overridesConfig = require(resolveApp(extraPathForAdditionalConfig));
+    const overridesConfigFunction = require(resolveApp(
+      extraPathForAdditionalConfig,
+    ));
 
-    const client = overridesConfig.find((config) => config.name === 'client');
-    const server = overridesConfig.find((config) => config.name === 'server');
+    if (
+      !overridesConfigFunction &&
+      typeof overridesConfigFunction === 'function'
+    ) {
+      return config;
+    }
 
-    return {
-      client,
-      server,
-    };
+    return overridesConfigFunction(config);
   } catch {
-    return {
-      client: {},
-      server: {},
-    };
+    return config;
   }
 };
