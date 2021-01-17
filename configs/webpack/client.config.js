@@ -21,6 +21,7 @@ import common, {
   getBabelLoaderConfig,
   getStyleLoadersConfig,
 } from './common.config';
+import { makeChunkManifest } from './utils/make-chunk-manifest';
 
 const isProduction = getIsProduction();
 
@@ -86,40 +87,13 @@ export default {
       done: (manifest, stats) => {
         // Write chunk-manifest.json.json
         const chunkFileName = `${appPaths.build}/chunk-manifest.json`;
+
         try {
-          const mapFileFilter = (file) => !file.endsWith('.map');
-          const cssFileFilter = (file) => file.endsWith('.css');
-          const jsFileFilter = (file) => file.endsWith('.js');
-          const addPath = (file) => manifest.getPublicPath(file);
-          const chunkFiles = stats.compilation.chunkGroups.reduce(
-            (acc, chunkGroup) => {
-              return {
-                ...acc,
-                [chunkGroup.name]: {
-                  ...acc[chunkGroup.name],
+          const chunkFiles = makeChunkManifest({
+            chunkGroups: stats.compilation.chunkGroups,
+            manifest,
+          });
 
-                  js: chunkGroup.chunks.reduce((files, cc) => {
-                    const newFiles = cc.files
-                      .filter(mapFileFilter)
-                      .filter(jsFileFilter)
-                      .map(addPath);
-
-                    return [...files, ...newFiles];
-                  }, []),
-
-                  css: chunkGroup.chunks.reduce((files, cc) => {
-                    const newFiles = cc.files
-                      .filter(mapFileFilter)
-                      .filter(cssFileFilter)
-                      .map(addPath);
-
-                    return [...files, ...newFiles];
-                  }, []),
-                },
-              };
-            },
-            {},
-          );
           fs.writeFileSync(chunkFileName, JSON.stringify(chunkFiles, null, 2));
         } catch (err) {
           console.error(`ERROR: Cannot write ${chunkFileName}: `, err);
