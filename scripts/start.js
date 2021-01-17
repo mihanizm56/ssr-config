@@ -9,7 +9,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
 import webpackConfig from '../configs/webpack';
 import { appPaths, packagePaths } from '../utils/paths';
-import run, { format } from './run';
+import run from './run';
 import clean from './clean';
 import { getInjectedConfig } from './get-injected-config';
 
@@ -23,10 +23,9 @@ const watchOptions = {
 const openBrowser = process.env.BROWSER !== 'none';
 const PORT = process.env.PORT || 3000;
 
-const createCompilationPromise = (name, compiler, config) => {
+const createCompilationPromise = (name, compiler) => {
   return new Promise((resolve, reject) => {
     compiler.hooks.done.tap(name, (stats) => {
-      console.info(stats.toString(config.stats));
       if (stats.hasErrors()) {
         console.log(
           stats.toString({
@@ -132,34 +131,41 @@ const start = async () => {
 
   function checkForUpdate(fromUpdate) {
     const hmrPrefix = '[\x1b[35mHMR\x1b[0m] ';
+
     if (!app.hot) {
       throw new Error(`${hmrPrefix}Hot Module Replacement is disabled.`);
     }
+
     if (app.hot.status() !== 'idle') {
       return Promise.resolve();
     }
+
     return app.hot
       .check(true)
       .then((updatedModules) => {
         if (!updatedModules) {
           if (fromUpdate) {
-            console.info(`${hmrPrefix}Update applied.`);
+            console.log(`${hmrPrefix}Update applied.`.green);
           }
+
           return;
         }
         if (updatedModules.length === 0) {
-          console.info(`${hmrPrefix}Nothing hot updated.`);
-        } else {
-          console.info(`${hmrPrefix}Updated modules:`);
-          updatedModules.forEach((moduleId) =>
-            console.info(`${hmrPrefix} - ${moduleId}`),
-          ); // eslint-disable-line function-paren-newline
-          checkForUpdate(true);
+          console.log(`${hmrPrefix}Nothing hot updated.`.yellow);
+
+          return;
         }
+
+        console.log(`${hmrPrefix}Updated modules:`.green);
+        updatedModules.forEach((moduleId) => {
+          console.log(`${hmrPrefix} - ${moduleId}`.green);
+        });
+
+        checkForUpdate(true);
       })
       .catch((error) => {
         if (['abort', 'fail'].includes(app.hot.status())) {
-          console.warn(`${hmrPrefix}Cannot apply update.`);
+          console.warn(`${hmrPrefix}Cannot apply update.`.yellow.underline);
 
           // Удаление server.js из require.cache
           delete require.cache[require.resolve(`${appPaths.build}/server`)];
@@ -176,30 +182,30 @@ const start = async () => {
 
           // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
           app = require(`${appPaths.build}/server`).default;
-          console.warn(`${hmrPrefix}App has been reloaded.`);
+          console.warn(`${hmrPrefix}App has been reloaded.`.green);
         } else {
-          console.warn(
-            `${hmrPrefix}Update failed: ${error.stack || error.message}`,
-          );
+          console.log(`${hmrPrefix}Update failed`.red);
+          console.log(`${error.stack || error.message}`.red);
         }
       });
   }
 
   serverCompiler.watch(watchOptions, (error, stats) => {
-    if (app && !error && !stats.hasErrors()) {
-      checkForUpdate().then(() => {
-        appPromiseIsResolved = true;
-        appPromiseResolve();
-      });
+    const isError = app && !error && !stats.hasErrors();
+
+    if (isError) {
+      return;
     }
+
+    checkForUpdate().then(() => {
+      appPromiseIsResolved = true;
+      appPromiseResolve();
+    });
   });
 
   // Ждем пока оба промиса сборки зарезолвятся
   await clientPromise;
   await serverPromise;
-
-  const timeStart = new Date();
-  console.info(`[${format(timeStart)}] Launching server...`);
 
   // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
   app = require(`${appPaths.build}/server`).default;
@@ -221,10 +227,6 @@ const start = async () => {
       (error, bs) => (error ? reject(error) : resolve(bs)),
     ),
   ); // eslint-disable-line function-paren-newline
-
-  const timeEnd = new Date();
-  const time = timeEnd.getTime() - timeStart.getTime();
-  console.info(`[${format(timeEnd)}] Server launched after ${time} ms`);
 
   return server;
 };

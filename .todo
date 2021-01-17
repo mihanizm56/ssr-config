@@ -13,3 +13,4 @@
 +7) awts => babel
 +8) add cache-loader and thread-loader
 +9) config-overrides.js
++10) logging and indication
