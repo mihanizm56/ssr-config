@@ -283,6 +283,37 @@ export default {
         ].filter(Boolean),
       },
 
+      {
+        test: /\.(woff2|woff)/,
+        use: [
+          !isProduction && { loader: 'cache-loader' },
+          { loader: 'file-loader' },
+        ].filter(Boolean),
+      },
+
+      {
+        exclude: [
+          reScripts,
+          reAllStyles,
+          reImage,
+          /\.json$/,
+          /\.txt$/,
+          /\.md$/,
+          /\.ejs$/,
+          /\.woff2/,
+          /\.woff/,
+        ],
+        use: [
+          ...getCacheAndThreadLoaderConfig(),
+          {
+            loader: 'file-loader',
+            options: {
+              name: staticAssetName,
+            },
+          },
+        ],
+      },
+
       // Для всего основного возвращаем URL
       // НЕ ЗАБЫТЬ обновить `exclude` при добавлении нового модуля
       {
