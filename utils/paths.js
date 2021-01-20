@@ -2,7 +2,9 @@
 import fs from 'fs';
 import path from 'path';
 
-const appCwd = path.join(process.cwd(), '../', '../', '../');
+const DEFAULT_APP_CWD = path.join(process.cwd(), '../', '../', '../');
+
+const appCwd = process.env.APP_CWD || DEFAULT_APP_CWD;
 
 // Пути в приложении
 const appDirectory = fs.realpathSync(appCwd);

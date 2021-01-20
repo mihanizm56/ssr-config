@@ -20,10 +20,10 @@ if (!command || !allowedCommands.includes(command)) {
   return;
 }
 
-const result = spawn.sync(`npm run ${command} --prefix ${prefix}`, {
-  stdio: 'inherit',
-  shell: true,
-});
+const result = spawn.sync(
+  `npx cross-env APP_CWD=${process.cwd()} npm run ${command} --prefix ${prefix}`,
+  { stdio: 'inherit', shell: true },
+);
 
 if (result.signal) {
   if (result.signal === 'SIGKILL') {
