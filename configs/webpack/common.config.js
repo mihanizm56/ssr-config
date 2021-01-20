@@ -264,30 +264,7 @@ export default {
         ].filter(Boolean),
       },
 
-      {
-        exclude: [
-          reScripts,
-          reAllStyles,
-          reImage,
-          /\.json$/,
-          /\.txt$/,
-          /\.md$/,
-          /\.ejs$/,
-          /\.woff2/,
-          /\.woff/,
-        ],
-        use: [
-          ...getCacheAndThreadLoaderConfig(isProduction),
-          {
-            loader: 'file-loader',
-            options: {
-              name: staticAssetName,
-            },
-          },
-        ],
-      },
-
-      // Для всего основного возвращаем URL
+      // Для всего остального возвращаем URL
       // НЕ ЗАБЫТЬ обновить `exclude` при добавлении нового модуля
       {
         exclude: [
