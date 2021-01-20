@@ -1,12 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import path from 'path';
-import os from 'os';
 import webpack from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
+import { getCacheAndThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 export const getIsProduction = () => process.env.NODE_ENV === 'production';
 const isProduction = getIsProduction();
@@ -25,32 +25,6 @@ export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
 const staticAssetName = '[name].[hash:8].[ext]';
 const STATIC_PATH = '/static/assets/';
-
-export const getCacheAndThreadLoaderConfig = () =>
-  isProduction
-    ? [
-        {
-          loader: 'thread-loader',
-          options: {
-            workers: os.cpus().length - 1,
-            poolRespawn: false,
-            workerParallelJobs: 50,
-            poolParallelJobs: 200,
-          },
-        },
-      ]
-    : [
-        { loader: 'cache-loader' },
-        {
-          loader: 'thread-loader',
-          options: {
-            workers: os.cpus().length - 1,
-            poolRespawn: false,
-            workerParallelJobs: 50,
-            poolParallelJobs: 200,
-          },
-        },
-      ];
 
 export const getBabelLoaderConfig = (isNode) => ({
   loader: 'babel-loader',
@@ -261,7 +235,7 @@ export default {
           // Или возвращем URL на ресурс
           {
             use: [
-              ...getCacheAndThreadLoaderConfig(),
+              ...getCacheAndThreadLoaderConfig(isProduction),
               {
                 loader: 'file-loader',
                 options: {
@@ -303,7 +277,7 @@ export default {
           /\.woff/,
         ],
         use: [
-          ...getCacheAndThreadLoaderConfig(),
+          ...getCacheAndThreadLoaderConfig(isProduction),
           {
             loader: 'file-loader',
             options: {
@@ -328,7 +302,7 @@ export default {
           /\.woff/,
         ],
         use: [
-          ...getCacheAndThreadLoaderConfig(),
+          ...getCacheAndThreadLoaderConfig(isProduction),
           {
             loader: 'file-loader',
             options: {

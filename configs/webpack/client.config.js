@@ -16,11 +16,11 @@ import common, {
   getIsProduction,
   isAnalyze,
   reScripts,
-  getCacheAndThreadLoaderConfig,
   getBabelLoaderConfig,
   getStyleLoadersConfig,
 } from './common.config';
 import { makeChunkManifest } from './utils/make-chunk-manifest';
+import { getCacheAndThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 const isProduction = getIsProduction();
 
@@ -52,7 +52,10 @@ export default {
     rules: [
       {
         test: reScripts,
-        use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(false)],
+        use: [
+          ...getCacheAndThreadLoaderConfig(isProduction),
+          getBabelLoaderConfig(false),
+        ],
       },
       ...getStyleLoadersConfig(false),
 

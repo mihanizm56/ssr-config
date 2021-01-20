@@ -11,10 +11,10 @@ import common, {
   reImage,
   reAllStyles,
   reScripts,
-  getCacheAndThreadLoaderConfig,
   getBabelLoaderConfig,
   getStyleLoadersConfig,
 } from './common.config';
+import { getCacheAndThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 const isProduction = getIsProduction();
 
@@ -47,7 +47,10 @@ export default {
     rules: [
       {
         test: reScripts,
-        use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(true)],
+        use: [
+          ...getCacheAndThreadLoaderConfig(isProduction),
+          getBabelLoaderConfig(true),
+        ],
       },
       ...getStyleLoadersConfig(true),
 
