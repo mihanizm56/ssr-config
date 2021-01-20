@@ -179,15 +179,6 @@ export default {
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
   },
 
-  resolve: {
-    // Нужно синхронизировать с .eslintrc
-    alias: {
-      '@': appPaths.src,
-    },
-    modules: ['node_modules'],
-    extensions: ['.ts', '.tsx', '.js', '.json'],
-  },
-
   module: {
     // Делаем несуществующие импорты ошибками а не ворнингами
     strictExportPresence: true,
