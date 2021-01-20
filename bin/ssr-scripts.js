@@ -10,7 +10,7 @@ const spawn = require('react-dev-utils/crossSpawn');
 
 dotenv.config();
 
-const allowedCommands = ['build', 'start'];
+const allowedCommands = ['build', 'start', 'build:analyse'];
 const command = process.argv[2];
 const prefix = path.resolve(__dirname, '../');
 
