@@ -16,6 +16,7 @@ const prefix = path.resolve(__dirname, '../');
 
 if (!command || !allowedCommands.includes(command)) {
   console.log(`Unknown command ${command}`);
+
   return;
 }
 

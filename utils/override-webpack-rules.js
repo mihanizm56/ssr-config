@@ -7,6 +7,7 @@ export const overrideWebpackRules = (rules, patch) => {
     if (rule.oneOf) {
       rule = { ...rule, oneOf: overrideWebpackRules(rule.oneOf, patch) };
     }
+
     return rule;
   });
 };

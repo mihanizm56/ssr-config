@@ -16,5 +16,6 @@ module.exports.getConsoleArgs = () => {
       });
     }
   });
+
   return args;
 };

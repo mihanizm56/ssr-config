@@ -8,7 +8,6 @@ import WebpackBar from 'webpackbar';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import CompressionPlugin from 'compression-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import { appPaths } from '../../utils/paths';
@@ -24,9 +23,6 @@ import common, {
 import { makeChunkManifest } from './utils/make-chunk-manifest';
 
 const isProduction = getIsProduction();
-
-const brotliEnabled = isProduction && process.env.BROTLI_ASSETS !== 'false';
-const gzipEnabled = isProduction && process.env.GZIP_ASSETS !== 'false';
 
 export default {
   ...common,
@@ -82,6 +78,7 @@ export default {
       customize: (entry) => {
         // You can prevent adding items to the manifest by returning false.
         if (entry.key.toLowerCase().endsWith('.map')) return false;
+
         return { key: entry.key, value: entry.value };
       },
       done: (manifest, stats) => {
@@ -117,21 +114,6 @@ export default {
     // Webpack Bundle Analyzer
     // https://github.com/th0r/webpack-bundle-analyzer
     isProduction && isAnalyze && new BundleAnalyzerPlugin(),
-    brotliEnabled &&
-      new CompressionPlugin({
-        filename: '[path].br[query]',
-        algorithm: 'brotliCompress',
-        test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
-        compressionOptions: {
-          level: 11,
-        },
-      }),
-    gzipEnabled &&
-      new CompressionPlugin({
-        filename: '[path].gz[query]',
-        algorithm: 'gzip',
-        test: /\.js$|\.css$|\.json$|\.html$|\.ico$/,
-      }),
   ].filter(Boolean),
 
   optimization: {

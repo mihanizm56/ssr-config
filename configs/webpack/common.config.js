@@ -283,7 +283,7 @@ export default {
       },
 
       {
-        test: /\.(woff2|woff)/,
+        test: /\.(ttf|woff2|woff)/,
         use: [
           !isProduction && { loader: 'cache-loader' },
           { loader: 'file-loader' },
@@ -342,17 +342,6 @@ export default {
       isProduction && {
         test: resolvePath('node_modules/react-deep-force-update/lib/index.js'),
         loader: 'null-loader',
-      },
-
-      {
-        test: /\.[jt]s$/,
-        exclude: /node_modules/,
-        use: [
-          ...getCacheAndThreadLoaderConfig(),
-          {
-            loader: '@mihanizm56/webpack-magic-redux-modules',
-          },
-        ],
       },
     ].filter(Boolean),
   },
