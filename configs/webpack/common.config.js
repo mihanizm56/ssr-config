@@ -198,7 +198,6 @@ export default {
   context: appPaths.root,
 
   mode: isProduction ? 'production' : 'development',
-  // mode: 'development',
 
   output: {
     publicPath: STATIC_PATH,
