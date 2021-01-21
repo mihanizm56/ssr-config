@@ -226,14 +226,14 @@ export default {
           // Или возвращем URL на ресурс
           {
             use: [
-              ...getCacheAndThreadLoaderConfig(isProduction),
+              !isProduction && { loader: 'cache-loader' },
               {
                 loader: 'file-loader',
                 options: {
                   name: staticAssetName,
                 },
               },
-            ],
+            ].filter(Boolean),
           },
         ],
       },
