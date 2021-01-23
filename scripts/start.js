@@ -101,6 +101,8 @@ const start = async () => {
 
     if (!app.hot) {
       console.log(`${hmrPrefix} ${'Hot Module Replacement is disabled'.red}`);
+
+      return;
     }
 
     if (app.hot.status() !== 'idle') {
@@ -162,7 +164,7 @@ const start = async () => {
     const isError = error || stats.hasErrors();
 
     if (!app) {
-      throw new Error('App is empty');
+      return;
     }
 
     if (isError) {
