@@ -46,7 +46,7 @@ const start = async () => {
   );
 
   enrichClientConfig(clientConfig);
-  enrichServerConfig(clientConfig);
+  enrichServerConfig(serverConfig);
 
   const webpackResultCompiler = webpack([clientConfig, serverConfig]);
 
