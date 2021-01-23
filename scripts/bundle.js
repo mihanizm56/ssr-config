@@ -3,6 +3,7 @@
 import webpack from 'webpack';
 import webpackConfig from '../configs/webpack';
 import { getInjectedConfig } from './get-injected-config';
+import { showStatsErrors } from './utils/show-stats-errors';
 
 const bundle = () => {
   return new Promise(async (resolve, reject) => {
@@ -14,12 +15,7 @@ const bundle = () => {
       }
 
       if (stats.hasErrors()) {
-        console.log(
-          stats.toString({
-            chunks: false, // Makes the build much quieter
-            colors: true, // Shows colors in the console
-          }),
-        );
+        showStatsErrors(stats);
 
         return reject(new Error('Webpack compilation errors'));
       }

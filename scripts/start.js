@@ -16,6 +16,7 @@ import { getInjectedConfig } from './get-injected-config';
 import { createCompilation } from './utils/create-compilation';
 import { enrichClientConfig } from './utils/enrich-client-config';
 import { enrichServerConfig } from './utils/enrich-server-config';
+import { showStatsErrors } from './utils/show-stats-errors';
 
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {
@@ -27,14 +28,10 @@ const watchOptions = {
 const openBrowser = process.env.BROWSER !== 'none';
 const PORT = process.env.PORT || 3000;
 
-let server;
-
 const start = async () => {
-  if (server) {
-    return server;
-  }
+  await run(clean);
 
-  server = express();
+  const server = express();
   server.use(errorOverlayMiddleware());
   server.use('/static', express.static(appPaths.public));
 
@@ -44,15 +41,12 @@ const start = async () => {
   const clientConfig = webpackResultConfig.find(
     (config) => config.name === 'client',
   );
-
   const serverConfig = webpackResultConfig.find(
     (config) => config.name === 'server',
   );
 
   enrichClientConfig(clientConfig);
   enrichServerConfig(clientConfig);
-
-  await run(clean);
 
   const webpackResultCompiler = webpack([clientConfig, serverConfig]);
 
@@ -69,7 +63,7 @@ const start = async () => {
   server.use(
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
-      logLevel: 'silent',
+      logLevel: 'error',
       watchOptions,
     }),
   );
@@ -87,7 +81,9 @@ const start = async () => {
 
     appPromiseIsResolved = false;
     // eslint-disable-next-line no-return-assign
-    appPromise = new Promise((resolve) => (appPromiseResolve = resolve));
+    appPromise = new Promise((resolve) => {
+      appPromiseResolve = resolve;
+    });
   });
 
   server.use(async (req, res) => {
@@ -163,15 +159,18 @@ const start = async () => {
   }
 
   serverCompiler.watch(watchOptions, async (error, stats) => {
-    const isError = !app || error || stats.hasErrors();
+    const isError = error || stats.hasErrors();
+
+    if (!app) {
+      throw new Error('App is empty');
+    }
 
     if (isError) {
-      console.log(
-        stats.toString({
-          chunks: false, // Makes the build much quieter
-          colors: true, // Shows colors in the console
-        }),
-      );
+      if (error) {
+        console.log(`${error}`.red);
+      } else {
+        showStatsErrors(stats);
+      }
 
       return;
     }
@@ -192,7 +191,6 @@ const start = async () => {
   appPromiseResolve();
 
   // Запуск dev сервера с browsersync и HMR
-
   browserSync.create().init(
     {
       // https://www.browsersync.io/docs/options
