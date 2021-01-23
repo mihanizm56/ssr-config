@@ -9,6 +9,7 @@ import { resolvePath } from '../../utils/resolve-path';
 import { getCacheAndThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 export const getIsProduction = () => process.env.NODE_ENV === 'production';
+export const disabledProgress = process.env.DISABLE_PROGRESS === 'true';
 const isProduction = getIsProduction();
 export const isAnalyze = process.env.ANALYZE === 'true';
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require

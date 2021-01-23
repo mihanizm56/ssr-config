@@ -18,6 +18,7 @@ import common, {
   reScripts,
   getBabelLoaderConfig,
   getStyleLoadersConfig,
+  disabledProgress,
 } from './common.config';
 import { makeChunkManifest } from './utils/make-chunk-manifest';
 import { getCacheAndThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
@@ -109,10 +110,11 @@ export default {
         : '[name].chunk.css',
     }),
 
-    new WebpackBar({
-      name: 'client',
-      color: 'green',
-    }),
+    !disabledProgress &&
+      new WebpackBar({
+        name: 'client',
+        color: 'green',
+      }),
 
     // Webpack Bundle Analyzer
     // https://github.com/th0r/webpack-bundle-analyzer

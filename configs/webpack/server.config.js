@@ -13,6 +13,7 @@ import common, {
   reScripts,
   getBabelLoaderConfig,
   getStyleLoadersConfig,
+  disabledProgress,
 } from './common.config';
 import { getCacheAndThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
@@ -93,10 +94,11 @@ export default {
       __CLIENT__: false,
     }),
 
-    new WebpackBar({
-      name: 'server',
-      color: 'yellow',
-    }),
+    !disabledProgress &&
+      new WebpackBar({
+        name: 'server',
+        color: 'yellow',
+      }),
 
     // Добавляем "баннер" для каждого собранного чанка
     // https://webpack.js.org/plugins/banner-plugin/
