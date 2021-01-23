@@ -248,7 +248,7 @@ export default {
       },
 
       {
-        test: /\.(ttf|woff2|woff)/,
+        test: /\.(ttf|woff2|woff|eot)/,
         use: [
           !isProduction && { loader: 'cache-loader' },
           { loader: 'file-loader' },
@@ -268,6 +268,8 @@ export default {
           /\.ejs$/,
           /\.woff2/,
           /\.woff/,
+          /\.ttf/,
+          /\.eot/,
         ],
         use: [
           ...getCacheAndThreadLoaderConfig(isProduction),
