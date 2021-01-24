@@ -29,13 +29,13 @@ const openBrowser = process.env.BROWSER !== 'none';
 const PORT = process.env.PORT || 3000;
 
 const start = async () => {
-  await run(clean);
-
   const server = express();
   server.use(errorOverlayMiddleware());
   server.use('/static', express.static(appPaths.public));
 
   const webpackResultConfig = await getInjectedConfig(webpackConfig);
+
+  await run(clean);
 
   // Configure client-side hot module replacement
   const clientConfig = webpackResultConfig.find(
@@ -74,6 +74,7 @@ const start = async () => {
   let appPromiseResolve;
   let app;
   let appPromiseIsResolved = true;
+
   serverCompiler.hooks.compile.tap('server', () => {
     if (!appPromiseIsResolved) {
       return;
@@ -86,6 +87,7 @@ const start = async () => {
     });
   });
 
+  // передаём траффик с девсервера вебпака на наш
   server.use(async (req, res) => {
     try {
       await appPromise;
@@ -97,7 +99,7 @@ const start = async () => {
   });
 
   function checkForUpdate(fromUpdate) {
-    const hmrPrefix = '[\x1b[35mHMR\x1b[0m] ';
+    const hmrPrefix = '[\x1b[35mHMR\x1b[0m]';
 
     if (!app.hot) {
       console.log(`${hmrPrefix} ${'Hot Module Replacement is disabled'.red}`);
@@ -120,14 +122,14 @@ const start = async () => {
           return;
         }
         if (updatedModules.length === 0) {
-          console.log(`${hmrPrefix}Nothing hot updated.`.yellow);
+          console.log(`${hmrPrefix} ${'Nothing hot updated'.yellow}`);
 
           return;
         }
 
-        console.log(`${hmrPrefix}Updated modules:`.green);
+        console.log(`${hmrPrefix} ${'Updated modules:'.green}`);
         updatedModules.forEach((moduleId) => {
-          console.log(`${hmrPrefix} - ${moduleId}`.green);
+          console.log(`${hmrPrefix} - ${`${moduleId}`.green}`);
         });
 
         checkForUpdate(true);
@@ -150,6 +152,7 @@ const start = async () => {
             }
           });
 
+          // переустанавливаем сервер нашего приложения в переменную
           // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
           app = require(`${appPaths.build}/server`).default;
           console.log(`${hmrPrefix} ${'App has been reloaded'.green}`);
@@ -160,13 +163,16 @@ const start = async () => {
       });
   }
 
+  // подписываемся на обновление файлов вебпака
   serverCompiler.watch(watchOptions, async (error, stats) => {
-    const isError = error || stats.hasErrors();
+    const isError = !app || error || stats.hasErrors();
 
+    // начальный старт еще не имеет собранного сервера app
     if (!app) {
       return;
     }
 
+    // вывод ошибок
     if (isError) {
       if (error) {
         console.log(`${error}`.red);
@@ -177,8 +183,10 @@ const start = async () => {
       return;
     }
 
+    // вызываем функцию обновления hmr
     await checkForUpdate();
 
+    // завершаем сборку
     appPromiseIsResolved = true;
     appPromiseResolve();
   });
@@ -187,8 +195,11 @@ const start = async () => {
   await clientCompilation;
   await serverCompilation;
 
+  // записываем серверную часть в переменную app
   // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
   app = require(`${appPaths.build}/server`).default;
+
+  // завершаем сборку
   appPromiseIsResolved = true;
   appPromiseResolve();
 
