@@ -15,5 +15,5 @@
 +9) config-overrides.js
 +10) logging and indication
 +11) remove unnecessary
-12) fix hmr
++-12) fix hmr
 13) cwd path fix
