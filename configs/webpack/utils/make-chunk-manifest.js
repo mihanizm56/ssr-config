@@ -4,7 +4,7 @@ export const makeChunkManifest = ({ chunkGroups, manifest }) =>
   chunkGroups.reduce((acc, chunkGroup) => {
     const chunkGroupName = chunkGroup.name;
 
-    const { js, css } = getFormattedChunkGroup({
+    const { js, css, inlineCss } = getFormattedChunkGroup({
       chunks: chunkGroup.chunks,
       manifest,
     });
@@ -15,6 +15,7 @@ export const makeChunkManifest = ({ chunkGroups, manifest }) =>
         ...acc[chunkGroupName],
         js,
         css,
+        inlineCss,
       },
     };
   }, {});

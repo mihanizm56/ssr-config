@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.2.2",
+  "version": "0.2.3-beta.1",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
