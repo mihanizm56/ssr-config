@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.2.3",
+  "version": "0.2.4-beta.1",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -48,7 +48,6 @@
     "glob": "7.1.6",
     "mini-css-extract-plugin": "0.9.0",
     "mkdirp": "1.0.4",
-    "node-sass": "4.13.1",
     "null-loader": "4.0.0",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pixrem": "5.0.0",
