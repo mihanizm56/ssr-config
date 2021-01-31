@@ -79,12 +79,6 @@ export default {
       output: `${appPaths.build}/asset-manifest.json`,
       publicPath: true,
       writeToDisk: true,
-      customize: (entry) => {
-        // You can prevent adding items to the manifest by returning false.
-        if (entry.key.toLowerCase().endsWith('.map')) return false;
-
-        return { key: entry.key, value: entry.value };
-      },
       done: (manifest, stats) => {
         // Write chunk-manifest.json.json
         const chunkFileName = `${appPaths.build}/chunk-manifest.json`;
