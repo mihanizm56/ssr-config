@@ -46,7 +46,7 @@ export default {
     ...common.resolve,
   },
 
-  devtool: isProduction ? false : 'cheap-module-source-map',
+  devtool: isProduction ? false : 'source-map',
 
   module: {
     ...common.module,
