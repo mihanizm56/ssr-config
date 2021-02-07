@@ -193,7 +193,6 @@ export default {
       {
         test: reImage,
         use: [
-          !isProduction && { loader: 'cache-loader' },
           {
             loader: 'url-loader',
             options: {
@@ -201,7 +200,7 @@ export default {
               limit: 4096, // 4kb
             },
           },
-        ].filter(Boolean),
+        ],
       },
 
       // Конвертирование TXT в модуль
