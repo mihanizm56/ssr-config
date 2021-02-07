@@ -192,56 +192,16 @@ export default {
     rules: [
       {
         test: reImage,
-        oneOf: [
-          // Инлайним маловесные изображения в CSS
+        use: [
+          !isProduction && { loader: 'cache-loader' },
           {
-            issuer: reAllStyles,
-            oneOf: [
-              // Инлайним маловесные SVGs как UTF-8 закодированные строки
-              {
-                test: /\.svg$/,
-
-                use: [
-                  !isProduction && { loader: 'cache-loader' },
-                  {
-                    loader: 'svg-url-loader',
-                    options: {
-                      name: staticAssetName,
-                      limit: 4096, // 4kb
-                    },
-                  },
-                ].filter(Boolean),
-              },
-
-              // Инлайним маловесные изображения как Base64 закодированные строки
-              {
-                use: [
-                  !isProduction && { loader: 'cache-loader' },
-                  {
-                    loader: 'url-loader',
-                    options: {
-                      name: staticAssetName,
-                      limit: 4096, // 4kb
-                    },
-                  },
-                ].filter(Boolean),
-              },
-            ],
+            loader: 'url-loader',
+            options: {
+              name: staticAssetName,
+              limit: 4096, // 4kb
+            },
           },
-
-          // Или возвращем URL на ресурс
-          {
-            use: [
-              !isProduction && { loader: 'cache-loader' },
-              {
-                loader: 'file-loader',
-                options: {
-                  name: staticAssetName,
-                },
-              },
-            ].filter(Boolean),
-          },
-        ],
+        ].filter(Boolean),
       },
 
       // Конвертирование TXT в модуль
