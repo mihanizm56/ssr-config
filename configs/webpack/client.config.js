@@ -34,7 +34,7 @@ export default {
   },
   output: {
     ...common.output,
-    path: `${appPaths.root}/build/public/assets`,
+    path: `${appPaths.root}/build/static/assets`,
     filename: isProduction ? '[name].[chunkhash:16].js' : '[name].js',
     chunkFilename: isProduction
       ? '[name].[chunkhash:16].chunk.js'

@@ -23,7 +23,7 @@ const copy = async () => {
         2,
       ),
     ),
-    copyDir(appPaths.public, `${appPaths.root}/build/public`),
+    copyDir(appPaths.public, `${appPaths.root}/build/static`),
   ]);
 };
 
