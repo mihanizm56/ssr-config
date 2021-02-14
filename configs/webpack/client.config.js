@@ -152,7 +152,7 @@ export default {
             ascii_only: true,
           },
         },
-        sourceMap: !isProduction,
+        sourceMap: true,
       }),
       new OptimizeCSSAssetsPlugin({
         cssProcessorPluginOptions: {

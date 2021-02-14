@@ -84,14 +84,12 @@ export const getStyleLoadersConfig = (isNode) => [
         loader: 'css-loader',
         options: {
           importLoaders: 1,
-          sourceMap: !isProduction,
           onlyLocals: isNode,
         },
       },
       {
         loader: 'postcss-loader',
         options: {
-          sourceMap: !isProduction,
           config: {
             path: `${packagePaths.configs}/postcss.config.js`,
           },
@@ -116,14 +114,12 @@ export const getStyleLoadersConfig = (isNode) => [
             localIdentName: '[local]-[hash:base64:10]',
           },
           importLoaders: 1,
-          sourceMap: !isProduction,
           onlyLocals: isNode,
         },
       },
       {
         loader: 'postcss-loader',
         options: {
-          sourceMap: !isProduction,
           config: {
             path: `${packagePaths.configs}/postcss.config.js`,
           },
@@ -148,14 +144,12 @@ export const getStyleLoadersConfig = (isNode) => [
             localIdentName: '[local]-[hash:base64:10]',
           },
           importLoaders: 2,
-          sourceMap: !isProduction,
           onlyLocals: isNode,
         },
       },
       {
         loader: 'postcss-loader',
         options: {
-          sourceMap: !isProduction,
           config: {
             path: `${packagePaths.configs}/postcss.config.js`,
           },
@@ -163,7 +157,6 @@ export const getStyleLoadersConfig = (isNode) => [
       },
       {
         loader: 'sass-loader',
-        options: { sourceMap: true },
       },
     ].filter(Boolean),
   },
