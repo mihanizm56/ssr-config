@@ -185,6 +185,8 @@ export default {
     extensions: ['.ts', '.tsx', '.js', '.json'],
   },
 
+  devtool: isProduction ? 'source-map' : 'cheap-source-map',
+
   module: {
     // Делаем несуществующие импорты ошибками а не ворнингами
     strictExportPresence: true,
