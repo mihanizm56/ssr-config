@@ -99,6 +99,8 @@ const start = async () => {
   });
 
   function checkForUpdate(fromUpdate) {
+    // Очищаем консоль перед перезапуском
+    console.clear();
     const hmrPrefix = '[\x1b[35mHMR\x1b[0m]';
 
     if (!app.hot) {
