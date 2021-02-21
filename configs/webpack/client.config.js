@@ -51,6 +51,7 @@ export default {
     rules: [
       {
         test: reScripts,
+        exclude: /node_modules/,
         use: [
           ...getCacheAndThreadLoaderConfig(isProduction),
           getBabelLoaderConfig(false),
