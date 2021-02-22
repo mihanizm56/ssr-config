@@ -97,6 +97,7 @@ export default {
     }),
 
     new MiniCssExtractPlugin({
+      ignoreOrder: true,
       filename: isProduction ? '[name].[contenthash:8].css' : '[name].css',
       chunkFilename: isProduction
         ? '[name].[contenthash:16].chunk.css'
