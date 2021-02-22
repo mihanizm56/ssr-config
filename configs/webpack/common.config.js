@@ -238,7 +238,7 @@ export default {
               name: staticAssetName,
             },
           },
-        ],
+        ].filter(Boolean),
       },
 
       // Исключение dev модулей при production сборке
