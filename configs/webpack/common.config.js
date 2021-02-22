@@ -6,7 +6,6 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
-import { getCacheAndThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 export const getIsProduction = () => process.env.NODE_ENV === 'production';
 export const disabledProgress = process.env.DISABLE_PROGRESS === 'true';
@@ -232,7 +231,7 @@ export default {
           /\.eot/,
         ],
         use: [
-          ...getCacheAndThreadLoaderConfig(isProduction),
+          !isProduction && { loader: 'cache-loader' },
           {
             loader: 'file-loader',
             options: {
