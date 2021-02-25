@@ -278,7 +278,7 @@ export default {
     }),
 
     new ForkTsCheckerWebpackPlugin({
-      async: true,
+      async: false,
     }),
   ],
 };
