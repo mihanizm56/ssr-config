@@ -78,7 +78,7 @@ export const getStyleLoadersConfig = (isNode) => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      // !isProduction && { loader: 'cache-loader' },
+      !isProduction && { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -105,7 +105,7 @@ export const getStyleLoadersConfig = (isNode) => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      // !isProduction && { loader: 'cache-loader' },
+      !isProduction && { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -135,7 +135,7 @@ export const getStyleLoadersConfig = (isNode) => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      // !isProduction && { loader: 'cache-loader' },
+      !isProduction && { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
