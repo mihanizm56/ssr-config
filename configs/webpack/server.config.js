@@ -58,6 +58,30 @@ export default {
 
       ...overrideWebpackRules(common.module.rules, (rule) => {
         // Переписываем пути для статических ассетов
+
+        if (rule.use) {
+          return {
+            ...rule,
+            use: rule.use.map((item) => {
+              if (
+                item.loader === 'file-loader' ||
+                item.loader === 'url-loader' ||
+                item.loader === 'svg-url-loader'
+              ) {
+                return {
+                  ...item,
+                  options: {
+                    ...item.options,
+                    emitFile: false,
+                  },
+                };
+              }
+
+              return item;
+            }),
+          };
+        }
+
         if (
           rule.loader === 'file-loader' ||
           rule.loader === 'url-loader' ||
