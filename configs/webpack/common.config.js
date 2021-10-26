@@ -15,7 +15,7 @@ export const isAnalyze = process.env.ANALYZE === 'true';
 const pkg = require(appPaths.packageJson);
 
 export const reScripts = /\.(js|jsx|ts|tsx)$/;
-export const reImage = /\.(gif|jpg|jpeg|png|svg)$/;
+export const reImage = /\.(gif|jpg|jpeg|png|svg|webp)$/;
 
 // style files regexes
 export const reCssRegex = /\.css$/;
