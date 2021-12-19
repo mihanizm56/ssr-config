@@ -26,7 +26,7 @@ export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 const staticAssetName = '[name].[hash:8].[ext]';
 const STATIC_PATH = '/static/assets/';
 
-export const getBabelLoaderConfig = (isNode) => ({
+export const getBabelLoaderConfig = isNode => ({
   loader: 'babel-loader',
   options: {
     cacheDirectory: true,
@@ -67,7 +67,7 @@ export const getBabelLoaderConfig = (isNode) => ({
   },
 });
 
-export const getStyleLoadersConfig = (isNode) => [
+export const getStyleLoadersConfig = isNode => [
   {
     test: reCssRegex,
     exclude: reCssModuleRegex,
@@ -168,7 +168,7 @@ export default {
 
   output: {
     publicPath: STATIC_PATH,
-    devtoolModuleFilenameTemplate: (info) =>
+    devtoolModuleFilenameTemplate: info =>
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
   },
 
@@ -265,7 +265,7 @@ export default {
     timings: true,
     version: false,
     // Скрываем ворнинги для mini-css-extract-plugin warnings о конфликтах в порядке стилей
-    warningsFilter: (warning) =>
+    warningsFilter: warning =>
       /Conflicting order. Following module has been added/gm.test(warning),
     // Скрываем логи дочерних плагинов
     children: false,

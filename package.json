@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -34,6 +34,7 @@
     "@babel/runtime": "7.9.6",
     "autoprefixer": "9.8.0",
     "babel-loader": "8.1.0",
+    "file-loader": "6.2.0",
     "browser-sync": "2.26.7",
     "cache-loader": "4.1.0",
     "colors": "1.4.0",
@@ -67,7 +68,6 @@
     "postcss-pseudoelements": "5.0.0",
     "postcss-selector-matches": "4.0.0",
     "postcss-selector-not": "4.0.0",
-    "prettier": "2.0.5",
     "raw-loader": "4.0.1",
     "react-dev-utils": "10.2.1",
     "react-error-overlay": "6.0.7",

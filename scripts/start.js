@@ -39,10 +39,10 @@ const start = async () => {
 
   // Configure client-side hot module replacement
   const clientConfig = webpackResultConfig.find(
-    (config) => config.name === 'client',
+    config => config.name === 'client',
   );
   const serverConfig = webpackResultConfig.find(
-    (config) => config.name === 'server',
+    config => config.name === 'server',
   );
 
   enrichClientConfig(clientConfig);
@@ -51,10 +51,10 @@ const start = async () => {
   const webpackResultCompiler = webpack([clientConfig, serverConfig]);
 
   const clientCompiler = webpackResultCompiler.compilers.find(
-    (compiler) => compiler.name === 'client',
+    compiler => compiler.name === 'client',
   );
   const serverCompiler = webpackResultCompiler.compilers.find(
-    (compiler) => compiler.name === 'server',
+    compiler => compiler.name === 'server',
   );
 
   const clientCompilation = createCompilation('client', clientCompiler);
@@ -82,7 +82,7 @@ const start = async () => {
 
     appPromiseIsResolved = false;
     // eslint-disable-next-line no-return-assign
-    appPromise = new Promise((resolve) => {
+    appPromise = new Promise(resolve => {
       appPromiseResolve = resolve;
     });
   });
@@ -115,7 +115,7 @@ const start = async () => {
 
     return app.hot
       .check(true)
-      .then((updatedModules) => {
+      .then(updatedModules => {
         if (!updatedModules) {
           if (fromUpdate) {
             console.log(`${hmrPrefix} ${'Update applied'.green}`);
@@ -130,13 +130,13 @@ const start = async () => {
         }
 
         console.log(`${hmrPrefix} ${'Updated modules:'.green}`);
-        updatedModules.forEach((moduleId) => {
+        updatedModules.forEach(moduleId => {
           console.log(`${hmrPrefix} - ${`${moduleId}`.green}`);
         });
 
         checkForUpdate(true);
       })
-      .catch((error) => {
+      .catch(error => {
         if (['abort', 'fail'].includes(app.hot.status())) {
           console.log(`${hmrPrefix} ${'Cannot apply update'.yellow.underline}`);
           console.log(`reason: ${app.hot.status()}`.red);
@@ -145,7 +145,7 @@ const start = async () => {
           delete require.cache[require.resolve(`${appPaths.build}/server`)];
 
           // Удаление чанков из require.cache
-          Object.keys(require.cache).forEach((filename) => {
+          Object.keys(require.cache).forEach(filename => {
             if (
               /.*\/build\/chunks\/[^/]+/.test(filename) ||
               /.*\\build\\chunks\\[^\\]+/.test(filename)
@@ -216,7 +216,7 @@ const start = async () => {
       ui: false,
       port: PORT,
     },
-    (error) => {
+    error => {
       if (error) {
         throw new Error('Browsersync error', error);
       }

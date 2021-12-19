@@ -1,5 +1,5 @@
 export const overrideWebpackRules = (rules, patch) => {
-  return rules.map((ruleToPatch) => {
+  return rules.map(ruleToPatch => {
     let rule = patch(ruleToPatch);
     if (rule.rules) {
       rule = { ...rule, rules: overrideWebpackRules(rule.rules, patch) };

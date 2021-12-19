@@ -56,13 +56,13 @@ export default {
       },
       ...getStyleLoadersConfig(true),
 
-      ...overrideWebpackRules(common.module.rules, (rule) => {
+      ...overrideWebpackRules(common.module.rules, rule => {
         // Переписываем пути для статических ассетов
 
         if (rule.use) {
           return {
             ...rule,
-            use: rule.use.map((item) => {
+            use: rule.use.map(item => {
               if (
                 item.loader === 'file-loader' ||
                 item.loader === 'url-loader' ||

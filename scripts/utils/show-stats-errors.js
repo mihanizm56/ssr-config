@@ -1,4 +1,4 @@
-export const showStatsErrors = (stats) => {
+export const showStatsErrors = stats => {
   console.log(
     stats.toString({
       chunks: false, // Makes the build much quieter

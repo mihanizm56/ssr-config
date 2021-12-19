@@ -3,7 +3,7 @@
 /* eslint-disable global-require */
 import { appPaths, resolveApp } from '../utils/paths';
 
-export const getInjectedConfig = async (config) => {
+export const getInjectedConfig = async config => {
   const pkg = require(appPaths.packageJson);
   const extraPathForAdditionalConfig =
     pkg['config-overrides-path'] || './config-overrides.js';

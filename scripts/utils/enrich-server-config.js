@@ -2,7 +2,7 @@
 
 import { HotModuleReplacementPlugin } from 'webpack';
 
-export const enrichServerConfig = (serverConfig) => {
+export const enrichServerConfig = serverConfig => {
   serverConfig.output.hotUpdateMainFilename = 'updates/[hash].hot-update.json';
   serverConfig.output.hotUpdateChunkFilename =
     'updates/[id].[hash].hot-update.js';

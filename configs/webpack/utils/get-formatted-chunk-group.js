@@ -12,7 +12,7 @@ export const getFormattedChunkGroup = ({ chunks, manifest }) =>
         }
       }
 
-      chunk.files.forEach((file) => {
+      chunk.files.forEach(file => {
         const isJS = file.endsWith('.js');
         const isCSS = file.endsWith('.css');
 

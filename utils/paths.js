@@ -8,7 +8,7 @@ const appCwd = process.env.APP_CWD || DEFAULT_APP_CWD;
 
 // Пути в приложении
 const appDirectory = fs.realpathSync(appCwd);
-export const resolveApp = (relativePath) =>
+export const resolveApp = relativePath =>
   path.resolve(appDirectory, relativePath);
 
 export const appPaths = {
@@ -25,7 +25,7 @@ export const appPaths = {
 
 // Путь в пакете сборки
 const packageDirectory = fs.realpathSync(process.cwd());
-const resolvePackage = (relativePath) =>
+const resolvePackage = relativePath =>
   path.resolve(packageDirectory, relativePath);
 
 export const packagePaths = {

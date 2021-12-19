@@ -59,7 +59,7 @@ export default {
       },
       ...getStyleLoadersConfig(false),
 
-      ...overrideWebpackRules(common.module.rules, (rule) => rule),
+      ...overrideWebpackRules(common.module.rules, rule => rule),
     ],
   },
 
@@ -172,7 +172,7 @@ export default {
     ],
 
     runtimeChunk: {
-      name: (entrypoint) => `runtime-${entrypoint.name}`,
+      name: entrypoint => `runtime-${entrypoint.name}`,
     },
     // Создание общих чанков с переиспользуемым функционалом
     splitChunks: {

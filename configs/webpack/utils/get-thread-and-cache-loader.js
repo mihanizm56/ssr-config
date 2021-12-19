@@ -2,7 +2,7 @@ import os from 'os';
 
 const singleThreaded = process.env.SINGLE_THREADED === 'true';
 
-export const getCacheAndThreadLoaderConfig = (isProduction) =>
+export const getCacheAndThreadLoaderConfig = isProduction =>
   isProduction
     ? [
         !singleThreaded && {
