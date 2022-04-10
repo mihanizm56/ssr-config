@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.3.0-beta.1",
+  "version": "0.2.11",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -27,7 +27,6 @@
     "@babel/plugin-transform-react-constant-elements": "7.9.0",
     "@babel/plugin-transform-react-inline-elements": "7.9.0",
     "@babel/plugin-transform-runtime": "7.9.6",
-    "@babel/plugin-transform-react-jsx": "7.17.3",
     "@babel/preset-env": "7.9.6",
     "@babel/preset-react": "7.12.10",
     "@babel/preset-typescript": "7.12.7",

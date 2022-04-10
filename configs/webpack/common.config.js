@@ -191,7 +191,7 @@ export default {
             loader: 'url-loader',
             options: {
               name: staticAssetName,
-              limit: 4096, // 4kb
+              limit: false, // no base-64 transform
             },
           },
         ],
