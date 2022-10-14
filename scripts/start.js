@@ -10,6 +10,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
 import webpackConfig from '../configs/webpack';
 import { appPaths } from '../utils/paths';
+import { copyDir } from '../utils/fs';
 import run from './run';
 import clean from './clean';
 import { getInjectedConfig } from './get-injected-config';
@@ -35,7 +36,10 @@ const start = async () => {
 
   const webpackResultConfig = await getInjectedConfig(webpackConfig);
 
+  // clean build dir
   await run(clean);
+  // copy static into build dir
+  await copyDir(appPaths.public, `${appPaths.root}/build/static`);
 
   // Configure client-side hot module replacement
   const clientConfig = webpackResultConfig.find(
