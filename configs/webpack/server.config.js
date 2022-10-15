@@ -48,6 +48,14 @@ export default {
     rules: [
       {
         test: reScripts,
+        include: /fastify/,
+        use: [
+          ...getCacheAndThreadLoaderConfig(isProduction),
+          getBabelLoaderConfig(true),
+        ],
+      },
+      {
+        test: reScripts,
         exclude: /node_modules/,
         use: [
           ...getCacheAndThreadLoaderConfig(isProduction),
