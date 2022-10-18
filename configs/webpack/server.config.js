@@ -49,18 +49,12 @@ export default {
       {
         test: reScripts,
         include: /fastify/,
-        use: [
-          ...getCacheAndThreadLoaderConfig(isProduction),
-          getBabelLoaderConfig(true),
-        ],
+        use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(true)],
       },
       {
         test: reScripts,
         exclude: /node_modules/,
-        use: [
-          ...getCacheAndThreadLoaderConfig(isProduction),
-          getBabelLoaderConfig(true),
-        ],
+        use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(true)],
       },
       ...getStyleLoadersConfig(true),
 

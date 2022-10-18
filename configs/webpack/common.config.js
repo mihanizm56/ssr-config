@@ -78,7 +78,7 @@ export const getStyleLoadersConfig = isNode => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      !isProduction && { loader: 'cache-loader' },
+      { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -105,7 +105,7 @@ export const getStyleLoadersConfig = isNode => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      !isProduction && { loader: 'cache-loader' },
+      { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -135,7 +135,7 @@ export const getStyleLoadersConfig = isNode => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      !isProduction && { loader: 'cache-loader' },
+      { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -200,18 +200,16 @@ export default {
       // Конвертирование TXT в модуль
       {
         test: /\.txt$/,
-        use: [
-          !isProduction && { loader: 'cache-loader' },
-          { loader: 'raw-loader' },
-        ].filter(Boolean),
+        use: [{ loader: 'cache-loader' }, { loader: 'raw-loader' }].filter(
+          Boolean,
+        ),
       },
 
       {
         test: /\.(ttf|woff2|woff|eot)/,
-        use: [
-          !isProduction && { loader: 'cache-loader' },
-          { loader: 'file-loader' },
-        ].filter(Boolean),
+        use: [{ loader: 'cache-loader' }, { loader: 'file-loader' }].filter(
+          Boolean,
+        ),
       },
 
       // Для всего остального возвращаем URL
@@ -231,7 +229,7 @@ export default {
           /\.eot/,
         ],
         use: [
-          !isProduction && { loader: 'cache-loader' },
+          { loader: 'cache-loader' },
           {
             loader: 'file-loader',
             options: {
@@ -251,7 +249,7 @@ export default {
 
   bail: isProduction,
 
-  cache: !isProduction,
+  cache: true,
 
   stats: {
     cached: false,
