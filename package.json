@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.3.0-beta.7",
+  "version": "0.3.0-beta.8",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -32,9 +32,10 @@
     "@babel/preset-typescript": "7.18.6",
     "@babel/register": "7.18.9",
     "@babel/runtime": "7.19.4",
+    "@fastify/express": "^2.0.2",
+    "@fastify/static": "^6.5.0",
     "autoprefixer": "9.8.0",
     "babel-loader": "8.2.5",
-    "file-loader": "6.2.0",
     "browser-sync": "2.26.7",
     "cache-loader": "4.1.0",
     "colors": "1.4.0",
@@ -43,7 +44,8 @@
     "css-loader": "3.4.2",
     "dotenv": "8.2.0",
     "empty": "0.10.1",
-    "express": "4.17.1",
+    "fastify": "^4.9.2",
+    "file-loader": "6.2.0",
     "fork-ts-checker-webpack-plugin": "6.1.0",
     "glob": "7.1.6",
     "mini-css-extract-plugin": "0.9.0",
