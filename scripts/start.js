@@ -2,9 +2,7 @@
 
 import 'colors';
 
-import fastify from 'fastify';
-import fastifyStatic from '@fastify/static';
-import fastifyExpress from '@fastify/express';
+import express from 'express';
 import browserSync from 'browser-sync';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -32,15 +30,9 @@ const openBrowser = process.env.BROWSER !== 'none';
 const PORT = process.env.PORT || 3000;
 
 const start = async () => {
-  const server = fastify({ logger: false });
-  await fastify.register(fastifyExpress);
-
+  const server = express();
   server.use(errorOverlayMiddleware());
-  // server.use('/static', express.static(appPaths.public));
-  server.register(fastifyStatic, {
-    root: appPaths.public,
-    prefix: '/static',
-  });
+  server.use('/static', express.static(appPaths.public));
 
   const webpackResultConfig = await getInjectedConfig(webpackConfig);
 
