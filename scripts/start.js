@@ -2,8 +2,9 @@
 
 import 'colors';
 
-import express from 'express';
-import browserSync from 'browser-sync';
+import fastify from 'fastify';
+import fastifyStatic from '@fastify/static';
+import fastifyExpress from '@fastify/express';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
@@ -26,13 +27,20 @@ const watchOptions = {
   aggregateTimeout: 1000,
 };
 
-const openBrowser = process.env.BROWSER !== 'none';
+// const openBrowser = process.env.BROWSER !== 'none';
 const PORT = process.env.PORT || 3000;
 
 const start = async () => {
-  const server = express();
+  const server = fastify({ logger: false });
+
+  await server.register(fastifyExpress);
+
   server.use(errorOverlayMiddleware());
-  server.use('/static', express.static(appPaths.public));
+
+  server.register(fastifyStatic, {
+    root: appPaths.public,
+    prefix: '/static',
+  });
 
   const webpackResultConfig = await getInjectedConfig(webpackConfig);
 
@@ -96,7 +104,15 @@ const start = async () => {
     try {
       await appPromise;
 
-      app.handle(req, res);
+      // console.log(app.server);
+      const response = await app.inject({
+        url: req.url,
+        headers: req.headers,
+        method: req.method,
+      });
+
+      res.send(response.payload);
+      // res.send(response)
     } catch (error) {
       console.log(`${error}`.red);
     }
@@ -210,22 +226,24 @@ const start = async () => {
   appPromiseResolve();
 
   // Запуск dev сервера с browsersync и HMR
-  browserSync.create().init(
-    {
-      // https://www.browsersync.io/docs/options
-      server: true,
-      middleware: [server],
-      open: openBrowser,
-      notify: false,
-      ui: false,
-      port: PORT,
-    },
-    error => {
-      if (error) {
-        throw new Error('Browsersync error', error);
-      }
-    },
-  );
+  // browserSync.create().init(
+  //   {
+  //     // https://www.browsersync.io/docs/options
+  //     server: true,
+  //     middleware: [server],
+  //     open: openBrowser,
+  //     notify: false,
+  //     ui: false,
+  //     port: PORT,
+  //   },
+  //   error => {
+  //     if (error) {
+  //       throw new Error('Browsersync error', error);
+  //     }
+  //   },
+  // );
+
+  await server.listen({ port: Number(PORT) });
 };
 
 export default start;
