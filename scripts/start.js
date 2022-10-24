@@ -3,7 +3,6 @@
 import 'colors';
 
 import fastify from 'fastify';
-import fastifyStatic from '@fastify/static';
 import fastifyExpress from '@fastify/express';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -36,11 +35,6 @@ const start = async () => {
   await server.register(fastifyExpress);
 
   server.use(errorOverlayMiddleware());
-
-  server.register(fastifyStatic, {
-    root: appPaths.public,
-    prefix: '/static',
-  });
 
   const webpackResultConfig = await getInjectedConfig(webpackConfig);
 
