@@ -48,7 +48,7 @@ export default {
     rules: [
       {
         test: reScripts,
-        include: /fastify/,
+        include: /fastify|undici/,
         use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(true)],
       },
       {
