@@ -16,7 +16,7 @@ import common, {
   getStyleLoadersConfig,
   disabledProgress,
 } from './common.config';
-import { getCacheAndThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
+import { getThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 const isProduction = getIsProduction();
 
@@ -50,12 +50,12 @@ export default {
       {
         test: reScripts,
         include: /fastify|undici/,
-        use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(true)],
+        use: [...getThreadLoaderConfig(), getBabelLoaderConfig(true)],
       },
       {
         test: reScripts,
         exclude: /node_modules/,
-        use: [...getCacheAndThreadLoaderConfig(), getBabelLoaderConfig(true)],
+        use: [...getThreadLoaderConfig(), getBabelLoaderConfig(true)],
       },
       ...getStyleLoadersConfig(true),
 

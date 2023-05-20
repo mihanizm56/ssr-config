@@ -2,9 +2,8 @@ import os from 'os';
 
 const singleThreaded = process.env.SINGLE_THREADED === 'true';
 
-export const getCacheAndThreadLoaderConfig = () =>
+export const getThreadLoaderConfig = () =>
   [
-    { loader: 'cache-loader' },
     !singleThreaded && {
       loader: 'thread-loader',
       options: {

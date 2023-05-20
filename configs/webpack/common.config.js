@@ -78,7 +78,6 @@ export const getStyleLoadersConfig = isNode => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -105,7 +104,6 @@ export const getStyleLoadersConfig = isNode => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -135,7 +133,6 @@ export const getStyleLoadersConfig = isNode => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
-      { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -204,16 +201,12 @@ export default {
       // Конвертирование TXT в модуль
       {
         test: /\.txt$/,
-        use: [{ loader: 'cache-loader' }, { loader: 'raw-loader' }].filter(
-          Boolean,
-        ),
+        use: [{ loader: 'raw-loader' }],
       },
 
       {
         test: /\.(ttf|woff2|woff|eot)/,
-        use: [{ loader: 'cache-loader' }, { loader: 'file-loader' }].filter(
-          Boolean,
-        ),
+        use: [{ loader: 'file-loader' }],
       },
 
       // Для всего остального возвращаем URL
@@ -233,7 +226,6 @@ export default {
           /\.eot/,
         ],
         use: [
-          { loader: 'cache-loader' },
           {
             loader: 'file-loader',
             options: {

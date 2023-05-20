@@ -21,7 +21,7 @@ import common, {
   disabledProgress,
 } from './common.config';
 import { makeChunkManifest } from './utils/make-chunk-manifest';
-import { getCacheAndThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
+import { getThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 const isProduction = getIsProduction();
 
@@ -53,7 +53,7 @@ export default {
         test: reScripts,
         exclude: /node_modules/,
         use: [
-          ...getCacheAndThreadLoaderConfig(isProduction),
+          ...getThreadLoaderConfig(isProduction),
           getBabelLoaderConfig(false),
         ],
       },
