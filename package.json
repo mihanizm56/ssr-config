@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.3.0-beta.12",
+  "version": "0.3.1-beta.7",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -32,8 +32,8 @@
     "@babel/preset-typescript": "7.18.6",
     "@babel/register": "7.18.9",
     "@babel/runtime": "7.19.4",
-    "@fastify/express": "^2.0.2",
-    "@fastify/static": "^6.5.0",
+    "@fastify/static": "6.5.0",
+    "@fastify/express": "2.3.0",
     "autoprefixer": "9.8.0",
     "babel-loader": "8.2.5",
     "browser-sync": "2.27.10",
@@ -44,7 +44,7 @@
     "css-loader": "3.4.2",
     "dotenv": "8.2.0",
     "empty": "0.10.1",
-    "fastify": "^4.9.2",
+    "fastify": "4.17.0",
     "file-loader": "6.2.0",
     "fork-ts-checker-webpack-plugin": "6.1.0",
     "glob": "7.1.6",
@@ -52,30 +52,18 @@
     "mkdirp": "1.0.4",
     "null-loader": "4.0.0",
     "optimize-css-assets-webpack-plugin": "5.0.4",
-    "pixrem": "5.0.0",
-    "pleeease-filters": "4.0.0",
     "postcss": "7.0.30",
     "postcss-calc": "7.0.2",
-    "postcss-color-function": "4.1.0",
-    "postcss-custom-media": "7.0.8",
-    "postcss-custom-properties": "9.1.1",
-    "postcss-custom-selectors": "5.1.2",
     "postcss-flexbugs-fixes": "4.2.1",
-    "postcss-import": "12.0.1",
     "postcss-loader": "3.0.0",
-    "postcss-media-minmax": "4.0.0",
-    "postcss-nested": "4.2.1",
-    "postcss-nesting": "7.0.1",
     "postcss-preset-env": "6.7.0",
     "postcss-pseudoelements": "5.0.0",
-    "postcss-selector-matches": "4.0.0",
-    "postcss-selector-not": "4.0.0",
     "raw-loader": "4.0.1",
     "react-dev-utils": "10.2.1",
     "react-error-overlay": "6.0.7",
     "rimraf": "3.0.2",
     "sass-loader": "8.0.2",
-    "source-map-support": "0.5.19",
+    "source-map-support": "0.5.21",
     "thread-loader": "3.0.1",
     "url-loader": "4.1.0",
     "webpack": "4.46.0",
@@ -109,9 +97,8 @@
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-testcafe": "0.2.1",
     "eslint-plugin-unused-imports": "0.1.3",
-    "husky": "3.0.9",
-    "prettier": "1.18.2",
-    "typescript": "4.8.4"
+    "husky": "8.0.3",
+    "prettier": "1.18.2"
   },
   "config": {
     "commitizen": {
@@ -119,13 +106,6 @@
     },
     "cz-customizable": {
       "config": "git/commitizen.js"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS -g ./git/commitlint.js",
-      "pre-commit": "npm run lint && git add .",
-      "prepare-commit-msg": "node ./git/prepare-commit.js"
     }
   },
   "files": [

@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import 'colors';
+
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import WebpackBar from 'webpackbar';
