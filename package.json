@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.3.1-beta.24",
+  "version": "0.3.1-beta.29",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -49,6 +49,7 @@
     "mini-css-extract-plugin": "2.7.6",
     "mkdirp": "1.0.4",
     "null-loader": "4.0.1",
+    "cache-loader": "4.1.0",
     "postcss": "8.4.23",
     "postcss-calc": "9.0.1",
     "postcss-flexbugs-fixes": "5.0.2",
@@ -57,11 +58,11 @@
     "raw-loader": "4.0.2",
     "react-dev-utils": "10.2.1",
     "react-error-overlay": "6.0.11",
-    "tiny-lru": "9.0.3",
     "rimraf": "3.0.2",
     "sass-loader": "13.2.2",
     "source-map-support": "0.5.21",
     "thread-loader": "4.0.1",
+    "tiny-lru": "9.0.3",
     "url-loader": "4.1.1",
     "webpack": "5.83.1",
     "webpack-assets-manifest": "5.1.0",

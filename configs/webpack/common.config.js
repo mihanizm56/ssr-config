@@ -4,6 +4,7 @@ import path from 'path';
 import webpack from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import loaderUtils from 'loader-utils';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
 
@@ -23,7 +24,6 @@ export const reCssModuleRegex = /\.module\.css$/;
 export const reSassAllRegex = /(\.module)?\.(scss|sass)$/;
 export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
-const staticAssetName = '[name].[contenthash:8].[ext]';
 const STATIC_PATH = '/static/assets/';
 
 export const getBabelLoaderConfig = isNode => ({
@@ -82,6 +82,7 @@ export const getStyleLoadersConfig = isNode => [
           options: { reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
+      { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -112,6 +113,7 @@ export const getStyleLoadersConfig = isNode => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
+      { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -143,6 +145,7 @@ export const getStyleLoadersConfig = isNode => [
           options: { cssModule: true, reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
+      { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
@@ -195,6 +198,19 @@ export default {
 
   devtool: isProduction ? 'source-map' : 'cheap-source-map',
 
+  cache: {
+    type: 'filesystem',
+    compression: false,
+    version: loaderUtils.getHashDigest(
+      JSON.stringify(appPaths.packageJson),
+      'md5',
+      'base64',
+      10,
+    ),
+    cacheDirectory: appPaths.appWebpackCache,
+    store: 'pack',
+  },
+
   module: {
     // Делаем несуществующие импорты ошибками а не ворнингами
     strictExportPresence: true,
@@ -221,14 +237,7 @@ export default {
           /\.ttf/,
           /\.eot/,
         ],
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: staticAssetName,
-            },
-          },
-        ],
+        type: 'asset/resource',
       },
 
       // Исключение dev модулей при production сборке
@@ -269,4 +278,5 @@ export default {
       async: false,
     }),
   ],
+  performance: false,
 };
