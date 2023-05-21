@@ -23,7 +23,7 @@ export const reCssModuleRegex = /\.module\.css$/;
 export const reSassAllRegex = /(\.module)?\.(scss|sass)$/;
 export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
-const staticAssetName = '[name].[hash:8].[ext]';
+const staticAssetName = '[name].[contenthash:8].[ext]';
 const STATIC_PATH = '/static/assets/';
 
 export const getBabelLoaderConfig = isNode => ({
@@ -35,7 +35,6 @@ export const getBabelLoaderConfig = isNode => ({
     plugins: [
       '@babel/plugin-proposal-class-properties',
       '@babel/plugin-syntax-dynamic-import',
-      '@babel/plugin-transform-exponentiation-operator',
       '@babel/plugin-proposal-optional-chaining',
       '@babel/plugin-proposal-nullish-coalescing-operator',
       // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
@@ -61,7 +60,12 @@ export const getBabelLoaderConfig = isNode => ({
               exclude: ['transform-typeof-symbol'],
             },
           ],
-      '@babel/preset-react',
+      [
+        '@babel/preset-react',
+        {
+          runtime: 'automatic',
+        },
+      ],
       '@babel/preset-typescript',
     ],
   },
@@ -75,22 +79,26 @@ export const getStyleLoadersConfig = isNode => [
       !isNode &&
         !isProduction && {
           loader: 'css-hot-loader',
-          options: { cssModule: true, reloadAll: true },
+          options: { reloadAll: true },
         },
       !isNode && { use: MiniCssExtractPlugin.loader },
       {
         loader: 'css-loader',
         options: {
           importLoaders: 1,
-          onlyLocals: isNode,
+          modules: {
+            exportOnlyLocals: isNode,
+          },
+          sourceMap: false,
         },
       },
       {
         loader: 'postcss-loader',
         options: {
-          config: {
-            path: `${packagePaths.configs}/postcss.config.js`,
+          postcssOptions: {
+            config: `${packagePaths.configs}/postcss.config.js`,
           },
+          sourceMap: false,
         },
       },
     ].filter(Boolean),
@@ -108,18 +116,20 @@ export const getStyleLoadersConfig = isNode => [
         loader: 'css-loader',
         options: {
           modules: {
-            localIdentName: '[local]-[hash:base64:10]',
+            localIdentName: '[local]-[contenthash:base64:10]',
+            exportOnlyLocals: isNode,
           },
           importLoaders: 1,
-          onlyLocals: isNode,
+          sourceMap: false,
         },
       },
       {
         loader: 'postcss-loader',
         options: {
-          config: {
-            path: `${packagePaths.configs}/postcss.config.js`,
+          postcssOptions: {
+            config: `${packagePaths.configs}/postcss.config.js`,
           },
+          sourceMap: false,
         },
       },
     ].filter(Boolean),
@@ -137,22 +147,27 @@ export const getStyleLoadersConfig = isNode => [
         loader: 'css-loader',
         options: {
           modules: {
-            localIdentName: '[local]-[hash:base64:10]',
+            localIdentName: '[local]-[contenthash:base64:10]',
+            exportOnlyLocals: isNode,
           },
           importLoaders: 2,
-          onlyLocals: isNode,
+          sourceMap: false,
         },
       },
       {
         loader: 'postcss-loader',
         options: {
-          config: {
-            path: `${packagePaths.configs}/postcss.config.js`,
+          postcssOptions: {
+            config: `${packagePaths.configs}/postcss.config.js`,
           },
+          sourceMap: false,
         },
       },
       {
         loader: 'sass-loader',
+        options: {
+          sourceMap: false,
+        },
       },
     ].filter(Boolean),
   },
@@ -174,7 +189,7 @@ export default {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
       // https://github.com/fastify/help/issues/272
-      'tiny-lru': 'tiny-lru/lib/tiny-lru.cjs.js',
+      'tiny-lru': 'tiny-lru/dist/tiny-lru.cjs',
     },
   },
 
@@ -186,27 +201,8 @@ export default {
 
     rules: [
       {
-        test: reImage,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              name: staticAssetName,
-              limit: false, // no base-64 transform
-            },
-          },
-        ],
-      },
-
-      // Конвертирование TXT в модуль
-      {
-        test: /\.txt$/,
-        use: [{ loader: 'raw-loader' }],
-      },
-
-      {
-        test: /\.(ttf|woff2|woff|eot)/,
-        use: [{ loader: 'file-loader' }],
+        test: [reImage, /\.txt$/, /\.(ttf|woff2|woff|eot)/],
+        type: 'asset/resource',
       },
 
       // Для всего остального возвращаем URL
@@ -232,7 +228,7 @@ export default {
               name: staticAssetName,
             },
           },
-        ].filter(Boolean),
+        ],
       },
 
       // Исключение dev модулей при production сборке
@@ -244,8 +240,6 @@ export default {
   },
 
   bail: isProduction,
-
-  cache: true,
 
   stats: {
     cached: false,

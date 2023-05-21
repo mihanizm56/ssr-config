@@ -4,9 +4,6 @@
         "react-app",
         "airbnb",
         "plugin:prettier/recommended",
-        "prettier/@typescript-eslint",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:import/typescript",
         "plugin:security/recommended",
         "plugin:testcafe/recommended"
     ],

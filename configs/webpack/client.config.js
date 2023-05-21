@@ -2,14 +2,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import 'colors';
+
 import fs from 'fs';
 import webpack from 'webpack';
-import WebpackBar from 'webpackbar';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import TerserPlugin from 'terser-webpack-plugin';
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import WebpackBar from 'webpackbar';
 import { appPaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
@@ -20,8 +21,8 @@ import common, {
   getStyleLoadersConfig,
   disabledProgress,
 } from './common.config';
-import { makeChunkManifest } from './utils/make-chunk-manifest';
 import { getThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
+import { makeChunkManifest } from './utils/make-chunk-manifest';
 
 const isProduction = getIsProduction();
 
@@ -44,6 +45,11 @@ export default {
   // https://github.com/webpack/webpack/issues/4817
   resolve: {
     ...common.resolve,
+    fallback: {
+      fs: 'empty',
+      net: 'empty',
+      tls: 'empty',
+    },
   },
 
   module: {
@@ -70,16 +76,16 @@ export default {
       'process.env.BROWSER': true,
       __SERVER__: false,
       __CLIENT__: true,
+      'process.env': JSON.stringify(process.env),
     }),
 
-    // Создание файла манифеста с ассетами
+    // Создание файла манифеста с ассетами (chunk-manifest.json)
     // https://github.com/webdeveric/webpack-assets-manifest#options
     new WebpackAssetsManifest({
       output: `${appPaths.build}/asset-manifest.json`,
       publicPath: true,
       writeToDisk: true,
       done: (manifest, stats) => {
-        // Write chunk-manifest.json.json
         const chunkFileName = `${appPaths.build}/chunk-manifest.json`;
 
         try {
@@ -154,14 +160,13 @@ export default {
             ascii_only: true,
           },
         },
-        sourceMap: true,
       }),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessorPluginOptions: {
+      new CssMinimizerPlugin({
+        parallel: true,
+        minimizerOptions: {
           preset: [
             'default',
             {
-              minifyFontValues: { removeQuotes: false },
               discardComments: {
                 removeAll: true,
               },
@@ -184,15 +189,5 @@ export default {
         },
       },
     },
-  },
-
-  // Некоторые библиотеки импортируют Node модули но не используют их в браузере
-  // Подготавливаем для моки webpack
-  // https://webpack.js.org/configuration/node/
-  // https://github.com/webpack/node-libs-browser/tree/master/mock
-  node: {
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
   },
 };

@@ -22,7 +22,6 @@ const isProduction = getIsProduction();
 
 export default {
   ...common,
-
   name: 'server',
   target: 'node',
 
@@ -42,6 +41,14 @@ export default {
   // https://github.com/webpack/webpack/issues/4817
   resolve: {
     ...common.resolve,
+    fallback: {
+      console: false,
+      global: false,
+      process: false,
+      Buffer: false,
+      __filename: false,
+      __dirname: false,
+    },
   },
 
   module: {
@@ -60,41 +67,12 @@ export default {
       ...getStyleLoadersConfig(true),
 
       ...overrideWebpackRules(common.module.rules, rule => {
-        // Переписываем пути для статических ассетов
-
-        if (rule.use) {
+        // Выключаем создание генерацию файлов на стороне серверной сборки
+        if (rule.type && rule.type.indexOf('asset/') !== -1) {
           return {
             ...rule,
-            use: rule.use.map(item => {
-              if (
-                item.loader === 'file-loader' ||
-                item.loader === 'url-loader' ||
-                item.loader === 'svg-url-loader'
-              ) {
-                return {
-                  ...item,
-                  options: {
-                    ...item.options,
-                    emitFile: false,
-                  },
-                };
-              }
-
-              return item;
-            }),
-          };
-        }
-
-        if (
-          rule.loader === 'file-loader' ||
-          rule.loader === 'url-loader' ||
-          rule.loader === 'svg-url-loader'
-        ) {
-          return {
-            ...rule,
-            options: {
-              ...rule.options,
-              emitFile: false,
+            generator: {
+              emit: false,
             },
           };
         }
@@ -109,8 +87,10 @@ export default {
     './chunk-manifest.json',
     './asset-manifest.json',
     nodeExternals({
-      whitelist: [reAllStyles, reImage],
+      allowlist: [reAllStyles, reImage],
     }),
+    'bufferutil',
+    'utf-8-validate',
   ],
 
   plugins: [
@@ -137,13 +117,4 @@ export default {
         entryOnly: false,
       }),
   ].filter(Boolean),
-
-  node: {
-    console: false,
-    global: false,
-    process: false,
-    Buffer: false,
-    __filename: false,
-    __dirname: false,
-  },
 };

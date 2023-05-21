@@ -6,11 +6,11 @@ export const getFormattedChunkGroup = ({ chunks, manifest }) =>
     (acc, chunk) => {
       // бежим по модулям и если этот модуль обработан mini-extract
       // то собираем содержимое в строку для инлайн-отдачи в html
-      for (const item of chunk._modules) {
-        if (item.type === 'css/mini-extract') {
-          acc.inlineCss = acc.inlineCss.concat(item.content);
-        }
-      }
+      // for (const item of chunk._modules) {
+      //   if (item.type === 'css/mini-extract') {
+      //     acc.inlineCss = acc.inlineCss.concat(item.content);
+      //   }
+      // }
 
       chunk.files.forEach(file => {
         const isJS = file.endsWith('.js');
