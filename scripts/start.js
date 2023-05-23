@@ -69,8 +69,8 @@ const start = async () => {
   server.use(
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
-      logLevel: 'error',
-      watchOptions,
+      stats: 'errors-only',
+      // watchOptions,
     }),
   );
 
