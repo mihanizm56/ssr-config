@@ -181,13 +181,18 @@ export default {
     },
     // Создание общих чанков с переиспользуемым функционалом
     splitChunks: {
-      cacheGroups: {
-        commons: {
-          chunks: 'initial',
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-        },
-      },
+      chunks: 'all',
+
+      // It's recommended to use either the defaults or optimization.splitChunks: { chunks: 'all' }.
+      // https://webpack.js.org/migrate/5/
+
+      // cacheGroups: {
+      //   commons: {
+      //     chunks: 'initial',
+      //     test: /[\\/]node_modules[\\/]/,
+      //     name: 'vendors',
+      //   },
+      // },
     },
   },
 };
