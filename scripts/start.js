@@ -21,12 +21,10 @@ import { showStatsErrors } from './utils/show-stats-errors';
 
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {
-  // poll: true,
-  // ignored: /node_modules/,
+  ignored: /node_modules/,
   aggregateTimeout: 1000,
 };
 
-// const openBrowser = process.env.BROWSER !== 'none';
 const PORT = process.env.PORT || 3000;
 
 const start = async () => {
@@ -218,24 +216,6 @@ const start = async () => {
   // завершаем сборку
   appPromiseIsResolved = true;
   appPromiseResolve();
-
-  // Запуск dev сервера с browsersync и HMR
-  // browserSync.create().init(
-  //   {
-  //     // https://www.browsersync.io/docs/options
-  //     server: true,
-  //     middleware: [server],
-  //     open: openBrowser,
-  //     notify: false,
-  //     ui: false,
-  //     port: PORT,
-  //   },
-  //   error => {
-  //     if (error) {
-  //       throw new Error('Browsersync error', error);
-  //     }
-  //   },
-  // );
 
   await server.listen({ port: Number(PORT) });
 };
