@@ -10,6 +10,9 @@ import { resolvePath } from '../../utils/resolve-path';
 
 export const getIsProduction = () => process.env.NODE_ENV === 'production';
 export const disabledProgress = process.env.DISABLE_PROGRESS === 'true';
+export const hashSize = process.env.HASH_CSS_SIZE
+  ? Number(process.env.HASH_CSS_SIZE)
+  : 3;
 const isProduction = getIsProduction();
 export const isAnalyze = process.env.ANALYZE === 'true';
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
@@ -118,7 +121,7 @@ export const getStyleLoadersConfig = isNode => [
         loader: 'css-loader',
         options: {
           modules: {
-            localIdentName: '[local]-[contenthash:base64:10]',
+            localIdentName: `[local]-[contenthash:${hashSize}`,
             exportOnlyLocals: isNode,
           },
           importLoaders: 1,
@@ -150,7 +153,7 @@ export const getStyleLoadersConfig = isNode => [
         loader: 'css-loader',
         options: {
           modules: {
-            localIdentName: '[local]-[contenthash:base64:10]',
+            localIdentName: `[local]-[contenthash:${hashSize}]`,
             exportOnlyLocals: isNode,
           },
           importLoaders: 2,
