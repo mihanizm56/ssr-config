@@ -24,7 +24,7 @@ export const reImage = /\.(gif|jpg|jpeg|png|svg|webp)$/;
 // style files regexes
 export const reCssRegex = /\.css$/;
 export const reCssModuleRegex = /\.module\.css$/;
-export const reSassAllRegex = /(\.module)?\.(scss|sass)$/;
+export const reSassModuleRegex = /\.module\.scss$/;
 export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
 const STATIC_PATH = '/static/assets/';
@@ -84,14 +84,14 @@ export const getStyleLoadersConfig = isNode => [
           loader: 'css-hot-loader',
           options: { reloadAll: true },
         },
-      !isNode && { use: MiniCssExtractPlugin.loader },
+      !isNode && { loader: MiniCssExtractPlugin.loader, options: {} },
       { loader: 'cache-loader' },
       {
         loader: 'css-loader',
         options: {
           importLoaders: 1,
           modules: {
-            exportOnlyLocals: isNode,
+            mode: 'icss',
           },
           sourceMap: false,
         },
@@ -115,7 +115,7 @@ export const getStyleLoadersConfig = isNode => [
           loader: 'css-hot-loader',
           options: { cssModule: true, reloadAll: true },
         },
-      !isNode && { use: MiniCssExtractPlugin.loader },
+      !isNode && { loader: MiniCssExtractPlugin.loader, options: {} },
       { loader: 'cache-loader' },
       {
         loader: 'css-loader',
@@ -140,14 +140,14 @@ export const getStyleLoadersConfig = isNode => [
     ].filter(Boolean),
   },
   {
-    test: reSassAllRegex,
+    test: reSassModuleRegex,
     rules: [
       !isNode &&
         !isProduction && {
           loader: 'css-hot-loader',
           options: { cssModule: true, reloadAll: true },
         },
-      !isNode && { use: MiniCssExtractPlugin.loader },
+      !isNode && { loader: MiniCssExtractPlugin.loader, options: {} },
       { loader: 'cache-loader' },
       {
         loader: 'css-loader',
