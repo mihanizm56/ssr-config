@@ -4,7 +4,6 @@ import path from 'path';
 import webpack from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { EsbuildPlugin } from 'esbuild-loader';
 import loaderUtils from 'loader-utils';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
@@ -258,13 +257,4 @@ export default {
     }),
   ],
   performance: false,
-
-  optimization: {
-    minimize: false,
-    minimizer: [
-      new EsbuildPlugin({
-        target: 'es2023',
-      }),
-    ],
-  },
 };

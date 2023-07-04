@@ -8,6 +8,7 @@ import webpack from 'webpack';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import { EsbuildPlugin } from 'esbuild-loader';
 import WebpackBar from 'webpackbar';
 import { appPaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
@@ -110,7 +111,12 @@ export default {
   ].filter(Boolean),
 
   optimization: {
-    ...common.optimization,
+    minimize: isProduction,
+    minimizer: [
+      new EsbuildPlugin({
+        target: 'es2022',
+      }),
+    ],
     runtimeChunk: {
       name: entrypoint => `runtime-${entrypoint.name}`,
     },

@@ -117,6 +117,6 @@ export default {
   ].filter(Boolean),
 
   optimization: {
-    ...common.optimization,
+    minimize: false,
   },
 };
