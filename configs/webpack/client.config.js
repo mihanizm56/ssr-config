@@ -16,6 +16,7 @@ import common, {
   isAnalyze,
   getStyleLoadersConfig,
   disabledProgress,
+  getMainEsbuildLoaders,
 } from './common.config';
 import { makeChunkManifest } from './utils/make-chunk-manifest';
 
@@ -50,29 +51,8 @@ export default {
   module: {
     ...common.module,
     rules: [
-      {
-        test: /\.(jsx|tsx)$/,
-        exclude: /node_modules/,
-        loader: 'esbuild-loader',
-        options: {
-          target: 'es2022',
-          jsx: 'automatic',
-          loader: 'tsx',
-          // tsconfig: '../../../tsconfig.json'
-        },
-      },
-      {
-        test: /\.(js|ts)$/,
-        exclude: /node_modules/,
-        loader: 'esbuild-loader',
-        options: {
-          target: 'es2022',
-          loader: 'ts',
-          // tsconfig: '../../../tsconfig.json'
-        },
-      },
+      ...getMainEsbuildLoaders(),
       ...getStyleLoadersConfig(false),
-
       ...overrideWebpackRules(common.module.rules, rule => rule),
     ],
   },

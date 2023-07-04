@@ -28,6 +28,28 @@ export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
 const STATIC_PATH = '/static/assets/';
 
+export const getMainEsbuildLoaders = () => [
+  {
+    test: /\.(jsx|tsx)$/,
+    exclude: /node_modules/,
+    loader: 'esbuild-loader',
+    options: {
+      target: 'es2022',
+      jsx: 'automatic',
+      loader: 'tsx',
+    },
+  },
+  {
+    test: /\.(js|ts)$/,
+    exclude: /node_modules/,
+    loader: 'esbuild-loader',
+    options: {
+      target: 'es2022',
+      loader: 'ts',
+    },
+  },
+];
+
 export const getStyleLoadersConfig = isNode => [
   {
     test: reCssRegex,

@@ -13,6 +13,7 @@ import common, {
   reAllStyles,
   getStyleLoadersConfig,
   disabledProgress,
+  getMainEsbuildLoaders,
 } from './common.config';
 
 const isProduction = getIsProduction();
@@ -61,28 +62,8 @@ export default {
         },
       },
 
-      {
-        test: /\.(jsx|tsx)$/,
-        exclude: /node_modules/,
-        loader: 'esbuild-loader',
-        options: {
-          target: 'es2022',
-          jsx: 'automatic',
-          loader: 'tsx',
-        },
-      },
-      {
-        test: /\.(js|ts)$/,
-        exclude: /node_modules/,
-        loader: 'esbuild-loader',
-        options: {
-          target: 'es2022',
-          loader: 'ts',
-        },
-      },
-
+      ...getMainEsbuildLoaders(),
       ...getStyleLoadersConfig(true),
-
       ...overrideWebpackRules(common.module.rules, rule => {
         // Выключаем создание генерацию файлов на стороне серверной сборки
         if (rule.type && rule.type.indexOf('asset/') !== -1) {
