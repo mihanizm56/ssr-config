@@ -134,4 +134,8 @@ export default {
         entryOnly: false,
       }),
   ].filter(Boolean),
+
+  optimization: {
+    ...common.optimization,
+  },
 };

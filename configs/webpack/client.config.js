@@ -130,6 +130,7 @@ export default {
   ].filter(Boolean),
 
   optimization: {
+    ...common.optimization,
     runtimeChunk: {
       name: entrypoint => `runtime-${entrypoint.name}`,
     },
