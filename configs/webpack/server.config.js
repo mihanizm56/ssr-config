@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import 'colors';
-
+import { EsbuildPlugin } from 'esbuild-loader';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import WebpackBar from 'webpackbar';
@@ -117,6 +117,11 @@ export default {
   ].filter(Boolean),
 
   optimization: {
-    minimize: false,
+    minimize: isProduction,
+    minimizer: [
+      new EsbuildPlugin({
+        target: 'es2022',
+      }),
+    ],
   },
 };
