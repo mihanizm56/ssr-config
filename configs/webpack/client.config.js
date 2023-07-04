@@ -8,20 +8,15 @@ import webpack from 'webpack';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import TerserPlugin from 'terser-webpack-plugin';
-import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import WebpackBar from 'webpackbar';
 import { appPaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
   getIsProduction,
   isAnalyze,
-  reScripts,
-  getBabelLoaderConfig,
   getStyleLoadersConfig,
   disabledProgress,
 } from './common.config';
-import { getThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 import { makeChunkManifest } from './utils/make-chunk-manifest';
 
 const isProduction = getIsProduction();
@@ -56,12 +51,25 @@ export default {
     ...common.module,
     rules: [
       {
-        test: reScripts,
+        test: /\.(jsx|tsx)$/,
         exclude: /node_modules/,
-        use: [
-          ...getThreadLoaderConfig(isProduction),
-          getBabelLoaderConfig(false),
-        ],
+        loader: 'esbuild-loader',
+        options: {
+          target: 'es2022',
+          jsx: 'automatic',
+          loader: 'tsx',
+          // tsconfig: '../../../tsconfig.json'
+        },
+      },
+      {
+        test: /\.(js|ts)$/,
+        exclude: /node_modules/,
+        loader: 'esbuild-loader',
+        options: {
+          target: 'es2022',
+          loader: 'ts',
+          // tsconfig: '../../../tsconfig.json'
+        },
       },
       ...getStyleLoadersConfig(false),
 
@@ -122,60 +130,6 @@ export default {
   ].filter(Boolean),
 
   optimization: {
-    minimize: isProduction,
-    minimizer: [
-      new TerserPlugin({
-        parallel: true,
-        terserOptions: {
-          parse: {
-            // We want terser to parse ecma 8 code. However, we don't want it
-            // to apply any minification steps that turns valid ecma 5 code
-            // into invalid ecma 5 code. This is why the 'compress' and 'output'
-            // sections only apply transformations that are ecma 5 safe
-            // https://github.com/facebook/create-react-app/pull/4234
-            ecma: 8,
-          },
-          compress: {
-            ecma: 5,
-            warnings: false,
-            // Disabled because of an issue with Uglify breaking seemingly valid code:
-            // https://github.com/facebook/create-react-app/issues/2376
-            // Pending further investigation:
-            // https://github.com/mishoo/UglifyJS2/issues/2011
-            comparisons: false,
-            // Disabled because of an issue with Terser breaking valid code:
-            // https://github.com/facebook/create-react-app/issues/5250
-            // Pending further investigation:
-            // https://github.com/terser-js/terser/issues/120
-            inline: 2,
-          },
-          mangle: {
-            safari10: true,
-          },
-          output: {
-            ecma: 5,
-            comments: false,
-            // Turned on because emoji and regex is not minified properly using default
-            // https://github.com/facebook/create-react-app/issues/2488
-            ascii_only: true,
-          },
-        },
-      }),
-      new CssMinimizerPlugin({
-        parallel: true,
-        minimizerOptions: {
-          preset: [
-            'default',
-            {
-              discardComments: {
-                removeAll: true,
-              },
-            },
-          ],
-        },
-      }),
-    ],
-
     runtimeChunk: {
       name: entrypoint => `runtime-${entrypoint.name}`,
     },

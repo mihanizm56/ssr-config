@@ -11,12 +11,9 @@ import common, {
   getIsProduction,
   reImage,
   reAllStyles,
-  reScripts,
-  getBabelLoaderConfig,
   getStyleLoadersConfig,
   disabledProgress,
 } from './common.config';
-import { getThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 const isProduction = getIsProduction();
 
@@ -55,15 +52,35 @@ export default {
     ...common.module,
     rules: [
       {
-        test: reScripts,
+        test: /\.(jsx|tsx)$/,
         include: /fastify|undici/,
-        use: [...getThreadLoaderConfig(), getBabelLoaderConfig(true)],
+        loader: 'esbuild-loader',
+        options: {
+          target: 'es2022',
+          loader: 'js',
+        },
+      },
+
+      {
+        test: /\.(jsx|tsx)$/,
+        exclude: /node_modules/,
+        loader: 'esbuild-loader',
+        options: {
+          target: 'es2022',
+          jsx: 'automatic',
+          loader: 'tsx',
+        },
       },
       {
-        test: reScripts,
+        test: /\.(js|ts)$/,
         exclude: /node_modules/,
-        use: [...getThreadLoaderConfig(), getBabelLoaderConfig(true)],
+        loader: 'esbuild-loader',
+        options: {
+          target: 'es2022',
+          loader: 'ts',
+        },
       },
+
       ...getStyleLoadersConfig(true),
 
       ...overrideWebpackRules(common.module.rules, rule => {

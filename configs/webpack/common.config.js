@@ -4,6 +4,7 @@ import path from 'path';
 import webpack from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import { EsbuildPlugin } from 'esbuild-loader';
 import loaderUtils from 'loader-utils';
 import { appPaths, packagePaths } from '../../utils/paths';
 import { resolvePath } from '../../utils/resolve-path';
@@ -15,8 +16,6 @@ export const hashSize = process.env.HASH_CSS_SIZE
   : 3;
 const isProduction = getIsProduction();
 export const isAnalyze = process.env.ANALYZE === 'true';
-// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires, security/detect-non-literal-require
-const pkg = require(appPaths.packageJson);
 
 export const reScripts = /\.(js|jsx|ts|tsx)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg|webp)$/;
@@ -28,51 +27,6 @@ export const reSassModuleRegex = /\.module\.scss$/;
 export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
 const STATIC_PATH = '/static/assets/';
-
-export const getBabelLoaderConfig = isNode => ({
-  loader: 'babel-loader',
-  options: {
-    cacheDirectory: true,
-    cacheCompression: false,
-    compact: isProduction,
-    plugins: [
-      '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-syntax-dynamic-import',
-      '@babel/plugin-proposal-optional-chaining',
-      '@babel/plugin-proposal-nullish-coalescing-operator',
-      // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-constant-elements
-      isProduction && '@babel/plugin-transform-react-inline-elements',
-      !isNode &&
-        isProduction &&
-        '@babel/plugin-transform-react-constant-elements',
-    ].filter(Boolean),
-    presets: [
-      isNode
-        ? '@babel/preset-env'
-        : [
-            '@babel/preset-env',
-            {
-              modules: false,
-              corejs: 3,
-              targets: {
-                browsers: pkg.browserslist,
-              },
-              forceAllTransforms: isProduction,
-              useBuiltIns: 'entry',
-              // Exclude transforms that make all code slower
-              exclude: ['transform-typeof-symbol'],
-            },
-          ],
-      [
-        '@babel/preset-react',
-        {
-          runtime: 'automatic',
-        },
-      ],
-      '@babel/preset-typescript',
-    ],
-  },
-});
 
 export const getStyleLoadersConfig = isNode => [
   {
@@ -282,4 +236,13 @@ export default {
     }),
   ],
   performance: false,
+
+  optimization: {
+    minimize: false,
+    minimizer: [
+      new EsbuildPlugin({
+        target: 'es2023',
+      }),
+    ],
+  },
 };
