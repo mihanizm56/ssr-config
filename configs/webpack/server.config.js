@@ -14,6 +14,7 @@ import common, {
   getStyleLoadersConfig,
   disabledProgress,
   getMainEsbuildLoaders,
+  ESBUILD_JS_VERSION,
 } from './common.config';
 
 const isProduction = getIsProduction();
@@ -57,7 +58,7 @@ export default {
         include: /fastify|undici/,
         loader: 'esbuild-loader',
         options: {
-          target: 'es2022',
+          target: ESBUILD_JS_VERSION,
           loader: 'js',
         },
       },
@@ -120,7 +121,7 @@ export default {
     minimize: isProduction,
     minimizer: [
       new EsbuildPlugin({
-        target: 'es2022',
+        target: ESBUILD_JS_VERSION,
       }),
     ],
   },

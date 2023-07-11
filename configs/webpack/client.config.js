@@ -18,6 +18,7 @@ import common, {
   getStyleLoadersConfig,
   disabledProgress,
   getMainEsbuildLoaders,
+  ESBUILD_JS_VERSION,
 } from './common.config';
 import { makeChunkManifest } from './utils/make-chunk-manifest';
 
@@ -114,7 +115,7 @@ export default {
     minimize: isProduction,
     minimizer: [
       new EsbuildPlugin({
-        target: 'es2022',
+        target: ESBUILD_JS_VERSION,
       }),
     ],
     runtimeChunk: {
