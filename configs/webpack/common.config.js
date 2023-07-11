@@ -15,7 +15,6 @@ export const hashSize = process.env.HASH_CSS_SIZE
   : 3;
 const isProduction = getIsProduction();
 export const isAnalyze = process.env.ANALYZE === 'true';
-const packageJson = JSON.stringify(appPaths.packageJson);
 
 export const reScripts = /\.(js|jsx|ts|tsx)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg|webp)$/;
@@ -28,7 +27,7 @@ export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
 const STATIC_PATH = '/static/assets/';
 
-export const ESBUILD_JS_VERSION = packageJson.esVersion || 'es2022';
+export const ESBUILD_JS_VERSION = appPaths.packageJson.esVersion || 'es2022';
 
 export const getMainEsbuildLoaders = () => [
   {
