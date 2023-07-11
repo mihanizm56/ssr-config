@@ -27,9 +27,12 @@ export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
 const STATIC_PATH = '/static/assets/';
 
-export const ESBUILD_JS_VERSION = appPaths.packageJson.esVersion || 'es2022';
+export const ESBUILD_JS_VERSION =
+  // eslint-disable-next-line global-require, security/detect-non-literal-require, import/no-dynamic-require
+  require(appPaths.packageJson).esVersion || 'es2022';
 
 export const getMainEsbuildLoaders = () => [
+  // jsx transpile
   {
     test: /\.(jsx|tsx)$/,
     exclude: /node_modules/,
@@ -40,6 +43,7 @@ export const getMainEsbuildLoaders = () => [
       loader: 'tsx',
     },
   },
+  // js transpile
   {
     test: /\.(js|ts)$/,
     exclude: /node_modules/,
