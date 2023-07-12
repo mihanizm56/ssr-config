@@ -258,9 +258,10 @@ export default {
       __TEST__: false,
     }),
 
-    new ForkTsCheckerWebpackPlugin({
-      async: false,
-    }),
-  ],
+    !isProduction &&
+      new ForkTsCheckerWebpackPlugin({
+        async: true,
+      }),
+  ].filter(Boolean),
   performance: false,
 };
