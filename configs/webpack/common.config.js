@@ -260,7 +260,7 @@ export default {
 
     !isProduction &&
       new ForkTsCheckerWebpackPlugin({
-        async: true,
+        async: false,
       }),
   ].filter(Boolean),
   performance: false,
