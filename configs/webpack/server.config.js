@@ -15,6 +15,7 @@ import common, {
   disabledProgress,
   getMainEsbuildLoaders,
   ESBUILD_JS_VERSION,
+  LATEST_ESBUILD_JS_VERSION,
 } from './common.config';
 
 const isProduction = getIsProduction();
@@ -58,12 +59,12 @@ export default {
         include: /fastify|undici/,
         loader: 'esbuild-loader',
         options: {
-          target: ESBUILD_JS_VERSION,
+          target: LATEST_ESBUILD_JS_VERSION,
           loader: 'js',
         },
       },
 
-      ...getMainEsbuildLoaders(),
+      ...getMainEsbuildLoaders(true),
       ...getStyleLoadersConfig(true),
       ...overrideWebpackRules(common.module.rules, rule => {
         // Выключаем создание генерацию файлов на стороне серверной сборки

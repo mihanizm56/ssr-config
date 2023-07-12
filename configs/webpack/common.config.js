@@ -26,18 +26,20 @@ export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
 const STATIC_PATH = '/static/assets/';
 
+export const LATEST_ESBUILD_JS_VERSION = 'es2022';
+
 export const ESBUILD_JS_VERSION =
   // eslint-disable-next-line global-require, security/detect-non-literal-require, import/no-dynamic-require
-  require(appPaths.packageJson).esVersion || 'es2022';
+  require(appPaths.packageJson).esVersion || LATEST_ESBUILD_JS_VERSION;
 
-export const getMainEsbuildLoaders = () => [
+export const getMainEsbuildLoaders = isNode => [
   // jsx transpile
   {
     test: /\.(jsx|tsx)$/,
     exclude: /node_modules/,
     loader: 'esbuild-loader',
     options: {
-      target: ESBUILD_JS_VERSION,
+      target: isNode ? LATEST_ESBUILD_JS_VERSION : ESBUILD_JS_VERSION,
       jsx: 'automatic',
       loader: 'tsx',
     },
@@ -48,45 +50,50 @@ export const getMainEsbuildLoaders = () => [
     exclude: /node_modules/,
     loader: 'esbuild-loader',
     options: {
-      target: ESBUILD_JS_VERSION,
+      target: isNode ? LATEST_ESBUILD_JS_VERSION : ESBUILD_JS_VERSION,
       loader: 'ts',
     },
   },
 ];
 
 export const getStyleLoadersConfig = isNode => [
-  {
-    test: reCssRegex,
-    exclude: reCssModuleRegex,
-    rules: [
-      !isNode &&
-        !isProduction && {
-          loader: 'css-hot-loader',
-          options: { reloadAll: true },
-        },
-      !isNode && { loader: MiniCssExtractPlugin.loader, options: {} },
-      { loader: 'cache-loader' },
-      {
-        loader: 'css-loader',
-        options: {
-          importLoaders: 1,
-          modules: {
-            mode: 'icss',
+  isNode
+    ? {
+        test: reCssRegex,
+        exclude: reCssModuleRegex,
+        loader: 'null-loader',
+      }
+    : {
+        test: reCssRegex,
+        exclude: reCssModuleRegex,
+        rules: [
+          !isProduction && {
+            loader: 'css-hot-loader',
+            options: { reloadAll: true },
           },
-          sourceMap: false,
-        },
-      },
-      {
-        loader: 'postcss-loader',
-        options: {
-          postcssOptions: {
-            config: `${packagePaths.configs}/postcss.config.js`,
+          { loader: MiniCssExtractPlugin.loader, options: {} },
+          { loader: 'cache-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: {
+                mode: 'icss',
+              },
+              sourceMap: false,
+            },
           },
-          sourceMap: false,
-        },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                config: `${packagePaths.configs}/postcss.config.js`,
+              },
+              sourceMap: false,
+            },
+          },
+        ].filter(Boolean),
       },
-    ].filter(Boolean),
-  },
   {
     test: reCssModuleRegex,
     rules: [
@@ -108,7 +115,7 @@ export const getStyleLoadersConfig = isNode => [
           sourceMap: false,
         },
       },
-      {
+      !isNode && {
         loader: 'postcss-loader',
         options: {
           postcssOptions: {
@@ -140,7 +147,7 @@ export const getStyleLoadersConfig = isNode => [
           sourceMap: false,
         },
       },
-      {
+      !isNode && {
         loader: 'postcss-loader',
         options: {
           postcssOptions: {
