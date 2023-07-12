@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.4.1-beta.6",
+  "version": "0.4.1-beta.7",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -26,7 +26,7 @@
     "@babel/preset-env": "7.21.5",
     "@fastify/express": "2.3.0",
     "@fastify/static": "6.5.0",
-    "autoprefixer": "9.8.0",
+    "autoprefixer": "10.4.14",
     "browser-sync": "2.29.3",
     "cache-loader": "4.1.0",
     "colors": "1.4.0",
@@ -41,9 +41,8 @@
     "mini-css-extract-plugin": "2.7.6",
     "mkdirp": "1.0.4",
     "null-loader": "4.0.1",
-    "postcss": "8.4.23",
+    "postcss": "8.4.25",
     "postcss-loader": "7.3.3",
-    "postcss-preset-env": "8.4.1",
     "react-dev-utils": "12.0.1",
     "react-error-overlay": "6.0.9",
     "rimraf": "3.0.2",
