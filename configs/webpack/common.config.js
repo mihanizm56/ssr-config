@@ -6,7 +6,6 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import loaderUtils from 'loader-utils';
 import { appPaths, packagePaths } from '../../utils/paths';
-import { resolvePath } from '../../utils/resolve-path';
 
 export const getIsProduction = () => process.env.NODE_ENV === 'production';
 export const disabledProgress = process.env.DISABLE_PROGRESS === 'true';
@@ -204,7 +203,6 @@ export default {
         test: [reImage, /\.txt$/, /\.(ttf|woff2|woff|eot)/],
         type: 'asset/resource',
       },
-
       // Для всего остального возвращаем URL
       // НЕ ЗАБЫТЬ обновить `exclude` при добавлении нового модуля
       {
@@ -223,13 +221,7 @@ export default {
         ],
         type: 'asset/resource',
       },
-
-      // Исключение dev модулей при production сборке
-      isProduction && {
-        test: resolvePath('node_modules/react-deep-force-update/lib/index.js'),
-        loader: 'null-loader',
-      },
-    ].filter(Boolean),
+    ],
   },
 
   bail: isProduction,
