@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.4.1-beta.5",
+  "version": "0.4.1-beta.6",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -42,8 +42,6 @@
     "mkdirp": "1.0.4",
     "null-loader": "4.0.1",
     "postcss": "8.4.23",
-    "postcss-calc": "9.0.1",
-    "postcss-flexbugs-fixes": "5.0.2",
     "postcss-loader": "7.3.3",
     "postcss-preset-env": "8.4.1",
     "react-dev-utils": "12.0.1",
