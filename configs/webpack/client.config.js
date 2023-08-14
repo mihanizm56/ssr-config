@@ -10,6 +10,9 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { EsbuildPlugin } from 'esbuild-loader';
 import WebpackBar from 'webpackbar';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import lightningcss from 'lightningcss';
+import browserslist from 'browserslist';
 import { appPaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
 import common, {
@@ -116,6 +119,16 @@ export default {
     minimizer: [
       new EsbuildPlugin({
         target: ESBUILD_JS_VERSION,
+      }),
+      // lightningcss fast and effective minifier
+      new CssMinimizerPlugin({
+        minify: CssMinimizerPlugin.lightningCssMinify,
+        minimizerOptions: {
+          // todo fix
+          targets: lightningcss.browserslistToTargets(
+            browserslist('last 3 versions'),
+          ),
+        },
       }),
     ],
     runtimeChunk: {

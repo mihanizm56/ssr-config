@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.4.1-beta.13",
+  "version": "0.4.1-beta.14",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -28,16 +28,19 @@
     "@fastify/static": "6.5.0",
     "autoprefixer": "10.4.14",
     "browser-sync": "2.29.3",
+    "browserslist": "4.21.10",
     "cache-loader": "4.1.0",
     "colors": "1.4.0",
     "cross-env": "7.0.3",
     "css-hot-loader": "1.4.4",
     "css-loader": "6.8.1",
+    "css-minimizer-webpack-plugin": "5.0.1",
     "dotenv": "8.2.0",
     "esbuild-loader": "3.0.1",
     "fastify": "4.17.0",
     "fork-ts-checker-webpack-plugin": "8.0.0",
     "glob": "7.1.6",
+    "lightningcss": "1.21.5",
     "mini-css-extract-plugin": "2.7.6",
     "mkdirp": "1.0.4",
     "null-loader": "4.0.1",
