@@ -18,20 +18,11 @@ import { enrichClientConfig } from './utils/enrich-client-config';
 import { enrichServerConfig } from './utils/enrich-server-config';
 import { showStatsErrors } from './utils/show-stats-errors';
 
-// https://webpack.js.org/configuration/watch/#watchoptions
-const watchOptions = {
-  // poll: true,
-  // ignored: /node_modules/,
-  aggregateTimeout: 1000,
-};
-
 const openBrowser = process.env.BROWSER !== 'none';
 const PORT = process.env.PORT || 3000;
 
 const start = async () => {
   const server = express();
-
-  server.use('/static', express.static(appPaths.public));
 
   const webpackResultConfig = await getInjectedConfig(webpackConfig);
 
@@ -67,7 +58,6 @@ const start = async () => {
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
       stats: 'errors-only',
-      // watchOptions,
     }),
   );
 
@@ -88,17 +78,6 @@ const start = async () => {
     appPromise = new Promise(resolve => {
       appPromiseResolve = resolve;
     });
-  });
-
-  // передаём траффик с девсервера вебпака на наш
-  server.use(async (req, res) => {
-    try {
-      await appPromise;
-
-      app(req, res);
-    } catch (error) {
-      console.log(`${error}`.red);
-    }
   });
 
   function checkForUpdate(fromUpdate) {
@@ -168,33 +147,39 @@ const start = async () => {
       });
   }
 
+  // https://webpack.js.org/configuration/watch/#watchoptions
   // подписываемся на обновление файлов вебпака
-  serverCompiler.watch(watchOptions, async (error, stats) => {
-    const isError = !app || error || stats.hasErrors();
+  serverCompiler.watch(
+    {
+      aggregateTimeout: 1000,
+    },
+    async (error, stats) => {
+      const isError = !app || error || stats.hasErrors();
 
-    // начальный старт еще не имеет собранного сервера app
-    if (!app) {
-      return;
-    }
-
-    // вывод ошибок
-    if (isError) {
-      if (error) {
-        console.log(`${error}`.red);
-      } else {
-        showStatsErrors(stats);
+      // начальный старт еще не имеет собранного сервера app
+      if (!app) {
+        return;
       }
 
-      return;
-    }
+      // вывод ошибок
+      if (isError) {
+        if (error) {
+          console.log(`${error}`.red);
+        } else {
+          showStatsErrors(stats);
+        }
 
-    // вызываем функцию обновления hmr
-    await checkForUpdate();
+        return;
+      }
 
-    // завершаем сборку
-    appPromiseIsResolved = true;
-    appPromiseResolve();
-  });
+      // вызываем функцию обновления hmr
+      await checkForUpdate();
+
+      // завершаем сборку
+      appPromiseIsResolved = true;
+      appPromiseResolve();
+    },
+  );
 
   // Ждем пока оба промиса сборки зарезолвятся
   await clientCompilation;
@@ -204,13 +189,28 @@ const start = async () => {
   // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
   const appServer = await require(`${appPaths.build}/server`);
 
-  app = appServer.default;
-
   const setupProxy = appServer.setupProxy;
 
+  // запуск сервера статики перед основным сервером
+  server.use('/static', express.static(appPaths.public));
+
+  // запуск setupProxy перед основным сервером
   if (setupProxy) {
     setupProxy(server);
   }
+
+  // передаём траффик с девсервера вебпака на наш
+  server.use(async (req, res) => {
+    try {
+      await appPromise;
+
+      app(req, res, server);
+    } catch (error) {
+      console.log(`${error}`.red);
+    }
+  });
+
+  app = appServer.default;
 
   // завершаем сборку
   appPromiseIsResolved = true;
