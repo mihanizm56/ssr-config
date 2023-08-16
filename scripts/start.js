@@ -2,12 +2,11 @@
 
 import 'colors';
 
-import fastify from 'fastify';
-import fastifyExpress from '@fastify/express';
+import express from 'express';
+import browserSync from 'browser-sync';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
-import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
 import webpackConfig from '../configs/webpack';
 import { appPaths } from '../utils/paths';
 import { copyDir } from '../utils/fs';
@@ -21,24 +20,22 @@ import { showStatsErrors } from './utils/show-stats-errors';
 
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {
-  ignored: /node_modules/,
+  // poll: true,
+  // ignored: /node_modules/,
   aggregateTimeout: 1000,
 };
 
+const openBrowser = process.env.BROWSER !== 'none';
 const PORT = process.env.PORT || 3000;
 
 const start = async () => {
-  const server = fastify({ logger: false });
-
-  await server.register(fastifyExpress);
-
-  server.use(errorOverlayMiddleware());
+  const server = express();
 
   const webpackResultConfig = await getInjectedConfig(webpackConfig);
 
   // clean build dir
   await run(clean);
-  // copy static into build dir
+  // copy static invscode-file://vscode-app/usr/share/code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.htmlto build dir
   await copyDir(appPaths.public, `${appPaths.root}/build/static`);
 
   // Configure client-side hot module replacement
@@ -67,8 +64,8 @@ const start = async () => {
   server.use(
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
-      stats: 'errors-only',
-      // watchOptions,
+      logLevel: 'error',
+      watchOptions,
     }),
   );
 
@@ -96,15 +93,15 @@ const start = async () => {
     try {
       await appPromise;
 
-      // console.log(app.server);
-      const response = await app.inject({
-        url: req.url,
-        headers: req.headers,
-        method: req.method,
-      });
+      const formattedResponseObject = {
+        ...res,
+        setHeader: req.header,
+        end: () => ({}),
+        writeHead: res.status,
+        write: res.send,
+      };
 
-      res.send(response.payload);
-      // res.send(response)
+      app(req, formattedResponseObject);
     } catch (error) {
       console.log(`${error}`.red);
     }
@@ -217,7 +214,23 @@ const start = async () => {
   appPromiseIsResolved = true;
   appPromiseResolve();
 
-  await server.listen({ port: Number(PORT) });
+  // Запуск dev сервера с browsersync и HMR
+  browserSync.create().init(
+    {
+      // https://www.browsersync.io/docs/options
+      server: true,
+      middleware: [server],
+      open: openBrowser,
+      notify: false,
+      ui: false,
+      port: PORT,
+    },
+    error => {
+      if (error) {
+        throw new Error('Browsersync error', error);
+      }
+    },
+  );
 };
 
 export default start;

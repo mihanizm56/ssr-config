@@ -180,10 +180,6 @@ export default {
   resolve: {
     modules: ['node_modules'],
     extensions: ['.ts', '.tsx', '.js', '.json'],
-    alias: {
-      // https://github.com/fastify/help/issues/272
-      'tiny-lru': 'tiny-lru/dist/tiny-lru.cjs',
-    },
   },
 
   devtool: isProduction ? 'source-map' : 'cheap-source-map',
