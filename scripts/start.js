@@ -3,8 +3,8 @@
 import 'colors';
 
 import express from 'express';
-import browserSync from 'browser-sync';
 import webpack from 'webpack';
+import browserSync from 'browser-sync';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../configs/webpack';
@@ -30,6 +30,8 @@ const PORT = process.env.PORT || 3000;
 
 const start = async () => {
   const server = express();
+
+  server.use('/static', express.static(appPaths.public));
 
   const webpackResultConfig = await getInjectedConfig(webpackConfig);
 
@@ -64,8 +66,8 @@ const start = async () => {
   server.use(
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
-      logLevel: 'error',
-      watchOptions,
+      stats: 'errors-only',
+      // watchOptions,
     }),
   );
 
@@ -93,15 +95,7 @@ const start = async () => {
     try {
       await appPromise;
 
-      const formattedResponseObject = {
-        ...res,
-        setHeader: req.header,
-        end: () => ({}),
-        writeHead: res.status,
-        write: res.send,
-      };
-
-      app(req, formattedResponseObject);
+      app(req, res);
     } catch (error) {
       console.log(`${error}`.red);
     }
@@ -145,7 +139,7 @@ const start = async () => {
 
         checkForUpdate(true);
       })
-      .catch(error => {
+      .catch(async error => {
         if (['abort', 'fail'].includes(app.hot.status())) {
           console.log(`${hmrPrefix} ${'Cannot apply update'.yellow.underline}`);
           console.log(`reason: ${app.hot.status()}`.red);
@@ -165,7 +159,7 @@ const start = async () => {
 
           // переустанавливаем сервер нашего приложения в переменную
           // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
-          app = require(`${appPaths.build}/server`).default;
+          app = (await require(`${appPaths.build}/server`)).default;
           console.log(`${hmrPrefix} ${'App has been reloaded'.green}`);
         } else {
           console.log(`${hmrPrefix} ${'Update failed'.red}`);
@@ -208,7 +202,15 @@ const start = async () => {
 
   // записываем серверную часть в переменную app
   // eslint-disable-next-line global-require, import/no-unresolved, import/no-dynamic-require, security/detect-non-literal-require
-  app = require(`${appPaths.build}/server`).default;
+  const appServer = await require(`${appPaths.build}/server`);
+
+  app = appServer.default;
+
+  const setupProxy = appServer.setupProxy;
+
+  if (setupProxy) {
+    setupProxy(server);
+  }
 
   // завершаем сборку
   appPromiseIsResolved = true;
