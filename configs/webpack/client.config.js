@@ -27,6 +27,10 @@ import { makeChunkManifest } from './utils/make-chunk-manifest';
 
 const isProduction = getIsProduction();
 
+export const browserslistConfig =
+  // eslint-disable-next-line global-require, security/detect-non-literal-require, import/no-dynamic-require
+  require(appPaths.packageJson).browserslist || 'last 3 versions';
+
 export default {
   ...common,
   name: 'client',
@@ -124,9 +128,8 @@ export default {
       new CssMinimizerPlugin({
         minify: CssMinimizerPlugin.lightningCssMinify,
         minimizerOptions: {
-          // todo fix
           targets: lightningcss.browserslistToTargets(
-            browserslist('last 3 versions'),
+            browserslist(browserslistConfig),
           ),
         },
       }),
