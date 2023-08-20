@@ -5,7 +5,7 @@ import { packagePaths } from '../../utils/paths';
 
 export const enrichClientConfig = clientConfig => {
   clientConfig.entry.client = [
-    path.join(packagePaths.utils, 'webpack-hot-middleware/client'),
+    path.join(packagePaths.utils, 'webpack-hot-dev-client'),
     clientConfig.entry.client,
   ];
 
