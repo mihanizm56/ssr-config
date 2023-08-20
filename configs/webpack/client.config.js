@@ -41,10 +41,8 @@ export default {
   output: {
     ...common.output,
     path: `${appPaths.root}/build/static/assets`,
-    filename: isProduction ? '[name].[chunkhash:16].js' : '[name].js',
-    chunkFilename: isProduction
-      ? '[name].[chunkhash:16].chunk.js'
-      : '[name].chunk.js',
+    filename: '[name].[contenthash:16].js',
+    chunkFilename: '[name].[contenthash:16].chunk.js',
   },
   // Webpack мутирует resolve объект, клонируем чтобы избежать этого
   // https://github.com/webpack/webpack/issues/4817
@@ -142,15 +140,6 @@ export default {
       // It's recommended to use either the defaults or optimization.splitChunks: { chunks: 'all' }.
       // https://webpack.js.org/migrate/5/
       chunks: 'all',
-
-      // old config
-      // cacheGroups: {
-      //   commons: {
-      //     chunks: 'initial',
-      //     test: /[\\/]node_modules[\\/]/,
-      //     name: 'vendors',
-      //   },
-      // },
     },
   },
 };
