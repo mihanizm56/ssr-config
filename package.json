@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.5.0-beta.5",
+  "version": "0.5.0-beta.6",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -28,7 +28,6 @@
     "browser-sync": "2.29.3",
     "browserslist": "4.21.10",
     "cache-loader": "4.1.0",
-    "express": "4.18.2",
     "colors": "1.4.0",
     "cross-env": "7.0.3",
     "css-hot-loader": "1.4.4",
@@ -36,6 +35,7 @@
     "css-minimizer-webpack-plugin": "5.0.1",
     "dotenv": "8.2.0",
     "esbuild-loader": "3.0.1",
+    "express": "4.18.2",
     "fork-ts-checker-webpack-plugin": "8.0.0",
     "glob": "7.1.6",
     "lightningcss": "1.21.5",
@@ -49,6 +49,7 @@
     "rimraf": "3.0.2",
     "sass-loader": "13.3.2",
     "source-map-support": "0.5.21",
+    "style-loader": "3.3.3",
     "thread-loader": "4.0.2",
     "tiny-lru": "9.0.3",
     "webpack": "5.88.1",
