@@ -41,8 +41,10 @@ export default {
   output: {
     ...common.output,
     path: `${appPaths.root}/build/static/assets`,
-    filename: '[name].[contenthash:16].js',
-    chunkFilename: '[name].[contenthash:16].chunk.js',
+    filename: isProduction ? '[name].[chunkhash:16].js' : '[name].js',
+    chunkFilename: isProduction
+      ? '[name].[chunkhash:16].chunk.js'
+      : '[name].chunk.js',
   },
   // Webpack мутирует resolve объект, клонируем чтобы избежать этого
   // https://github.com/webpack/webpack/issues/4817

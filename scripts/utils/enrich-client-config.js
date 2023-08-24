@@ -9,5 +9,14 @@ export const enrichClientConfig = clientConfig => {
     clientConfig.entry.client,
   ];
 
+  clientConfig.output.filename = clientConfig.output.filename.replace(
+    'chunkhash',
+    'contenthash',
+  );
+  clientConfig.output.chunkFilename = clientConfig.output.chunkFilename.replace(
+    'chunkhash',
+    'contenthash',
+  );
+
   clientConfig.plugins.push(new HotModuleReplacementPlugin());
 };
