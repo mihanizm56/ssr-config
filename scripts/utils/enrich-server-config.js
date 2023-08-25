@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-
 import { HotModuleReplacementPlugin } from 'webpack';
 
 export const enrichServerConfig = serverConfig => {
