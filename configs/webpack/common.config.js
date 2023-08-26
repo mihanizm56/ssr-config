@@ -112,6 +112,13 @@ export const getStyleLoadersConfig = isNode => [
               sourceMap: false,
             },
           },
+          { loader: 'cache-loader' },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: false,
+            },
+          },
         ]
       : [
           isProduction
@@ -156,6 +163,13 @@ export const getStyleLoadersConfig = isNode => [
                 exportOnlyLocals: true,
               },
               importLoaders: 2,
+              sourceMap: false,
+            },
+          },
+          { loader: 'cache-loader' },
+          {
+            loader: 'sass-loader',
+            options: {
               sourceMap: false,
             },
           },
