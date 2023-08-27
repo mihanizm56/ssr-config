@@ -44,6 +44,7 @@ export const getBabelLoaderConfig = () => [
       cacheCompression: false,
       compact: false,
       plugins: [
+        'react-refresh/babel',
         '@babel/plugin-proposal-class-properties',
         '@babel/plugin-syntax-dynamic-import',
         '@babel/plugin-proposal-optional-chaining',
