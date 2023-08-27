@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.5.0-beta.10",
+  "version": "0.5.0-beta.11",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -60,7 +60,9 @@
     "webpack-dev-middleware": "6.1.1",
     "webpack-hot-middleware": "2.25.4",
     "webpack-node-externals": "3.0.0",
-    "webpackbar": "5.0.2"
+    "webpackbar": "5.0.2",
+    "@pmmmwh/react-refresh-webpack-plugin": "0.5.11",
+    "react-refresh": "0.14.0"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",

@@ -1,47 +1,47 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import 'webpack-hot-middleware/client';
+// import hotClient from 'webpack-hot-middleware/client';
+// import launchEditorEndpoint from 'react-dev-utils/launchEditorEndpoint';
+// import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
+// import {
+//   setEditorHandler,
+//   reportBuildError,
+//   dismissBuildError,
+//   startReportingRuntimeErrors,
+//   stopReportingRuntimeErrors,
+// } from 'react-error-overlay';
 
-import hotClient from 'webpack-hot-middleware/client';
-import launchEditorEndpoint from 'react-dev-utils/launchEditorEndpoint';
-import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
-import {
-  setEditorHandler,
-  reportBuildError,
-  dismissBuildError,
-  startReportingRuntimeErrors,
-  stopReportingRuntimeErrors,
-} from 'react-error-overlay';
+// setEditorHandler(errorLocation => {
+//   const fileName = encodeURIComponent(errorLocation.fileName);
+//   const lineNumber = encodeURIComponent(errorLocation.lineNumber || 1);
+//   fetch(
+//     `${launchEditorEndpoint}?fileName=${fileName}&lineNumber=${lineNumber}`,
+//   );
+// });
 
-setEditorHandler(errorLocation => {
-  const fileName = encodeURIComponent(errorLocation.fileName);
-  const lineNumber = encodeURIComponent(errorLocation.lineNumber || 1);
-  fetch(
-    `${launchEditorEndpoint}?fileName=${fileName}&lineNumber=${lineNumber}`,
-  );
-});
+// hotClient.useCustomOverlay({
+//   showProblems(type, errors) {
+//     const formatted = formatWebpackMessages({
+//       errors,
+//       warnings: [],
+//     });
 
-hotClient.useCustomOverlay({
-  showProblems(type, errors) {
-    const formatted = formatWebpackMessages({
-      errors,
-      warnings: [],
-    });
+//     reportBuildError(formatted.errors[0]);
+//   },
+//   clear() {
+//     dismissBuildError();
+//   },
+// });
 
-    reportBuildError(formatted.errors[0]);
-  },
-  clear() {
-    dismissBuildError();
-  },
-});
+// hotClient.setOptionsAndConnect({
+//   name: 'client',
+//   reload: true,
+// });
 
-hotClient.setOptionsAndConnect({
-  name: 'client',
-  reload: true,
-});
+// startReportingRuntimeErrors({
+//   filename: '/assets/client.js',
+// });
 
-startReportingRuntimeErrors({
-  filename: '/assets/client.js',
-});
-
-if (module.hot) {
-  module.hot.dispose(stopReportingRuntimeErrors);
-}
+// if (module.hot) {
+//   module.hot.dispose(stopReportingRuntimeErrors);
+// }

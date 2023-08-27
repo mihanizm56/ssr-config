@@ -15,6 +15,9 @@ export const hashSize = process.env.HASH_CSS_SIZE
 const isProduction = getIsProduction();
 export const isAnalyze = process.env.ANALYZE === 'true';
 
+// eslint-disable-next-line
+const pkg = require(appPaths.packageJson);
+
 export const reScripts = /\.(js|jsx|ts|tsx)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg|webp)$/;
 
@@ -31,6 +34,25 @@ export const LATEST_ESBUILD_JS_VERSION = 'es2022';
 export const ESBUILD_JS_VERSION =
   // eslint-disable-next-line global-require, security/detect-non-literal-require, import/no-dynamic-require
   require(appPaths.packageJson).esVersion || LATEST_ESBUILD_JS_VERSION;
+
+export const getBabelLoaderConfig = () => ({
+  loader: 'babel-loader',
+  options: {
+    cacheDirectory: true,
+    cacheCompression: false,
+    compact: false,
+    plugins: ['react-refresh/babel', '@babel/plugin-syntax-dynamic-import'],
+    presets: [
+      [
+        '@babel/preset-react',
+        {
+          runtime: 'automatic',
+        },
+      ],
+      '@babel/preset-typescript',
+    ],
+  },
+});
 
 export const getMainEsbuildLoaders = isNode => [
   // jsx transpile
@@ -61,7 +83,12 @@ export const getStyleLoadersConfig = isNode => [
     ? {
         test: reCssRegex,
         exclude: reCssModuleRegex,
-        loader: 'null-loader',
+        rules: [
+          {
+            loader: 'null-loader',
+          },
+          { loader: 'cache-loader' },
+        ],
       }
     : {
         test: reCssRegex,

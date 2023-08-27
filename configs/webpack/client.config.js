@@ -22,6 +22,7 @@ import common, {
   disabledProgress,
   getMainEsbuildLoaders,
   ESBUILD_JS_VERSION,
+  getBabelLoaderConfig,
 } from './common.config';
 import { makeChunkManifest } from './utils/make-chunk-manifest';
 
@@ -60,7 +61,7 @@ export default {
   module: {
     ...common.module,
     rules: [
-      ...getMainEsbuildLoaders(),
+      ...(isProduction ? getMainEsbuildLoaders() : getBabelLoaderConfig()),
       ...getStyleLoadersConfig(false),
       ...overrideWebpackRules(common.module.rules, rule => rule),
     ],
