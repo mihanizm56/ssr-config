@@ -42,7 +42,7 @@ export const getBabelLoaderConfig = () => [
     options: {
       cacheDirectory: true,
       cacheCompression: false,
-      compact: isProduction,
+      compact: false,
       plugins: [
         '@babel/plugin-proposal-class-properties',
         '@babel/plugin-syntax-dynamic-import',
@@ -106,25 +106,13 @@ export const getStyleLoadersConfig = isNode => [
     ? {
         test: reCssRegex,
         exclude: reCssModuleRegex,
-        rules: [
-          {
-            loader: 'null-loader',
-          },
-          { loader: 'cache-loader' },
-        ],
+        loader: 'null-loader',
       }
     : {
         test: reCssRegex,
         exclude: reCssModuleRegex,
         rules: [
-          isProduction
-            ? {
-                loader: MiniCssExtractPlugin.loader,
-                options: {},
-              }
-            : {
-                loader: 'style-loader',
-              },
+          { loader: MiniCssExtractPlugin.loader, options: {} },
           { loader: 'cache-loader' },
           {
             loader: 'css-loader',
@@ -145,124 +133,69 @@ export const getStyleLoadersConfig = isNode => [
               sourceMap: false,
             },
           },
-        ],
+        ].filter(Boolean),
       },
   {
     test: reCssModuleRegex,
-    rules: isNode
-      ? [
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: `[local]-[contenthash:${hashSize}`,
-                exportOnlyLocals: true,
-              },
-              importLoaders: 1,
-              sourceMap: false,
-            },
+    rules: [
+      !isNode && { loader: MiniCssExtractPlugin.loader, options: {} },
+      { loader: 'cache-loader' },
+      {
+        loader: 'css-loader',
+        options: {
+          modules: {
+            localIdentName: `[local]-[contenthash:${hashSize}`,
+            exportOnlyLocals: isNode,
           },
-          { loader: 'cache-loader' },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: false,
-            },
+          importLoaders: 1,
+          sourceMap: false,
+        },
+      },
+      !isNode && {
+        loader: 'postcss-loader',
+        options: {
+          postcssOptions: {
+            config: `${packagePaths.configs}/postcss.config.js`,
           },
-        ]
-      : [
-          isProduction
-            ? {
-                loader: MiniCssExtractPlugin.loader,
-                options: {},
-              }
-            : {
-                loader: 'style-loader',
-              },
-          { loader: 'cache-loader' },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: `[local]-[contenthash:${hashSize}`,
-              },
-              importLoaders: 1,
-              sourceMap: false,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                config: `${packagePaths.configs}/postcss.config.js`,
-              },
-              sourceMap: false,
-            },
-          },
-        ],
+          sourceMap: false,
+        },
+      },
+    ].filter(Boolean),
   },
   {
     test: reSassModuleRegex,
-    rules: isNode
-      ? [
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: `[local]-[contenthash:${hashSize}]`,
-                exportOnlyLocals: true,
-              },
-              importLoaders: 2,
-              sourceMap: false,
-            },
+    rules: [
+      !isNode && { loader: MiniCssExtractPlugin.loader, options: {} },
+      { loader: 'cache-loader' },
+      {
+        loader: 'css-loader',
+        options: {
+          modules: {
+            localIdentName: `[local]-[contenthash:${hashSize}]`,
+            exportOnlyLocals: isNode,
           },
-          { loader: 'cache-loader' },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: false,
-            },
+          importLoaders: 2,
+          sourceMap: false,
+        },
+      },
+      !isNode && {
+        loader: 'postcss-loader',
+        options: {
+          postcssOptions: {
+            config: `${packagePaths.configs}/postcss.config.js`,
           },
-        ]
-      : [
-          isProduction
-            ? {
-                loader: MiniCssExtractPlugin.loader,
-                options: {},
-              }
-            : {
-                loader: 'style-loader',
-              },
-          { loader: 'cache-loader' },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: `[local]-[contenthash:${hashSize}]`,
-              },
-              importLoaders: 2,
-              sourceMap: false,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                config: `${packagePaths.configs}/postcss.config.js`,
-              },
-              sourceMap: false,
-            },
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: false,
-            },
-          },
-        ],
+          sourceMap: false,
+        },
+      },
+      {
+        loader: 'sass-loader',
+        options: {
+          sourceMap: false,
+        },
+      },
+    ].filter(Boolean),
   },
 ];
-
 export default {
   context: appPaths.root,
 
