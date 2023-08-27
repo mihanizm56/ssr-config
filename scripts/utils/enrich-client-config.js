@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import path from 'path';
 import { HotModuleReplacementPlugin } from 'webpack';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import { packagePaths } from '../../utils/paths';
 
 export const enrichClientConfig = clientConfig => {
@@ -19,4 +20,5 @@ export const enrichClientConfig = clientConfig => {
   );
 
   clientConfig.plugins.push(new HotModuleReplacementPlugin());
+  clientConfig.plugins.push(new ReactRefreshWebpackPlugin());
 };

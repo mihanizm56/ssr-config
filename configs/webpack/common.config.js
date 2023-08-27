@@ -35,6 +35,7 @@ export const ESBUILD_JS_VERSION =
   // eslint-disable-next-line global-require, security/detect-non-literal-require, import/no-dynamic-require
   require(appPaths.packageJson).esVersion || LATEST_ESBUILD_JS_VERSION;
 
+// babel config is used for DEV ONLY purposes because of react-refresh
 export const getBabelLoaderConfig = () => [
   {
     loader: 'babel-loader',
@@ -67,6 +68,7 @@ export const getBabelLoaderConfig = () => [
           '@babel/preset-react',
           {
             runtime: 'automatic',
+            development: true,
           },
         ],
         '@babel/preset-typescript',
