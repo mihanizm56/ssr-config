@@ -35,24 +35,45 @@ export const ESBUILD_JS_VERSION =
   // eslint-disable-next-line global-require, security/detect-non-literal-require, import/no-dynamic-require
   require(appPaths.packageJson).esVersion || LATEST_ESBUILD_JS_VERSION;
 
-export const getBabelLoaderConfig = () => ({
-  loader: 'babel-loader',
-  options: {
-    cacheDirectory: true,
-    cacheCompression: false,
-    compact: false,
-    plugins: ['react-refresh/babel', '@babel/plugin-syntax-dynamic-import'],
-    presets: [
-      [
-        '@babel/preset-react',
-        {
-          runtime: 'automatic',
-        },
+export const getBabelLoaderConfig = () => [
+  {
+    loader: 'babel-loader',
+    options: {
+      cacheDirectory: true,
+      cacheCompression: false,
+      compact: isProduction,
+      plugins: [
+        '@babel/plugin-proposal-class-properties',
+        '@babel/plugin-syntax-dynamic-import',
+        '@babel/plugin-proposal-optional-chaining',
+        '@babel/plugin-proposal-nullish-coalescing-operator',
       ],
-      '@babel/preset-typescript',
-    ],
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            modules: false,
+            corejs: 3,
+            targets: {
+              browsers: pkg.browserslist,
+            },
+            forceAllTransforms: isProduction,
+            useBuiltIns: 'entry',
+            // Exclude transforms that make all code slower
+            exclude: ['transform-typeof-symbol'],
+          },
+        ],
+        [
+          '@babel/preset-react',
+          {
+            runtime: 'automatic',
+          },
+        ],
+        '@babel/preset-typescript',
+      ],
+    },
   },
-});
+];
 
 export const getMainEsbuildLoaders = isNode => [
   // jsx transpile
