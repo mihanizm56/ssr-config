@@ -36,47 +36,25 @@ export const ESBUILD_JS_VERSION =
   require(appPaths.packageJson).esVersion || LATEST_ESBUILD_JS_VERSION;
 
 // babel config is used for DEV ONLY purposes because of react-refresh
-export const getBabelLoaderConfig = () => [
-  {
-    loader: 'babel-loader',
-    options: {
-      cacheDirectory: true,
-      cacheCompression: false,
-      compact: false,
-      plugins: [
-        'react-refresh/babel',
-        '@babel/plugin-proposal-class-properties',
-        '@babel/plugin-syntax-dynamic-import',
-        '@babel/plugin-proposal-optional-chaining',
-        '@babel/plugin-proposal-nullish-coalescing-operator',
+export const getBabelLoaderConfig = () => ({
+  loader: 'babel-loader',
+  options: {
+    cacheDirectory: true,
+    cacheCompression: false,
+    compact: false,
+    plugins: ['react-refresh/babel'],
+    presets: [
+      [
+        '@babel/preset-react',
+        {
+          runtime: 'automatic',
+          development: true,
+        },
       ],
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            modules: false,
-            corejs: 3,
-            targets: {
-              browsers: pkg.browserslist,
-            },
-            forceAllTransforms: isProduction,
-            useBuiltIns: 'entry',
-            // Exclude transforms that make all code slower
-            exclude: ['transform-typeof-symbol'],
-          },
-        ],
-        [
-          '@babel/preset-react',
-          {
-            runtime: 'automatic',
-            development: true,
-          },
-        ],
-        '@babel/preset-typescript',
-      ],
-    },
+      '@babel/preset-typescript',
+    ],
   },
-];
+});
 
 export const getMainEsbuildLoaders = isNode => [
   // jsx transpile

@@ -20,11 +20,13 @@ import common, {
   isAnalyze,
   getStyleLoadersConfig,
   disabledProgress,
-  getMainEsbuildLoaders,
   ESBUILD_JS_VERSION,
   getBabelLoaderConfig,
+  reScripts,
+  getMainEsbuildLoaders,
 } from './common.config';
 import { makeChunkManifest } from './utils/make-chunk-manifest';
+import { getThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 const isProduction = getIsProduction();
 
@@ -61,7 +63,19 @@ export default {
   module: {
     ...common.module,
     rules: [
-      ...(isProduction ? getMainEsbuildLoaders() : getBabelLoaderConfig()),
+      // ...(isProduction ? getMainEsbuildLoaders() : getBabelLoaderConfig()),
+      ...(!isProduction
+        ? [
+            {
+              test: reScripts,
+              exclude: /node_modules/,
+              use: [
+                ...getThreadLoaderConfig(isProduction),
+                getBabelLoaderConfig(false),
+              ],
+            },
+          ]
+        : getMainEsbuildLoaders()),
       ...getStyleLoadersConfig(false),
       ...overrideWebpackRules(common.module.rules, rule => rule),
     ],
