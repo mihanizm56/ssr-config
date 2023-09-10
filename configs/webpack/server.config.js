@@ -1,9 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import 'colors';
-import { EsbuildPlugin } from 'esbuild-loader';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
+import TerserPlugin from 'terser-webpack-plugin';
 import WebpackBar from 'webpackbar';
 import { appPaths } from '../../utils/paths';
 import { overrideWebpackRules } from '../../utils/override-webpack-rules';
@@ -13,8 +13,7 @@ import common, {
   reAllStyles,
   getStyleLoadersConfig,
   disabledProgress,
-  getMainEsbuildLoaders,
-  ESBUILD_JS_VERSION,
+  getSWCLoader,
 } from './common.config';
 
 const isProduction = getIsProduction();
@@ -53,7 +52,7 @@ export default {
   module: {
     ...common.module,
     rules: [
-      ...getMainEsbuildLoaders(true),
+      getSWCLoader(true),
       ...getStyleLoadersConfig(true),
       ...overrideWebpackRules(common.module.rules, rule => {
         // Выключаем создание генерацию файлов на стороне серверной сборки
@@ -109,10 +108,6 @@ export default {
 
   optimization: {
     minimize: isProduction,
-    minimizer: [
-      new EsbuildPlugin({
-        target: ESBUILD_JS_VERSION,
-      }),
-    ],
+    minimizer: [new TerserPlugin({ minify: TerserPlugin.swcMinify })],
   },
 };

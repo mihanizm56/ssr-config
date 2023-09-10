@@ -29,56 +29,32 @@ export const reAllStyles = /(\.module)?\.(css|scss|sass)$/;
 
 const STATIC_PATH = '/static/assets/';
 
-export const LATEST_ESBUILD_JS_VERSION = 'es2022';
-
-export const ESBUILD_JS_VERSION =
-  // eslint-disable-next-line global-require, security/detect-non-literal-require, import/no-dynamic-require
-  require(appPaths.packageJson).esVersion || LATEST_ESBUILD_JS_VERSION;
-
-// babel config is used for DEV ONLY purposes because of react-refresh
-export const getBabelLoaderConfig = () => ({
-  loader: 'babel-loader',
-  options: {
-    cacheDirectory: true,
-    cacheCompression: false,
-    compact: false,
-    plugins: ['react-refresh/babel'],
-    presets: [
-      [
-        '@babel/preset-react',
-        {
-          runtime: 'automatic',
-          development: true,
+export const getSWCLoader = isNode => ({
+  test: /\.(ts|js)x?$/,
+  exclude: /(node_modules)/,
+  use: {
+    loader: 'swc-loader',
+    options: {
+      jsc: {
+        parser: {
+          syntax: 'typescript',
+          dynamicImport: true,
+          tsx: true,
+          jsx: true,
         },
-      ],
-      '@babel/preset-typescript',
-    ],
+        transform: {
+          react: {
+            runtime: 'automatic',
+            refresh: !isProduction && !isNode,
+          },
+        },
+        loose: true,
+        target: 'es2022',
+      },
+      minify: isProduction && !isNode,
+    },
   },
 });
-
-export const getMainEsbuildLoaders = isNode => [
-  // jsx transpile
-  {
-    test: /\.(jsx|tsx)$/,
-    exclude: /node_modules/,
-    loader: 'esbuild-loader',
-    options: {
-      target: isNode ? LATEST_ESBUILD_JS_VERSION : ESBUILD_JS_VERSION,
-      jsx: 'automatic',
-      loader: 'tsx',
-    },
-  },
-  // js transpile
-  {
-    test: /\.(js|ts)$/,
-    exclude: /node_modules/,
-    loader: 'esbuild-loader',
-    options: {
-      target: isNode ? LATEST_ESBUILD_JS_VERSION : ESBUILD_JS_VERSION,
-      loader: 'ts',
-    },
-  },
-];
 
 export const getStyleLoadersConfig = isNode => [
   isNode

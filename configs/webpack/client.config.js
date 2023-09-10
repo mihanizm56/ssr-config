@@ -6,9 +6,9 @@ import 'colors';
 import fs from 'fs';
 import webpack from 'webpack';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
+import TerserPlugin from 'terser-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import { EsbuildPlugin } from 'esbuild-loader';
 import WebpackBar from 'webpackbar';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import lightningcss from 'lightningcss';
@@ -20,13 +20,9 @@ import common, {
   isAnalyze,
   getStyleLoadersConfig,
   disabledProgress,
-  ESBUILD_JS_VERSION,
-  getBabelLoaderConfig,
-  reScripts,
-  getMainEsbuildLoaders,
+  getSWCLoader,
 } from './common.config';
 import { makeChunkManifest } from './utils/make-chunk-manifest';
-import { getThreadLoaderConfig } from './utils/get-thread-and-cache-loader';
 
 const isProduction = getIsProduction();
 
@@ -63,19 +59,7 @@ export default {
   module: {
     ...common.module,
     rules: [
-      // ...(isProduction ? getMainEsbuildLoaders() : getBabelLoaderConfig()),
-      ...(!isProduction
-        ? [
-            {
-              test: reScripts,
-              exclude: /node_modules/,
-              use: [
-                ...getThreadLoaderConfig(isProduction),
-                getBabelLoaderConfig(false),
-              ],
-            },
-          ]
-        : getMainEsbuildLoaders()),
+      getSWCLoader(),
       ...getStyleLoadersConfig(false),
       ...overrideWebpackRules(common.module.rules, rule => rule),
     ],
@@ -136,9 +120,7 @@ export default {
   optimization: {
     minimize: isProduction,
     minimizer: [
-      new EsbuildPlugin({
-        target: ESBUILD_JS_VERSION,
-      }),
+      new TerserPlugin({ minify: TerserPlugin.swcMinify }),
       // lightningcss fast and effective minifier
       new CssMinimizerPlugin({
         minify: CssMinimizerPlugin.lightningCssMinify,

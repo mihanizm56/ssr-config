@@ -1,9 +1,3 @@
 - inline chunk css generate fix
 
-
-- disable css processing on ssr
-- transpile ssr only for 2023
-
-
-- dev mode style-loader & scripts await before render the page
-- fix hmr for scripts
+- fix hmr for ssr
