@@ -40,7 +40,6 @@ export const getSWCLoader = isNode => ({
           syntax: 'typescript',
           dynamicImport: true,
           tsx: true,
-          jsx: true,
         },
         transform: {
           react: {
@@ -48,10 +47,9 @@ export const getSWCLoader = isNode => ({
             refresh: !isProduction && !isNode,
           },
         },
-        loose: true,
+        loose: false,
         target: 'es2022',
       },
-      minify: isProduction && !isNode,
     },
   },
 });
