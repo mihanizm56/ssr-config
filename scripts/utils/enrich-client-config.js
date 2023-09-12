@@ -22,7 +22,9 @@ export const enrichClientConfig = clientConfig => {
   clientConfig.plugins.push(new HotModuleReplacementPlugin());
   clientConfig.plugins.push(
     new ReactRefreshWebpackPlugin({
-      sockIntegration: 'whm',
+      overlay: {
+        sockIntegration: 'whm',
+      },
     }),
   );
 };
