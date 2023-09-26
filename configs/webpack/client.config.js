@@ -88,6 +88,7 @@ export default {
           const chunkFiles = makeChunkManifest({
             chunkGroups: stats.compilation.chunkGroups,
             manifest,
+            buildPath: isProduction ? appPaths.build : null,
           });
 
           fs.writeFileSync(chunkFileName, JSON.stringify(chunkFiles, null, 2));

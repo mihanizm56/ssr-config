@@ -1,28 +1,28 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
 
-export const getFormattedChunkGroup = ({ chunks, manifest }) =>
-  chunks.reduce(
-    (acc, chunk) => {
-      // бежим по модулям и если этот модуль обработан mini-extract
-      // то собираем содержимое в строку для инлайн-отдачи в html
-      // for (const item of chunk._modules) {
-      //   if (item.type === 'css/mini-extract') {
-      //     acc.inlineCss = acc.inlineCss.concat(item.content);
-      //   }
-      // }
+import { readFileSync } from 'fs';
+import path from 'path';
 
-      chunk.files.forEach(file => {
-        const isJS = file.endsWith('.js');
-        const isCSS = file.endsWith('.css');
+export const getFormattedChunkGroup = ({ chunks, manifest, buildPath }) => {
+  return chunks.reduce(
+    (acc, chunk) => {
+      chunk.files.forEach(fileName => {
+        const isJS = fileName.endsWith('.js');
+        const isCSS = fileName.endsWith('.css');
 
         if (isJS || isCSS) {
-          const filePath = manifest.getPublicPath(file);
+          const filePath = manifest.getPublicPath(fileName);
 
           if (isJS) {
             acc.js.push(filePath);
           } else {
+            const cssContent = buildPath
+              ? readFileSync(path.join(buildPath, filePath), 'utf-8')
+              : '';
+
             acc.css.push(filePath);
+            acc.inlineCss = acc.inlineCss.concat(cssContent);
           }
         }
       });
@@ -31,3 +31,4 @@ export const getFormattedChunkGroup = ({ chunks, manifest }) =>
     },
     { js: [], css: [], inlineCss: '' },
   );
+};
