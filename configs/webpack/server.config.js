@@ -95,15 +95,6 @@ export default {
         name: 'server',
         color: 'yellow',
       }),
-
-    // Добавляем "баннер" для каждого собранного чанка
-    // https://webpack.js.org/plugins/banner-plugin/
-    isProduction &&
-      new webpack.BannerPlugin({
-        banner: 'require("source-map-support").install();',
-        raw: true,
-        entryOnly: false,
-      }),
   ].filter(Boolean),
 
   optimization: {
