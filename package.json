@@ -1,6 +1,6 @@
 {
   "name": "@mihanizm56/ssr-scripts",
-  "version": "0.5.1-beta.5",
+  "version": "0.5.1",
   "bin": {
     "ssr-scripts": "./bin/ssr-scripts.js"
   },
@@ -50,7 +50,6 @@
     "sass-loader": "13.3.2",
     "style-loader": "3.3.3",
     "thread-loader": "4.0.2",
-    "tiny-lru": "9.0.3",
     "webpack": "5.88.1",
     "webpack-assets-manifest": "5.1.0",
     "webpack-bundle-analyzer": "4.9.0",
@@ -59,6 +58,7 @@
     "webpack-node-externals": "3.0.0",
     "webpackbar": "5.0.2",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.11",
+    "speed-measure-webpack-plugin": "1.5.0",
     "react-refresh": "0.14.0"
   },
   "devDependencies": {
