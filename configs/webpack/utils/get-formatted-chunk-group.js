@@ -1,10 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
 
-import { readFileSync } from 'fs';
-import path from 'path';
-
-export const getFormattedChunkGroup = ({ chunks, manifest, buildPath }) => {
+export const getFormattedChunkGroup = ({ chunks, manifest }) => {
   return chunks.reduce(
     (acc, chunk) => {
       chunk.files.forEach(fileName => {
@@ -17,12 +14,12 @@ export const getFormattedChunkGroup = ({ chunks, manifest, buildPath }) => {
           if (isJS) {
             acc.js.push(filePath);
           } else {
-            const cssContent = buildPath
-              ? readFileSync(path.join(buildPath, filePath), 'utf-8')
-              : '';
+            // const cssContent = buildPath
+            //   ? readFileSync(path.join(buildPath, filePath), 'utf-8')
+            //   : '';
 
             acc.css.push(filePath);
-            acc.inlineCss = acc.inlineCss.concat(cssContent);
+            // acc.inlineCss = acc.inlineCss.concat(cssContent);
           }
         }
       });
