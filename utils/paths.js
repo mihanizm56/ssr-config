@@ -16,6 +16,7 @@ export const appPaths = {
   src: resolveApp('src'),
   build: resolveApp('build'),
   public: resolveApp('public'),
+  publicInBuild: path.join(resolveApp('build'), 'static'),
   nodeModules: resolveApp('node_modules'),
   packageJson: resolveApp('package.json'),
   packageLockJson: resolveApp('package-lock.json'),

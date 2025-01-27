@@ -192,7 +192,7 @@ const start = async () => {
   const setupProxy = appServer.setupProxy;
 
   // запуск сервера статики public папки
-  server.use('/static', express.static(appPaths.public));
+  server.use('/static', express.static(appPaths.publicInBuild));
 
   // запуск setupProxy перед основным сервером
   if (setupProxy) {
