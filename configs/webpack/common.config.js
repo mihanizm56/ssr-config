@@ -72,6 +72,8 @@ export const getStyleLoadersConfig = isNode => [
             options: {
               importLoaders: 1,
               modules: {
+                namedExport: false,
+                exportLocalsConvention: 'as-is',
                 mode: 'icss',
               },
               sourceMap: false,
@@ -99,6 +101,8 @@ export const getStyleLoadersConfig = isNode => [
           modules: {
             localIdentName: `[local]-[contenthash:${hashSize}`,
             exportOnlyLocals: isNode,
+            namedExport: false,
+            exportLocalsConvention: 'as-is',
           },
           importLoaders: 1,
           sourceMap: false,
@@ -126,6 +130,8 @@ export const getStyleLoadersConfig = isNode => [
           modules: {
             localIdentName: `[local]-[contenthash:${hashSize}]`,
             exportOnlyLocals: isNode,
+            namedExport: false,
+            exportLocalsConvention: 'as-is',
           },
           importLoaders: 2,
           sourceMap: false,
