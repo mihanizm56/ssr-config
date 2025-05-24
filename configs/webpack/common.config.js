@@ -18,7 +18,7 @@ export const isAnalyze = process.env.ANALYZE === 'true';
 // eslint-disable-next-line
 const pkg = require(appPaths.packageJson);
 
-export const reScripts = /\.(js|jsx|ts|tsx)$/;
+export const reScripts = /\.(js|mjs|jsx|ts|tsx)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg|webp)$/;
 
 // style files regexes
@@ -168,7 +168,7 @@ export default {
 
   resolve: {
     modules: ['node_modules'],
-    extensions: ['.ts', '.tsx', '.js', '.json'],
+    extensions: ['.mjs', '.js', '.ts', '.tsx', '.json'],
   },
 
   devtool: isProduction ? 'source-map' : 'cheap-source-map',
