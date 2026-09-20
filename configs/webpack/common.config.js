@@ -9,6 +9,7 @@ import { appPaths, packagePaths } from '../../utils/paths';
 
 export const getIsProduction = () => process.env.NODE_ENV === 'production';
 export const disabledProgress = process.env.DISABLE_PROGRESS === 'true';
+export const disabledSourceMap = process.env.DISABLE_SOURCEMAP === 'true';
 export const hashSize = process.env.HASH_CSS_SIZE
   ? Number(process.env.HASH_CSS_SIZE)
   : 3;
@@ -17,6 +18,14 @@ export const isAnalyze = process.env.ANALYZE === 'true';
 
 // eslint-disable-next-line
 const pkg = require(appPaths.packageJson);
+
+export const getDevtool = () => {
+  if (disabledSourceMap) {
+    return false;
+  }
+
+  return isProduction ? 'source-map' : 'cheap-source-map';
+};
 
 export const reScripts = /\.(js|mjs|jsx|ts|tsx)$/;
 export const reImage = /\.(gif|jpg|jpeg|png|svg|webp)$/;
@@ -171,7 +180,7 @@ export default {
     extensions: ['.mjs', '.js', '.ts', '.tsx', '.json'],
   },
 
-  devtool: isProduction ? 'source-map' : 'cheap-source-map',
+  devtool: getDevtool(),
 
   cache: {
     type: 'filesystem',
