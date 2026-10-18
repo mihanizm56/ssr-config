@@ -1,12 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
+import { readFileSync } from 'fs';
+import path from 'path';
 
-export const getFormattedChunkGroup = ({
-  chunks,
-  manifest,
-  compilation,
-  withInlineCss,
-}) => {
+export const getFormattedChunkGroup = ({ chunks, manifest, buildPath }) => {
   return chunks.reduce(
     (acc, chunk) => {
       chunk.files.forEach(fileName => {
@@ -21,14 +18,10 @@ export const getFormattedChunkGroup = ({
           } else {
             acc.css.push(filePath);
 
-            // текст берем из ассетов компиляции: это итоговый минифицированный css,
-            // и не нужно читать файлы с диска
-            const asset = withInlineCss && compilation.getAsset(fileName);
-
-            if (asset) {
+            if (buildPath) {
               acc.inlineCss.push({
                 href: filePath,
-                css: asset.source.source().toString(),
+                css: readFileSync(path.join(buildPath, filePath), 'utf-8'),
               });
             }
           }
