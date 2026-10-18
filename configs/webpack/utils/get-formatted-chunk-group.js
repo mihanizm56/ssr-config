@@ -1,7 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
 
-export const getFormattedChunkGroup = ({ chunks, manifest }) => {
+export const getFormattedChunkGroup = ({
+  chunks,
+  manifest,
+  compilation,
+  withInlineCss,
+}) => {
   return chunks.reduce(
     (acc, chunk) => {
       chunk.files.forEach(fileName => {
@@ -14,18 +19,24 @@ export const getFormattedChunkGroup = ({ chunks, manifest }) => {
           if (isJS) {
             acc.js.push(filePath);
           } else {
-            // const cssContent = buildPath
-            //   ? readFileSync(path.join(buildPath, filePath), 'utf-8')
-            //   : '';
-
             acc.css.push(filePath);
-            // acc.inlineCss = acc.inlineCss.concat(cssContent);
+
+            // текст берем из ассетов компиляции: это итоговый минифицированный css,
+            // и не нужно читать файлы с диска
+            const asset = withInlineCss && compilation.getAsset(fileName);
+
+            if (asset) {
+              acc.inlineCss.push({
+                href: filePath,
+                css: asset.source.source().toString(),
+              });
+            }
           }
         }
       });
 
       return acc;
     },
-    { js: [], css: [], inlineCss: '' },
+    { js: [], css: [], inlineCss: [] },
   );
 };
