@@ -7,9 +7,7 @@ export const makeChunkManifest = ({ chunkGroups, manifest, buildPath }) =>
     const { js, css, inlineCss } = getFormattedChunkGroup({
       chunks: chunkGroup.chunks,
       manifest,
-      // текст стилей кладем только для entry-групп: они нужны на каждой странице,
-      // стили роутов остаются файлами и кэшируются браузером
-      buildPath: chunkGroup.isInitial() ? buildPath : null,
+      buildPath,
     });
 
     return {
